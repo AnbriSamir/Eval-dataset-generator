@@ -1,0 +1,30 @@
+name: CI
+
+# Continuous Integration: lint + typecheck + tests on every push and pull request.
+# This is what the README's CI badge tracks. Fully offline: no API key, no
+# Docker, no network beyond pip install.
+on: [push, pull_request]
+
+jobs:
+  quality:
+    name: lint · typecheck · test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install (editable + dev extras)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+      - name: Lint (ruff)
+        run: ruff check src tests
+      - name: Format check (black)
+        run: black --check src tests
+      - name: Type check (mypy)
+        run: mypy src
+      - name: Tests (pytest)
+        run: pytest -q
