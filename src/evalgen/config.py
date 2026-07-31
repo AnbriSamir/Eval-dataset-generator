@@ -5,12 +5,18 @@ never as a magic constant buried in a module. The provenance writer copies the
 active settings into ``meta.json`` so any exported dataset can be traced back to
 the exact knobs that produced it (same discipline as the sibling repos'
 bit-exact reproducibility).
+
+Knobs carry the same bounds their downstream contracts enforce (``Field``
+constraints below): a bad value set via env var or ``.env`` fails HERE, at load
+time, with a message naming the knob — never as an opaque ``ValidationError``
+deep inside a pipeline stage (red-team finding, ADR-0002 amendment).
 """
 
 from __future__ import annotations
 
 from functools import lru_cache
 
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -36,13 +42,23 @@ class Settings(BaseSettings):
     #: Cosine similarity at/above which two records are near-duplicates.
     #: The default is a starting point — the real threshold is MEASURED on a
     #: labeled duplicate fixture before any export (ADR to pin the protocol).
-    near_dup_threshold: float = 0.92
+    #: Bounds mirror ``DedupReport`` ([-1, 1] — alternate_sign hashing makes
+    #: negative cosines possible); a value like 7.0 would silently disable
+    #: near-dup instead of failing, hence the load-time refusal.
+    near_dup_threshold: float = Field(default=0.92, ge=-1.0, le=1.0)
 
     # --------------------------------------------------------------- cluster
     #: HDBSCAN minimum cluster size (records); smaller clusters become noise.
-    min_cluster_size: int = 5
+    #: ``ge=2`` mirrors ``ClusteringReport`` and sklearn's own requirement.
+    min_cluster_size: int = Field(default=5, ge=2)
     #: Dimensionality of the deterministic hashing embedder used in tests/CI.
     hash_embedding_dim: int = 512
+
+    # -------------------------------------------------------------- sampling
+    #: Total stratified-sample budget across clusters + noise (make demo scale;
+    #: Phase 5 export will surface its own budget knob if needs diverge).
+    #: ``ge=1`` mirrors ``SamplingReport.sample_size_requested``.
+    sample_size: int = Field(default=50, ge=1)
 
     # ---------------------------------------------------------------- label
     #: Max records auto-labeled per run (cost guard).

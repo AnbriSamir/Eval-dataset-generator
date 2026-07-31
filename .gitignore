@@ -26,6 +26,9 @@ htmlcov/
 data/out/
 data/runs/
 
+# Inter-agent handoff reports (workflow-local, never committed)
+.workflow-handoff/
+
 # OS noise
 .DS_Store
 Thumbs.db
