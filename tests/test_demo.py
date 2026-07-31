@@ -66,3 +66,19 @@ def test_main_prints_the_report_and_exits_zero(capsys) -> None:
     assert main() == 0
     captured = capsys.readouterr()
     assert captured.out == run_demo()
+
+
+def test_label_stage_shows_the_planted_fewshot_collision() -> None:
+    # The demo PROVES the leakage gate in a committed byte-exact artifact (ADR-0003
+    # rule 10): the planted twin is skipped, counted, and named.
+    out = run_demo()
+    assert "fewshot_collisions=1" in out
+    assert "collision  rec-d1087e0ca3da3367" in out
+
+
+def test_label_stage_marks_fake_verdicts_as_synthetic() -> None:
+    # FakeJudge distributions are hash-derived noise — the marker is mandatory so the
+    # README can never quote them as findings.
+    out = run_demo()
+    assert "[synthetic fake-judge verdicts]" in out
+    assert "judge=fake model=fake-judge-v1" in out

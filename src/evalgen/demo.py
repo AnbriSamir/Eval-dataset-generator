@@ -1,10 +1,12 @@
-"""End-to-end offline demo: ingest → dedup → cluster → stratified sample on the
-committed fixtures (ADR-0002 rule 9).
+"""End-to-end offline demo: ingest → dedup → cluster → stratified sample → label the
+sample on the committed fixtures (ADR-0002 rule 9, extended by ADR-0003 rule 10).
 
 Zero arguments (arguments are variance; the demo's job is to be identical every time),
 zero network, byte-identical output every run — pinned by ``tests/golden/demo_output.txt``
 and a double-run test. Composition layer: imports ``config``/``ingest``/``dedup``/
-``cluster``; nothing imports ``demo``.
+``cluster``/``label``; nothing imports ``demo``. The judge is the deterministic
+``FakeJudge`` — its verdicts are hash-derived NOISE, marked as synthetic in the output,
+and the README must never quote them as findings.
 
 Output discipline: post-redaction record text only, truncated previews, no timestamps,
 no absolute paths (basenames only — paths are PII per ADR-0001), no floats beyond the
@@ -13,26 +15,33 @@ rounded similarities.
 
 from __future__ import annotations
 
+from collections import Counter
 from pathlib import Path
 
 from evalgen.cluster import HashingEmbedder, cluster_records, stratified_sample
 from evalgen.config import get_settings
 from evalgen.contracts import (
     NOISE_CLUSTER_ID,
+    TAXONOMY_V1,
     ClusteringReport,
     DedupOutcome,
     IngestReport,
+    LabelingOutcome,
     LogRecord,
+    OutcomeLabel,
     SamplingReport,
+    TaskTypeLabel,
     record_sort_key,
 )
 from evalgen.dedup import run_dedup
-from evalgen.ingest import GenericMapping, load_generic_jsonl, load_tracespan_jsonl
+from evalgen.ingest import GenericMapping, load_generic_jsonl, load_tracespan_jsonl, sanitize_text
+from evalgen.label import FakeJudge, load_few_shots, run_labeling
 
 #: Repo root is two levels up from src/evalgen/demo.py; computed once, never printed.
 #: Assumes a SOURCE CHECKOUT (dev tool by declaration — `make demo` runs from the
 #: repo); installed as a wheel this would not resolve, and that is fine for v1.
 _FIXTURES_DIR = Path(__file__).resolve().parents[2] / "data" / "fixtures"
+_FEWSHOTS_PATH = Path(__file__).resolve().parents[2] / "data" / "fewshots" / "judge_v1.jsonl"
 
 _GENERIC_MAPPING = GenericMapping(
     input_key="q",
@@ -74,7 +83,7 @@ def _wrap_ids(prefix: str, ids: tuple[str, ...]) -> list[str]:
 
 
 def _render_ingest(reports: tuple[IngestReport, ...], total: int) -> list[str]:
-    lines = ["[1/4] ingest"]
+    lines = ["[1/5] ingest"]
     lines.extend(
         f"  {report.source_name:<{_NAME_COL}} {report.lines_read} read | "
         f"{report.records_normalized} records | {report.lines_rejected} rejected | "
@@ -89,7 +98,7 @@ def _render_dedup(outcome: DedupOutcome) -> list[str]:
     report = outcome.report
     fp = report.embedder
     lines = [
-        f"[2/4] dedup   threshold={report.threshold:g}  embedder={fp.name} "
+        f"[2/5] dedup   threshold={report.threshold:g}  embedder={fp.name} "
         f"dim={fp.dim} {fp.analyzer}({fp.ngram_min},{fp.ngram_max})",
         f"  in={report.records_in}  out={report.records_out}  "
         f"id_collapsed={report.id_collapsed}  exact={report.exact_dropped}  "
@@ -108,7 +117,7 @@ def _render_dedup(outcome: DedupOutcome) -> list[str]:
 
 def _render_cluster(clustering: ClusteringReport, by_id: dict[str, LogRecord]) -> list[str]:
     lines = [
-        f"[3/4] cluster   min_cluster_size={clustering.min_cluster_size}  "
+        f"[3/5] cluster   min_cluster_size={clustering.min_cluster_size}  "
         f"metric={clustering.metric}"
     ]
     for cluster in clustering.clusters:
@@ -123,7 +132,7 @@ def _render_cluster(clustering: ClusteringReport, by_id: dict[str, LogRecord]) -
 
 def _render_sample(sampling: SamplingReport) -> list[str]:
     lines = [
-        f"[4/4] sample   seed={sampling.seed}  requested={sampling.sample_size_requested}"
+        f"[4/5] sample   seed={sampling.seed}  requested={sampling.sample_size_requested}"
         f"  sampled={sampling.total_sampled}"
     ]
     for stratum in sampling.strata:
@@ -132,6 +141,37 @@ def _render_sample(sampling: SamplingReport) -> list[str]:
             f"quota {stratum.quota}/{stratum.stratum_size}   "
         )
         lines.extend(_wrap_ids(prefix, stratum.sampled_record_ids))
+    return lines
+
+
+def _render_label(labeling: LabelingOutcome) -> list[str]:
+    report = labeling.report
+    fp = report.judge
+    lines = [
+        f"[5/5] label   judge={fp.judge_name} model={fp.model_id}  "
+        f"taxonomy={fp.taxonomy_id}  prompt={fp.prompt_sha256[:12]}",
+        f"  in={report.records_in}  labeled={report.labeled}  refused={report.refused}  "
+        f"failed={report.failed}  budget_skipped={report.skipped_budget}  "
+        f"fewshot_collisions={report.skipped_fewshot_collision}  (budget={report.max_labels})",
+    ]
+    lines.extend(
+        f"  collision  {record_id}  (canonical text matches a committed few-shot — "
+        "never labeled, never exportable)"
+        for record_id in report.fewshot_collision_record_ids
+    )
+    # Distributions over labeled examples, enum declaration order. The marker is
+    # mandatory: FakeJudge verdicts are hash-derived noise, never findings.
+    outcome_counts = Counter(e.verdict.outcome for e in labeling.labeled_examples)
+    task_counts = Counter(e.verdict.task_type for e in labeling.labeled_examples)
+    lines.append(
+        "  outcome    "
+        + "  ".join(f"{member.value}={outcome_counts[member]}" for member in OutcomeLabel)
+        + "   [synthetic fake-judge verdicts]"
+    )
+    lines.append(
+        "  task_type  "
+        + "  ".join(f"{member.value}={task_counts[member]}" for member in TaskTypeLabel)
+    )
     return lines
 
 
@@ -159,6 +199,17 @@ def run_demo() -> str:
     sampling = stratified_sample(clustering, sample_size=settings.sample_size, seed=settings.seed)
 
     by_id = {r.record_id: r for r in outcome.kept}
+    # Label the SAMPLE — the production shape (the sample is what gets labeled and
+    # exported). FakeJudge: offline by declaration, injected at this composition layer
+    # (ADR-0003 rule 3 — no factory, no env switch). The few-shot loader gets the
+    # PRODUCTION sanitizer: a redactable few-shot refuses to load (rule 8 amendment).
+    sampled_ids = [rid for stratum in sampling.strata for rid in stratum.sampled_record_ids]
+    sampled_records = [by_id[rid] for rid in sampled_ids]
+    judge = FakeJudge(
+        taxonomy=TAXONOMY_V1, few_shots=load_few_shots(_FEWSHOTS_PATH, sanitizer=sanitize_text)
+    )
+    labeling = run_labeling(sampled_records, judge=judge, max_labels=settings.max_labels_per_run)
+
     title = "evalgen demo — offline pipeline on committed fixtures"
     sections = [
         [title, "=" * len(title)],
@@ -166,6 +217,7 @@ def run_demo() -> str:
         _render_dedup(outcome),
         _render_cluster(clustering, by_id),
         _render_sample(sampling),
+        _render_label(labeling),
     ]
     return "\n\n".join("\n".join(section) for section in sections) + "\n"
 

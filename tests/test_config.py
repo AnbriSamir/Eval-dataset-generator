@@ -63,6 +63,14 @@ def test_min_cluster_size_below_two_refuses_at_load_time(monkeypatch) -> None:
         Settings(_env_file=None)
 
 
+def test_zero_label_budget_refuses_at_load_time(monkeypatch) -> None:
+    # A zero budget would silently label nothing (everything skipped_budget) instead
+    # of failing — the knob carries its contract's bound (LabelingReport.max_labels ge=1).
+    monkeypatch.setenv("EVALGEN_MAX_LABELS_PER_RUN", "0")
+    with pytest.raises(ValidationError, match="max_labels_per_run"):
+        Settings(_env_file=None)
+
+
 def test_out_of_range_threshold_refuses_at_load_time(monkeypatch) -> None:
     # 7.0 would silently disable near-dup (every cosine < 7.0) rather than fail.
     monkeypatch.setenv("EVALGEN_NEAR_DUP_THRESHOLD", "7.0")

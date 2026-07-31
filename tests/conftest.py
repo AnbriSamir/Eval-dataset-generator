@@ -1,18 +1,32 @@
-"""Shared Phase 2 test plumbing: the stub embedder + a record factory.
+"""Shared Phase 2/3 test plumbing: stub embedder, stub judges, a record factory.
 
 ``StubEmbedder`` returns pre-baked vectors keyed by EXACT text — near-dup boundary and
-chain fixtures are thereby exact (injected dots), not hash-approximate. It satisfies the
-``Embedder`` Protocol; tests inject it wherever production code takes an embedder.
+chain fixtures are thereby exact (injected dots), not hash-approximate. ``StubJudge`` /
+``RaisingJudge`` are the judge-side equivalents (ADR-0003 rule 5: the FakeJudge never
+raises — failure paths live in test-local stubs, never in production trigger tokens).
+All satisfy their Protocols; tests inject them wherever production code takes the seam.
 """
 
 from __future__ import annotations
 
+import hashlib
 from collections.abc import Sequence
 from datetime import datetime
 
 import numpy as np
 
-from evalgen.contracts import EmbedderFingerprint, LogRecord, SourceKind
+from evalgen.contracts import (
+    TAXONOMY_V1,
+    EmbedderFingerprint,
+    JudgeConfidence,
+    JudgeFingerprint,
+    JudgeVerdict,
+    Judgment,
+    LogRecord,
+    OutcomeLabel,
+    SourceKind,
+    TaskTypeLabel,
+)
 from evalgen.ingest import build_record
 
 
@@ -52,3 +66,70 @@ def make_record(
         output_text=output_text,
         timestamp=timestamp,
     )
+
+
+# --------------------------------------------------------------- Phase 3: judge stubs
+
+#: A fixed, valid verdict for stub judges — content is irrelevant to engine tests.
+STUB_VERDICT = JudgeVerdict(
+    task_type=TaskTypeLabel.FACTUAL_QUERY,
+    outcome=OutcomeLabel.CORRECT,
+    confidence=JudgeConfidence.HIGH,
+    rationale="stub verdict — test scaffolding only",
+)
+
+
+def make_stub_fingerprint(*, few_shot_content_hashes: tuple[str, ...] = ()) -> JudgeFingerprint:
+    """A valid stub JudgeFingerprint; hashes get matching synthetic sorted ids."""
+    return JudgeFingerprint(
+        judge_name="stub",
+        model_id="stub-model-requested",
+        taxonomy_id=TAXONOMY_V1.taxonomy_id,
+        prompt_sha256=hashlib.sha256(b"stub-prompt").hexdigest(),
+        few_shot_ids=tuple(f"fs-{i:016x}" for i in range(len(few_shot_content_hashes))),
+        few_shot_content_hashes=tuple(sorted(few_shot_content_hashes)),
+    )
+
+
+class StubJudge:
+    """Test-only Judge: fixed verdict, per-input scripted errors, call recording."""
+
+    def __init__(
+        self,
+        *,
+        verdict: JudgeVerdict = STUB_VERDICT,
+        errors: dict[str, Exception] | None = None,
+        model_id: str = "stub-model-served",
+        few_shot_content_hashes: tuple[str, ...] = (),
+    ) -> None:
+        self._verdict = verdict
+        self._errors = dict(errors or {})
+        self._model_id = model_id
+        self._fingerprint = make_stub_fingerprint(few_shot_content_hashes=few_shot_content_hashes)
+        self.calls: list[tuple[str, str]] = []
+
+    @property
+    def fingerprint(self) -> JudgeFingerprint:
+        return self._fingerprint
+
+    def judge(self, input_text: str, output_text: str) -> Judgment:
+        self.calls.append((input_text, output_text))
+        error = self._errors.get(input_text)
+        if error is not None:
+            raise error
+        return Judgment(verdict=self._verdict, model_id=self._model_id)
+
+
+class RaisingJudge:
+    """Test-only Judge that raises the given exception on every call."""
+
+    def __init__(self, error: Exception) -> None:
+        self._error = error
+        self._fingerprint = make_stub_fingerprint()
+
+    @property
+    def fingerprint(self) -> JudgeFingerprint:
+        return self._fingerprint
+
+    def judge(self, input_text: str, output_text: str) -> Judgment:
+        raise self._error
