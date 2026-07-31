@@ -61,8 +61,12 @@ class Settings(BaseSettings):
     sample_size: int = Field(default=50, ge=1)
 
     # ---------------------------------------------------------------- label
-    #: Max records auto-labeled per run (cost guard).
-    max_labels_per_run: int = 500
+    #: Max records auto-labeled per run (cost guard). Enforced in ``label/engine.py``
+    #: identically on the fake and real paths; overrun is visible as ``skipped_budget``
+    #: + the full id list in the LabelingReport. ``ge=1`` mirrors
+    #: ``LabelingReport.max_labels`` (ADR-0002 amendment discipline: knobs carry the
+    #: bounds their downstream contracts enforce).
+    max_labels_per_run: int = Field(default=500, ge=1)
 
     # -------------------------------------------------------------- validate
     #: Minimum human-labeled subset size before a kappa is considered reportable.

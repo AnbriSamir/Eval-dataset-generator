@@ -13,6 +13,7 @@ production logs (TraceSpan JSONL from multi-agent-orchestrator · generic JSONL)
   → cluster/    embeddings (hashing default) · HDBSCAN · stratified sampling
                                                                          [Phase 2 ✔]
   → label/      LLM judge (structured output) · taxonomy · few-shot store
+                                                                         [Phase 3 ✔]
   → validate/   human subset · Cohen's κ (global + per-class) · bootstrap CI95
   → export/     golden.jsonl · meta.json provenance · contamination guard
 ```
@@ -98,6 +99,69 @@ out of contract range refuse at load time naming the knob; hand-computed skewed 
 every report's refuse-to-validate cases; demo golden byte-equality + leak scan
 (no planted secret, no absolute path).
 
+## Label — taxonomy + LLM judge (Phase 3 — implemented, [ADR-0003](decisions/ADR-0003-label-taxonomy-judge.md))
+
+```
+contracts/taxonomy.py     TaskTypeLabel / OutcomeLabel / JudgeConfidence StrEnums ·
+                          LabelTaxonomy (content-derived self-verified taxonomy_id) ·
+                          TAXONOMY_V1 — ONE questionnaire for judge and human labeler
+contracts/labeling.py     JudgeVerdict — IS the output_format schema (closed enums: an
+                          out-of-taxonomy label is unrepresentable at the API) ·
+                          Judgment (verdict + model ACTUALLY served) · Judge Protocol
+                          (two strings in, a Judgment out — blindness by signature) ·
+                          JudgeFingerprint (requested model, taxonomy id, prompt sha256,
+                          few-shot ids + content hashes) · FewShotExample (self-verified
+                          id; content_hash = the exact-dedup identity over input ␟ output)
+                          · TextSanitizer Protocol (the loader's injected redaction seam)
+                          · five-bucket LabelingReport + LabelingOutcome (self-validating:
+                          labeled + refused + failed + skipped_budget +
+                          skipped_fewshot_collision == records_in; budget never exceeded;
+                          buckets pairwise disjoint; forged outcomes refuse to exist)
+label/errors.py           JudgeError hierarchy: JudgeRefusalError / JudgeParseError /
+                          JudgeAPIError — anything else PROPAGATES (our own bugs are
+                          never laundered into labeling statistics)
+label/prompt.py           pure render_system_prompt / render_user_message + prompt_sha256
+                          (system prompt ␟ user template — any drift breaks the golden) ·
+                          system prompt demarcates INPUT/OUTPUT as data-not-instructions
+                          (red-team F-2 hardening; closed enums bound the blast radius)
+label/fewshots.py         load_few_shots(path, *, sanitizer) — validated, sorted,
+                          tamper-evident AND redaction-clean: refuses any example whose
+                          string fields the injected production sanitizer would rewrite
+                          (red-team F-1: a raw few-shot would ship its secret to the API
+                          and evade the collision/export gates, which hash REDACTED text)
+label/fake.py             FakeJudge — sha256-derived verdicts, platform-stable, never
+                          raises; same render/hash as the real judge, so the offline
+                          golden pins the production prompt byte-for-byte
+label/anthropic_judge.py  AnthropicJudge — the ONLY module importing anthropic, NOT
+                          exported from label/__init__ · messages.parse(output_format=
+                          JudgeVerdict) → .parsed_output · adaptive thinking ·
+                          output_config effort=high · no temperature/top_p/top_k, no
+                          budget_tokens · stop_reason checked BEFORE parsed_output ·
+                          model_id from response.model (served, not requested) · pure
+                          response/exception mappers tested offline, class never
+                          instantiated in tests
+label/engine.py           run_labeling(records, judge=…, max_labels=…) — canonical
+                          record_sort_key order · collision gate first (consumes no
+                          budget) · budget cut EXACT (labeled+refused+failed==max) ·
+                          typed failures → counted entries · non-JudgeError propagates
+demo.py                   [5/5] label — FakeJudge over the sampled records; fingerprint
+                          line, five-bucket accounting, planted collision named, synthetic
+                          distributions marked; production sanitizer injected to the
+                          few-shot loader at this composition layer
+```
+
+Invariants the tests pin: enum↔`TAXONOMY_V1` mirror; tampered taxonomy/few-shot/report/
+outcome refuse to validate; FakeJudge determinism with pinned verdicts; five-bucket sums
+under every mix (refusals, failures, budget cut, collisions — stub judges raising each
+typed error); budget boundary shuffle-invariant, collisions consume no budget; a planted
+`AttributeError` propagates; SDK call structure recorded (including the ABSENCE of
+temperature/top_p/top_k/budget_tokens); `stop_reason` precedence; the red-team F-1
+payload replayed verbatim (raw-vs-redacted hash miss proven, redactable few-shot refuses
+to load, secret never echoed); committed store sanitize-neutral under the production
+sanitizer; injection payload lands as data under the demarcating prompt; blindness by
+AST walk at every import depth (F-3) + path-literal grep + no-`AnthropicJudge`-export;
+demo golden byte-equality + double-run identity with `fewshot_collisions=1` named.
+
 ## Module boundaries (enforced from day 0)
 
 - `contracts` is imported by everyone and imports no one (pinned by a test).
@@ -107,7 +171,12 @@ every report's refuse-to-validate cases; demo golden byte-equality + leak scan
   module-top-import greps; `calibrate.main()`'s inner import is the one sanctioned
   composition-layer exception).
 - `demo` is composition: it imports the pipeline, nothing imports it (pinned).
-- `label` never reads the human labels (the judge stays blind to ground truth).
+- `label` imports only `contracts` and never reads the human labels (the judge stays
+  blind to ground truth) — pinned by AST-walk import tests at every nesting depth and
+  a path-literal grep; the two-string `Judge` Protocol is the type-level guarantee.
+  The few-shot loader's redaction check arrives INJECTED through the `TextSanitizer`
+  Protocol (composition passes `ingest.sanitize_text`), so `label` never imports
+  `ingest` either.
 - `export` depends on everything; nothing depends on `export`.
 
 ## Decisions
@@ -129,3 +198,18 @@ protocol, clustering choice, taxonomy design, κ protocol, export format).
   the `Embedder` Protocol seam, HDBSCAN on L2-normalized hashing embeddings with
   noise as a first-class stratum, floor-1 largest-remainder stratified sampling with
   seeded-hash selection, and the byte-identical `make demo` golden.
+- [ADR-0003 — Label taxonomy, the LLM judge seam, typed labeling failures, and the
+  few-shot leakage gate](decisions/ADR-0003-label-taxonomy-judge.md) — Phase 3
+  (implemented; amended after the pre-commit red-team pass): two closed unconditional
+  axes (`task_type`, `outcome`) sized for per-class κ at n = 30–50, enums as the
+  structured-output schema, the narrow `Judge` Protocol (two strings in, a `Judgment`
+  out — blindness by signature), `AnthropicJudge` (SDK §2 rules, thin shell, pure
+  mappers) vs deterministic content-derived `FakeJudge`, the five-bucket
+  self-validating `LabelingReport` (labeled + refused + failed + skipped_budget +
+  skipped_fewshot_collision == records_in) with the `max_labels_per_run` guard
+  enforced in the engine, and the few-shot store gated on the exact-dedup content
+  hash (labeling-time skip now, export ∩ few-shots = ∅ at Phase 5). Amendments:
+  redaction-clean few-shot loading via the injected `TextSanitizer` Protocol (a
+  redactable few-shot refuses to load — closes the raw-vs-redacted hash asymmetry),
+  the data-not-instructions prompt demarcation (second sanctioned golden
+  regeneration: `prompt=` prefix only), and AST-walk blindness tests.

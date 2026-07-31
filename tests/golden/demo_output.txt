@@ -1,13 +1,13 @@
 evalgen demo — offline pipeline on committed fixtures
 =====================================================
 
-[1/4] ingest
+[1/5] ingest
   generic_demo.jsonl     8 read | 3 records | 3 rejected | 2 skipped
   cluster_demo.jsonl     53 read | 53 records | 0 rejected | 0 skipped
   tracespans_demo.jsonl  16 read | 6 records | 4 rejected | 6 skipped
   total records: 62
 
-[2/4] dedup   threshold=0.92  embedder=hashing dim=512 char_wb(3,5)
+[2/5] dedup   threshold=0.92  embedder=hashing dim=512 char_wb(3,5)
   in=62  out=54  id_collapsed=0  exact=3  near=5 (via_chain=1)
   exact  rec-1eedc0a1e303f024 -> kept rec-802038cabe9059c3
   exact  rec-66655921ccee08fb -> kept rec-c84e05c141516b51
@@ -18,14 +18,14 @@ evalgen demo — offline pipeline on committed fixtures
   near   rec-962f74d7d43e1a1c -> kept rec-c84e05c141516b51  sim=0.983013
   near   rec-d829e64df1f0efad -> kept rec-083298153276e970  sim=0.910607  [chain]
 
-[3/4] cluster   min_cluster_size=5  metric=euclidean_l2norm
+[3/5] cluster   min_cluster_size=5  metric=euclidean_l2norm
   cl-20714a1ef2e1  size=13  "Quels sont les horaires du péage de Saint-Arnoult ?"
   cl-83b5c3674ec3  size=11  "Le trafic est-il fluide sur l'A10 ce matin entre Orléans et Tou…"
   cl-2c464a809396  size=10  "L'export des données de trafic échoue avec une erreur 500, que …"
   cl-824fa8ffc0f8  size=8  "Comment activer le badge télépéage sur ma nouvelle voiture ?"
   noise            size=12
 
-[4/4] sample   seed=1750  requested=50  sampled=50
+[4/5] sample   seed=1750  requested=50  sampled=50
   cl-20714a1ef2e1  quota 12/13   rec-091fd142459095f7, rec-219bbb2b999ff9c2,
                                  rec-45340f7659c0b9e6, rec-4642c539b7b29ae3,
                                  rec-480d0aa5a9457494, rec-5d247122fa704582,
@@ -52,3 +52,9 @@ evalgen demo — offline pipeline on committed fixtures
                                rec-58ccbba47fe47168, rec-94ccac8945e3bd1e,
                                rec-c0d7b5986ffbf0da, rec-ccf2c7490864b9db,
                                rec-d1087e0ca3da3367, rec-f469c4171d1b2785
+
+[5/5] label   judge=fake model=fake-judge-v1  taxonomy=tax-d9ca3b87b403  prompt=b963c9e7aa28
+  in=50  labeled=49  refused=0  failed=0  budget_skipped=0  fewshot_collisions=1  (budget=500)
+  collision  rec-d1087e0ca3da3367  (canonical text matches a committed few-shot — never labeled, never exportable)
+  outcome    correct=9  partially_correct=16  incorrect=15  unjudgeable=9   [synthetic fake-judge verdicts]
+  task_type  factual_query=6  procedural_request=15  troubleshooting=14  planning_or_reasoning=6  other=8

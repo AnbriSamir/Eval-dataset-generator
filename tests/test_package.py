@@ -5,8 +5,16 @@ Boundary-grep convention: only MODULE-TOP imports count — lines starting with
 concrete embedder INSIDE the function (the one sanctioned composition-layer exception,
 documented in its module docstring); an indented import is invisible to these greps
 on purpose.
+
+EXCEPTION — ``label/`` blindness tests walk the AST at EVERY depth (red-team F-3): a
+function-level ``import evalgen.validate`` would slip past a column-0 grep, and the
+judge boundary is load-bearing in a way the calibrate composition exception is not.
+Dynamically-constructed import strings remain out of reach of ANY static check; the
+real guarantee stays the two-string ``Judge`` Protocol, which cannot transport a
+human label (ADR-0003 rule 3) — the AST walk is the hardened second layer.
 """
 
+import ast
 import importlib
 import pathlib
 import re
@@ -97,3 +105,61 @@ def test_phase2_modules_never_import_anthropic() -> None:
             assert "anthropic" not in line, line
     demo_text = (SRC / "demo.py").read_text(encoding="utf-8")
     assert "anthropic" not in demo_text
+
+
+# ---------------------------------------------------- Phase 3: structural blindness
+# ADR-0003 rule 9 — the judge is blind by imports, paths, and exports, not by promise.
+
+
+def _imported_modules_any_depth(path: pathlib.Path) -> list[str]:
+    """Every module name imported ANYWHERE in the file — module top, function bodies,
+    conditionals: ``ast.walk`` sees every nesting depth, so formatting tricks and
+    lazy function-level imports cannot evade the check (red-team F-3). Covers
+    ``import X``, ``from X import Y`` (both ``X`` and ``X.Y`` — catching
+    ``from evalgen import validate``), and aliased forms."""
+    tree = ast.parse(path.read_text(encoding="utf-8"))
+    names: list[str] = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            names.extend(alias.name for alias in node.names)
+        elif isinstance(node, ast.ImportFrom) and node.module:
+            names.append(node.module)
+            names.extend(f"{node.module}.{alias.name}" for alias in node.names)
+    return names
+
+
+def test_label_imports_no_pipeline_sibling() -> None:
+    # label -> contracts only: no mining module, and NEVER validate (human labels).
+    # AST-walked at every depth — see the module docstring's label exception.
+    forbidden = ("ingest", "dedup", "cluster", "validate", "export", "demo")
+    for path in sorted((SRC / "label").glob("*.py")):
+        for module in _imported_modules_any_depth(path):
+            for name in forbidden:
+                assert not module.startswith(f"evalgen.{name}"), f"{path.name}: {module}"
+
+
+def test_anthropic_is_confined_to_the_real_judge_module() -> None:
+    # The SDK import lives in exactly one file, which label/__init__ never imports —
+    # importing the package (tests, demo) therefore never imports the SDK. AST-walked
+    # at every depth so a lazy in-function SDK import cannot hide elsewhere.
+    for path in sorted((SRC / "label").glob("*.py")):
+        for module in _imported_modules_any_depth(path):
+            if module == "anthropic" or module.startswith("anthropic."):
+                assert path.name == "anthropic_judge.py", f"{path.name}: {module}"
+
+
+def test_label_never_references_the_human_label_store() -> None:
+    # Path-level blindness: label/ takes records as arguments; it must not even NAME
+    # the human ground-truth location (ADR-0003 rule 9, layer 3).
+    for path in sorted((SRC / "label").glob("*.py")):
+        text = path.read_text(encoding="utf-8")
+        assert "data/labels" not in text, path
+        assert "human_label" not in text, path
+
+
+def test_label_package_does_not_export_the_real_judge() -> None:
+    # AnthropicJudge is reached only by an explicit deep import at the composition
+    # layer — no test or demo path can construct it by accident.
+    import evalgen.label as label
+
+    assert not hasattr(label, "AnthropicJudge")

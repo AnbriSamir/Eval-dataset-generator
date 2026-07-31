@@ -1,6 +1,6 @@
 """Shared Pydantic models: LogRecord, dedup/clustering/sampling/calibration reports,
-the Embedder Protocol seam — plus (later phases) LabeledExample, LabelTaxonomy,
-AgreementReport, ExportManifest.
+the Embedder Protocol seam, the label taxonomy + Judge Protocol + labeling reports —
+plus (later phases) AgreementReport, ExportManifest.
 
 Imported by everyone, imports no one (pinned by a test).
 """
@@ -26,6 +26,22 @@ from evalgen.contracts.dedup import (
     NearDupEntry,
 )
 from evalgen.contracts.embeddings import Embedder, EmbedderFingerprint
+from evalgen.contracts.labeling import (
+    MAX_FAILURE_DETAIL_LEN,
+    MAX_RATIONALE_LEN,
+    FewShotExample,
+    Judge,
+    JudgeFingerprint,
+    JudgeVerdict,
+    Judgment,
+    LabeledExample,
+    LabelFailureEntry,
+    LabelFailureReason,
+    LabelingOutcome,
+    LabelingReport,
+    TextSanitizer,
+    derive_few_shot_id,
+)
 from evalgen.contracts.records import (
     CANONICAL_SEP,
     LogRecord,
@@ -42,13 +58,26 @@ from evalgen.contracts.reports import (
     RejectSample,
     SkipReason,
 )
+from evalgen.contracts.taxonomy import (
+    TAXONOMY_V1,
+    JudgeConfidence,
+    LabelTaxonomy,
+    OutcomeLabel,
+    TaskTypeLabel,
+    TaxonomyAxis,
+    TaxonomyClass,
+    derive_taxonomy_id,
+)
 
 __all__ = [
     "CANONICAL_SEP",
+    "MAX_FAILURE_DETAIL_LEN",
+    "MAX_RATIONALE_LEN",
     "MAX_REJECT_DETAIL_LEN",
     "MAX_REJECT_SAMPLES",
     "NOISE_CLUSTER_ID",
     "SIMILARITY_DECIMALS",
+    "TAXONOMY_V1",
     "Cluster",
     "ClusteringReport",
     "DedupOutcome",
@@ -56,10 +85,23 @@ __all__ = [
     "Embedder",
     "EmbedderFingerprint",
     "ExactDupEntry",
+    "FewShotExample",
     "IngestReport",
+    "Judge",
+    "JudgeConfidence",
+    "JudgeFingerprint",
+    "JudgeVerdict",
+    "Judgment",
+    "LabelFailureEntry",
+    "LabelFailureReason",
+    "LabelTaxonomy",
+    "LabeledExample",
     "LabeledPair",
+    "LabelingOutcome",
+    "LabelingReport",
     "LogRecord",
     "NearDupEntry",
+    "OutcomeLabel",
     "RecordOrigin",
     "RejectReason",
     "RejectSample",
@@ -67,9 +109,15 @@ __all__ = [
     "SkipReason",
     "SourceKind",
     "StratumSample",
+    "TaskTypeLabel",
+    "TaxonomyAxis",
+    "TaxonomyClass",
+    "TextSanitizer",
     "ThresholdCalibrationReport",
     "ThresholdCandidate",
     "derive_cluster_id",
+    "derive_few_shot_id",
     "derive_record_id",
+    "derive_taxonomy_id",
     "record_sort_key",
 ]
