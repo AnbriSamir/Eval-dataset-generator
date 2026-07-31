@@ -79,3 +79,32 @@ def test_out_of_range_threshold_refuses_at_load_time(monkeypatch) -> None:
     monkeypatch.setenv("EVALGEN_NEAR_DUP_THRESHOLD", "-1.5")
     with pytest.raises(ValidationError, match="near_dup_threshold"):
         Settings(_env_file=None)
+
+
+# ADR-0004 rule 8: the validate/export knobs carry their contracts' bounds too.
+
+
+def test_min_class_support_default_and_bound(monkeypatch) -> None:
+    assert Settings(_env_file=None).min_class_support == 5
+    monkeypatch.setenv("EVALGEN_MIN_CLASS_SUPPORT", "0")
+    with pytest.raises(ValidationError, match="min_class_support"):
+        Settings(_env_file=None)
+
+
+def test_zero_bootstrap_resamples_refuses_at_load_time(monkeypatch) -> None:
+    monkeypatch.setenv("EVALGEN_BOOTSTRAP_RESAMPLES", "0")
+    with pytest.raises(ValidationError, match="bootstrap_resamples"):
+        Settings(_env_file=None)
+
+
+def test_zero_min_human_labels_refuses_at_load_time(monkeypatch) -> None:
+    monkeypatch.setenv("EVALGEN_MIN_HUMAN_LABELS", "0")
+    with pytest.raises(ValidationError, match="min_human_labels"):
+        Settings(_env_file=None)
+
+
+def test_out_of_kappa_range_export_gate_refuses_at_load_time(monkeypatch) -> None:
+    # Kappa lives in [-1, 1]; a gate of 2.0 would silently block every export.
+    monkeypatch.setenv("EVALGEN_MIN_EXPORT_KAPPA", "2.0")
+    with pytest.raises(ValidationError, match="min_export_kappa"):
+        Settings(_env_file=None)
