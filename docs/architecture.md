@@ -15,6 +15,7 @@ production logs (TraceSpan JSONL from multi-agent-orchestrator · generic JSONL)
   → label/      LLM judge (structured output) · taxonomy · few-shot store
                                                                          [Phase 3 ✔]
   → validate/   human subset · Cohen's κ (global + per-class) · bootstrap CI95
+                                                                         [Phase 4 ✔]
   → export/     golden.jsonl · meta.json provenance · contamination guard
 ```
 
@@ -162,6 +163,71 @@ sanitizer; injection payload lands as data under the demarcating prompt; blindne
 AST walk at every import depth (F-3) + path-literal grep + no-`AnthropicJudge`-export;
 demo golden byte-equality + double-run identity with `fewshot_collisions=1` named.
 
+## Validate — the agreement protocol (Phase 4 — implemented, [ADR-0004](decisions/ADR-0004-agreement-kappa-protocol.md))
+
+```
+contracts/agreement.py    kappa_from_confusion — THE κ formula (exact integer numerator/
+                          denominator, ONE float division; degeneracy p_e=1 ⟺ S=n² tested in
+                          integers, typed None never NaN/0) · binarize_confusion (per-class κ
+                          IS global κ on the 2×2 collapse — one formula total) · HumanLabel
+                          (extra="ignore": edited display copies cannot alter κ; no
+                          content-derived id — hook + git + sha256 binding are the tamper
+                          story) · KappaStatus typed degeneracy vocabulary · BootstrapCI
+                          (bounds None ⟺ ALL resamples degenerate, always counted) ·
+                          KappaValue (status ok ⟺ values present) · AxisAgreement —
+                          self-validating: recomputes p_o/p_e/κ (global AND per-class),
+                          supports, statuses and per-cell disagreement multiplicities from
+                          its own confusion on every construction · MatchAccounting (join
+                          sums enforced; orphan sets sorted, unique, disjoint) ·
+                          AgreementReport — headline_ready cannot lie, every CI's b_total ==
+                          B, taxonomy id pinned to the fingerprint, ONE report-level
+                          min_class_support every axis must match, human_labels_sha256 binds
+                          the κ to the exact ground-truth bytes (red-team M-1/M-2 closures)
+validate/errors.py        typed refusals: TaxonomyMismatch, DuplicateHumanLabel,
+                          HumanLabelFormat (names the 1-based line), NoMatchedPairs
+validate/human_labels.py  STRICT loader (the deliberate opposite of ingest's tolerance):
+                          any invalid/unfilled line, duplicate record_id, mixed taxonomy_id
+                          or empty file refuses the whole file naming the line
+validate/annotation.py    render_label_template(records, taxonomy) + annotator instructions —
+                          judgments unrepresentable by signature (blindness by type; the
+                          mirror of the two-string Judge Protocol)
+validate/kappa.py         confusion_matrix over label pairs (every class keeps its row/col
+                          at zero support) · landis_koch_band (reading aid, nothing gates)
+validate/bootstrap.py     draw_index_matrix — ONE Generator(PCG64(seed)), ONE integers call,
+                          function of (seed, B, n) only · bootstrap_kappa — paired resampling
+                          of joint codes via bincount, degenerate resamples excluded AND
+                          counted, percentile method pinned BY NAME ("linear")
+validate/agreement.py     compute_agreement — taxonomy guard → duplicate guard → join on
+                          record_id (matched sorted ascending = THE canonical bootstrap pair
+                          order) → human-only orphans classified by cause from the labeling
+                          report's buckets (refusals printed as coverage loss) → ONE index
+                          matrix shared by every metric → frozen self-verifying report;
+                          knobs injected, never imported
+validate/render.py        deterministic text report — κ never travels naked (n, po/pe, CI95,
+                          B, degenerate count, band, per-class supports ride every line);
+                          header prints source, sha256 binding (or "unrecorded"), bootstrap
+                          knobs and the gates line
+agreement_demo.py         make agreement → re-runs the fixture pipeline + joins the committed
+                          SYNTHETIC annotation fixture; mandatory !! SYNTHETIC banner first;
+                          byte-pinned by tests/golden/agreement_output.txt (demo.py and its
+                          golden untouched this phase)
+```
+
+Invariants the tests pin: every formula on hand-computed fixtures (κ = 16/31 global with
+per-class 0.6 / 11/21 / 0.375 / absent; perfect 1; chance 0; perfect disagreement −1;
+monoclass judge → exactly 0; one-side-absent class → exactly 0; p_e = 1 → typed undefined)
++ sklearn as independent oracle (global and binarized per-class); the hand-built index
+matrix CI ([0.0, 0.9625], b_degenerate = 1, computed on paper — the linear-method pin);
+pinned first bootstrap row for seed 1750 against numpy drift; global np.random untouched;
+forged reports refuse (flattered κ at 1 ulp, wrong supports/statuses, filtered drill-down,
+headline_ready lie both directions, diverging support gate both directions, non-hexdigest
+binding); the red-team M-1 payload replayed through files (selective filtering lifts κ
+0.516129 → 1.0 but changes the sha256 binding on the report's face); join losses classified
+(refused/collision/not_in_run) with sums enforced; min_human_labels boundary 29 vs 30;
+support-gate boundary; loader strictness battery; template renderers cannot receive
+judgments; validate imports only contracts (AST at every depth) and writes nothing (grep);
+agreement golden byte-equality + double-run identity + banner-first + no leak.
+
 ## Module boundaries (enforced from day 0)
 
 - `contracts` is imported by everyone and imports no one (pinned by a test).
@@ -177,6 +243,12 @@ demo golden byte-equality + double-run identity with `fewshot_collisions=1` name
   The few-shot loader's redaction check arrives INJECTED through the `TextSanitizer`
   Protocol (composition passes `ingest.sanitize_text`), so `label` never imports
   `ingest` either.
+- `validate` imports only `contracts` (+ numpy) — AST-walked at every depth, both
+  directions of blindness pinned (`label` never sees human labels; `validate` never
+  reaches `label` internals — it consumes `LabelingOutcome` through contracts). It is
+  the ONE module allowed to see both raters and it only measures: no write capability
+  (grep-pinned), knobs injected by the composition layer, never imported from config.
+  `agreement_demo` is composition: imports the pipeline, nothing imports it.
 - `export` depends on everything; nothing depends on `export`.
 
 ## Decisions
@@ -213,3 +285,19 @@ protocol, clustering choice, taxonomy design, κ protocol, export format).
   redactable few-shot refuses to load — closes the raw-vs-redacted hash asymmetry),
   the data-not-instructions prompt demarcation (second sanctioned golden
   regeneration: `prompt=` prefix only), and AST-walk blindness tests.
+- [ADR-0004 — The agreement protocol: human labels, Cohen's κ (global + per-class),
+  paired bootstrap CI95, and the honest
+  report](decisions/ADR-0004-agreement-kappa-protocol.md) — Phase 4 (implemented;
+  amended after the pre-commit red-team pass): the filled-template human-label
+  workflow with structural double-blindness (judgment-free renderer signatures
+  mirroring the two-string `Judge` Protocol), unweighted Cohen's κ per axis with
+  one-vs-rest per-class κ through ONE hand-checked formula, typed degeneracy
+  statuses (never NaN, never a silent 0), the support gate
+  (`min_class_support = 5`) as suppression-with-status, the paired seeded
+  percentile bootstrap (degenerate resamples excluded-and-counted, method pinned
+  by name), the classified join ledger, the self-validating `AgreementReport`,
+  and the byte-pinned SYNTHETIC `make agreement`. Amendments (2026-08-01):
+  report-level `human_labels_sha256` ground-truth binding (M-1), report-level
+  `min_class_support` + the header gates line (M-2), the empty-input bootstrap
+  refusal (N-1), and the Phase 5 rule that a headline with status ≠ `ok` blocks
+  export exactly like `headline_ready = False`.

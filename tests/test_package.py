@@ -163,3 +163,58 @@ def test_label_package_does_not_export_the_real_judge() -> None:
     import evalgen.label as label
 
     assert not hasattr(label, "AnthropicJudge")
+
+
+# ------------------------------------------------- Phase 4: validate/ boundaries
+# ADR-0004 rule 7 — validate reads both raters and only measures: contracts-only
+# imports (AST-walked at every depth, the label battery pattern), and NO write
+# capability of any kind (an agent that could write through validate could write
+# the ground truth it is supposed to measure against).
+
+
+def test_validate_imports_only_contracts() -> None:
+    # validate -> contracts (+ numpy/stdlib) ONLY: no pipeline sibling, no config
+    # (knobs are injected by the composition layer), no demo modules.
+    forbidden = ("ingest", "dedup", "cluster", "label", "export", "demo", "config")
+    for path in sorted((SRC / "validate").glob("*.py")):
+        for module in _imported_modules_any_depth(path):
+            for name in forbidden:
+                assert not module.startswith(f"evalgen.{name}"), f"{path.name}: {module}"
+
+
+def test_validate_never_writes() -> None:
+    # The no-write rule, pinned by grep: file reads go through Path.read_text; any
+    # open( / write_text / .write( / to_file appearing under validate/ is a defect.
+    for path in sorted((SRC / "validate").glob("*.py")):
+        text = path.read_text(encoding="utf-8")
+        for token in ("open(", "write_text", ".write(", "to_file"):
+            assert token not in text, f"{path.name} contains {token!r}"
+
+
+def test_validate_and_agreement_demo_never_import_anthropic() -> None:
+    # Phase 4 is 100 % offline: the SDK must not leak into measurement code.
+    paths = sorted((SRC / "validate").glob("*.py")) + [SRC / "agreement_demo.py"]
+    for path in paths:
+        for module in _imported_modules_any_depth(path):
+            assert module != "anthropic", f"{path.name}: {module}"
+            assert not module.startswith("anthropic."), f"{path.name}: {module}"
+
+
+def test_nothing_imports_agreement_demo() -> None:
+    # Composition layer, demo pattern: it imports the pipeline, nothing imports it.
+    for path in sorted(SRC.rglob("*.py")):
+        if path.name == "agreement_demo.py":
+            continue
+        text = path.read_text(encoding="utf-8")
+        assert "evalgen.agreement_demo" not in text, path
+        assert "import agreement_demo" not in text, path
+
+
+def test_agreement_axis_mirrors_taxonomy() -> None:
+    # The kappa axes ARE the taxonomy axes — names AND order; drift between the
+    # questionnaire and the measurement vocabulary must fail loudly.
+    from evalgen.contracts import TAXONOMY_V1, AgreementAxis
+
+    assert tuple(member.value for member in AgreementAxis) == tuple(
+        axis.name for axis in TAXONOMY_V1.axes
+    )

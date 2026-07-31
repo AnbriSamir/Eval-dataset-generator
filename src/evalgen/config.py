@@ -69,15 +69,27 @@ class Settings(BaseSettings):
     max_labels_per_run: int = Field(default=500, ge=1)
 
     # -------------------------------------------------------------- validate
-    #: Minimum human-labeled subset size before a kappa is considered reportable.
-    min_human_labels: int = 30
-    #: Bootstrap resamples for the CI95 on agreement metrics.
-    bootstrap_resamples: int = 10_000
+    #: Minimum matched (judge, human) pairs before the kappa headline is reportable;
+    #: below it the report still ships its diagnostics with ``headline_ready=False``.
+    #: ``ge=1`` mirrors ``AgreementReport.min_human_labels`` (ADR-0004 rule 8).
+    min_human_labels: int = Field(default=30, ge=1)
+    #: Bootstrap resamples for the CI95 on agreement metrics (paired percentile
+    #: bootstrap, one seeded index matrix per run — ADR-0004 rule 5). ``ge=1``
+    #: mirrors ``AgreementReport.bootstrap_resamples``.
+    bootstrap_resamples: int = Field(default=10_000, ge=1)
+    #: Per-class support gate: a class with 0 < human+judge support < this over the
+    #: matched pairs is reported with status ``insufficient_support`` — supports
+    #: shown, kappa suppressed, never silently dropped (ADR-0004 options §4: below
+    #: ~5 occurrences a per-class kappa is noise wearing a number's clothes).
+    #: ``ge=1`` mirrors ``AxisAgreement.min_class_support``.
+    min_class_support: int = Field(default=5, ge=1)
 
     # ---------------------------------------------------------------- export
     #: Kappa below this value blocks an export by default (may be overridden
     #: deliberately — the export then carries the honest low kappa on its face).
-    min_export_kappa: float = 0.6
+    #: Bounds are kappa's actual range (ADR-0004 rule 8); the Phase 5 gate reads
+    #: ``AgreementReport.headline`` (the outcome-axis global kappa) against it.
+    min_export_kappa: float = Field(default=0.6, ge=-1.0, le=1.0)
 
 
 @lru_cache(maxsize=1)

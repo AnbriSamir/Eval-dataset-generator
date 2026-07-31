@@ -1,0 +1,86 @@
+!! SYNTHETIC — annotations_synthetic.jsonl + FakeJudge: machinery proof, NOT a
+!! measured kappa. The real number waits for data/labels/human_labels.jsonl.
+
+evalgen agreement — Cohen's kappa, judge vs human labels
+========================================================
+
+source      annotations_synthetic.jsonl   annotators: synthetic
+labels      sha256=2beaf42e8fd6a7f84f2ef569afca534857db57e07f34f1725255213ddac55e18
+taxonomy    tax-d9ca3b87b403
+judge       fake  model=fake-judge-v1  prompt=b963c9e7aa28
+bootstrap   B=10000  seed=1750  method=percentile
+gates       min_human_labels=30  min_class_support=5
+
+accounting  judged_in=49  human_in=42  matched=40  judge_only=9  human_only=2
+  judge_only   rec-17323e235e1e1812, rec-219bbb2b999ff9c2, rec-2ff675dd24fd7880,
+               rec-45340f7659c0b9e6, rec-480d0aa5a9457494, rec-5133258a231a3948,
+               rec-5342ee5eb3c46573, rec-c0d7b5986ffbf0da, rec-f9e1699074bcd6cb
+  human_only   not_in_run         rec-083298153276e970
+  human_only   fewshot_collision  rec-d1087e0ca3da3367  (judge saw its answer key — structurally excluded from kappa)
+
+[axis task_type]
+  kappa=0.52862 (n=40, po=0.65, pe=0.2575)  CI95=[0.314075, 0.723195] (B=10000, degenerate=0)  band=moderate
+  class                  human judge both   kappa
+  factual_query              1     2    1   insufficient_support (h+j=3 < min_class_support=5) — kappa suppressed, supports shown
+  procedural_request        13    14    9   kappa=0.497207  CI95=[0.189856, 0.762611] (B=10000, degenerate=0)  band=moderate
+  troubleshooting           12    12    8   kappa=0.52381  CI95=[0.202658, 0.787234] (B=10000, degenerate=0)  band=moderate
+  planning_or_reasoning      7     6    4   kappa=0.541284  CI95=[0.090909, 0.856631] (B=10000, degenerate=2)  band=moderate
+  other                      7     6    4   kappa=0.541284  CI95=[0.119446, 0.856631] (B=10000, degenerate=1)  band=moderate
+  confusion  rows=human, cols=judge  (1=factual_query 2=procedural_request 3=troubleshooting 4=planning_or_reasoning 5=other)
+          1    2    3    4    5
+     1    1    0    0    0    0
+     2    0    9    3    1    0
+     3    0    3    8    0    1
+     4    0    1    1    4    1
+     5    1    1    0    1    4
+  disagreements (14):
+    other -> factual_query   rec-f469c4171d1b2785  confidence=high  "synthetic fake-judge verdict (digest b44012b1) …"
+    other -> planning_or_reasoning   rec-ccf2c7490864b9db  confidence=medium  "synthetic fake-judge verdict (digest 26d604ab) …"
+    other -> procedural_request   rec-decabc0573dfb253  confidence=medium  "synthetic fake-judge verdict (digest 2ee9a088) …"
+    planning_or_reasoning -> other   rec-9b36bf3aece7578d  confidence=medium  "synthetic fake-judge verdict (digest db07ac13) …"
+    planning_or_reasoning -> procedural_request   rec-f8102818860818b2  confidence=high  "synthetic fake-judge verdict (digest 74b98a57) …"
+    planning_or_reasoning -> troubleshooting   rec-d45211a456b277dc  confidence=medium  "synthetic fake-judge verdict (digest 25073dc7) …"
+    procedural_request -> planning_or_reasoning   rec-cf1afb802995bbcd  confidence=high  "synthetic fake-judge verdict (digest 7b982713) …"
+    procedural_request -> troubleshooting   rec-996ce817c0eda631  confidence=medium  "synthetic fake-judge verdict (digest 70a891df) …"
+    procedural_request -> troubleshooting   rec-eb78f7082d5d0fef  confidence=high  "synthetic fake-judge verdict (digest a70c0097) …"
+    procedural_request -> troubleshooting   rec-f374b8ec672fb60a  confidence=high  "synthetic fake-judge verdict (digest 4d56c327) …"
+    troubleshooting -> other   rec-8ac9f496595e95b8  confidence=medium  "synthetic fake-judge verdict (digest 8b096700) …"
+    troubleshooting -> procedural_request   rec-189adcb306a8c328  confidence=high  "synthetic fake-judge verdict (digest 835618db) …"
+    troubleshooting -> procedural_request   rec-884a023cbcb4d44e  confidence=medium  "synthetic fake-judge verdict (digest 5676527a) …"
+    troubleshooting -> procedural_request   rec-c1a67f62f2e4d615  confidence=low  "synthetic fake-judge verdict (digest 014ed750) …"
+
+[axis outcome]
+  kappa=0.513109 (n=40, po=0.675, pe=0.3325)  CI95=[0.286421, 0.707241] (B=10000, degenerate=0)  band=moderate
+  class                  human judge both   kappa
+  correct                    9     7    5   kappa=0.533074  CI95=[0.140625, 0.827586] (B=10000, degenerate=0)  band=moderate
+  partially_correct         17    16   11   kappa=0.43299  CI95=[0.127907, 0.69697] (B=10000, degenerate=0)  band=moderate
+  incorrect                 13    15   11   kappa=0.671233  CI95=[0.390244, 0.890411] (B=10000, degenerate=0)  band=substantial
+  unjudgeable                1     2    0   insufficient_support (h+j=3 < min_class_support=5) — kappa suppressed, supports shown
+  confusion  rows=human, cols=judge  (1=correct 2=partially_correct 3=incorrect 4=unjudgeable)
+          1    2    3    4
+     1    5    3    0    1
+     2    2   11    3    1
+     3    0    2   11    0
+     4    0    0    1    0
+  disagreements (13):
+    correct -> partially_correct   rec-91f350d70ee60bd9  confidence=high  "synthetic fake-judge verdict (digest 67358455) …"
+    correct -> partially_correct   rec-94ccac8945e3bd1e  confidence=high  "synthetic fake-judge verdict (digest c1edf05b) …"
+    correct -> partially_correct   rec-decabc0573dfb253  confidence=medium  "synthetic fake-judge verdict (digest 2ee9a088) …"
+    correct -> unjudgeable   rec-9b36bf3aece7578d  confidence=medium  "synthetic fake-judge verdict (digest db07ac13) …"
+    incorrect -> partially_correct   rec-d75a5d9866b5e52b  confidence=low  "synthetic fake-judge verdict (digest 34a9bcb2) …"
+    incorrect -> partially_correct   rec-f8102818860818b2  confidence=high  "synthetic fake-judge verdict (digest 74b98a57) …"
+    partially_correct -> correct   rec-eb78f7082d5d0fef  confidence=high  "synthetic fake-judge verdict (digest a70c0097) …"
+    partially_correct -> correct   rec-f469c4171d1b2785  confidence=high  "synthetic fake-judge verdict (digest b44012b1) …"
+    partially_correct -> incorrect   rec-c84e05c141516b51  confidence=high  "synthetic fake-judge verdict (digest 731660b0) …"
+    partially_correct -> incorrect   rec-ccf2c7490864b9db  confidence=medium  "synthetic fake-judge verdict (digest 26d604ab) …"
+    partially_correct -> incorrect   rec-d0f74b81bb6d0529  confidence=low  "synthetic fake-judge verdict (digest 97527a13) …"
+    partially_correct -> unjudgeable   rec-d45211a456b277dc  confidence=medium  "synthetic fake-judge verdict (digest 25073dc7) …"
+    unjudgeable -> incorrect   rec-f374b8ec672fb60a  confidence=high  "synthetic fake-judge verdict (digest 4d56c327) …"
+
+headline (outcome axis, the export gate's number)
+  kappa=0.513109 (n=40, po=0.675, pe=0.3325)  CI95=[0.286421, 0.707241] (B=10000, degenerate=0)  band=moderate
+
+caveats
+  - Landis & Koch 1977 descriptive bands — a reading aid, not a test.
+  - small n (matched=40): percentile bootstrap CI95 can undercover; read kappa with its supports and interval.
+  - 3 degenerate resamples (p_e=1) across all intervals were excluded from percentiles and counted per interval.
