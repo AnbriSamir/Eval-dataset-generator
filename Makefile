@@ -22,8 +22,8 @@ typecheck:
 
 # ---- pipeline targets (wired up as the phases land) ------------------------
 
-demo:  ## Phase 2+: end-to-end pipeline on committed fixture logs (offline, deterministic)
-	@echo "make demo lands in Phase 2 (ingest + dedup + cluster on fixtures)." && exit 1
+demo:  ## End-to-end pipeline on committed fixture logs — offline, deterministic
+	python -m evalgen.demo
 
 agreement:  ## Phase 4+: Cohen's kappa + CI95 of judge vs human labels — the headline number
 	@echo "make agreement lands in Phase 4 (judge + human labels + kappa)." && exit 1

@@ -94,6 +94,17 @@ def derive_record_id(origin: RecordOrigin, input_text: str, output_text: str) ->
     return _ID_PREFIX + digest[:_ID_HEX_LEN]
 
 
+def record_sort_key(record: LogRecord) -> tuple[str, int, str]:
+    """THE canonical total order of Phase 2+ (ADR-0002 rule 1).
+
+    Used for: dedup survivor choice, near-dup representative choice, embedding-matrix
+    row order, report entry order. Content-derived (origin is part of the record) —
+    input list order is never load-bearing. Human-readable: "the earliest line of the
+    lexicographically-first source" wins.
+    """
+    return (record.origin.source_name, record.origin.line_no, record.record_id)
+
+
 class LogRecord(BaseModel):
     """One judgeable input/output exchange, normalized, redacted, frozen.
 
