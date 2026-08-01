@@ -1,6 +1,6 @@
 """Shared Pydantic models: LogRecord, dedup/clustering/sampling/calibration reports,
-the Embedder Protocol seam, the label taxonomy + Judge Protocol + labeling reports —
-plus (later phases) AgreementReport, ExportManifest.
+the Embedder Protocol seam, the label taxonomy + Judge Protocol + labeling reports,
+AgreementReport, and the export contracts (GoldenRecord, ExportManifest & co).
 
 Imported by everyone, imports no one (pinned by a test).
 """
@@ -43,6 +43,25 @@ from evalgen.contracts.dedup import (
     NearDupEntry,
 )
 from evalgen.contracts.embeddings import Embedder, EmbedderFingerprint
+from evalgen.contracts.export import (
+    EXPORT_FORMAT_VERSION,
+    BlockedCandidate,
+    BlockedCause,
+    ExportGateDecision,
+    ExportGateOverride,
+    ExportGateVerdict,
+    ExportManifest,
+    ExportOutcome,
+    ExportReport,
+    GateCheck,
+    GateCheckName,
+    GoldenRecord,
+    InputFileDigest,
+    InputFileRole,
+    RecordProvenance,
+    SettingsSnapshot,
+    VolatileProvenance,
+)
 from evalgen.contracts.labeling import (
     MAX_FAILURE_DETAIL_LEN,
     MAX_RATIONALE_LEN,
@@ -89,6 +108,7 @@ from evalgen.contracts.taxonomy import (
 __all__ = [
     "AGREEMENT_DECIMALS",
     "CANONICAL_SEP",
+    "EXPORT_FORMAT_VERSION",
     "MAX_FAILURE_DETAIL_LEN",
     "MAX_RATIONALE_LEN",
     "MAX_REJECT_DETAIL_LEN",
@@ -99,6 +119,8 @@ __all__ = [
     "AgreementAxis",
     "AgreementReport",
     "AxisAgreement",
+    "BlockedCandidate",
+    "BlockedCause",
     "BootstrapCI",
     "ClassAgreement",
     "Cluster",
@@ -109,9 +131,20 @@ __all__ = [
     "Embedder",
     "EmbedderFingerprint",
     "ExactDupEntry",
+    "ExportGateDecision",
+    "ExportGateOverride",
+    "ExportGateVerdict",
+    "ExportManifest",
+    "ExportOutcome",
+    "ExportReport",
     "FewShotExample",
+    "GateCheck",
+    "GateCheckName",
+    "GoldenRecord",
     "HumanLabel",
     "IngestReport",
+    "InputFileDigest",
+    "InputFileRole",
     "Judge",
     "JudgeConfidence",
     "JudgeFingerprint",
@@ -131,9 +164,11 @@ __all__ = [
     "NearDupEntry",
     "OutcomeLabel",
     "RecordOrigin",
+    "RecordProvenance",
     "RejectReason",
     "RejectSample",
     "SamplingReport",
+    "SettingsSnapshot",
     "SkipReason",
     "SourceKind",
     "StratumSample",
@@ -145,6 +180,7 @@ __all__ = [
     "ThresholdCandidate",
     "UnmatchedHuman",
     "UnmatchedHumanCause",
+    "VolatileProvenance",
     "binarize_confusion",
     "derive_cluster_id",
     "derive_few_shot_id",
