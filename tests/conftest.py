@@ -1,4 +1,5 @@
-"""Shared Phase 2/3 test plumbing: stub embedder, stub judges, a record factory.
+"""Shared Phase 2/3 test plumbing: stub embedder, stub judges, a record factory —
+plus (Phase 5) the session-cached export-demo artifacts.
 
 ``StubEmbedder`` returns pre-baked vectors keyed by EXACT text — near-dup boundary and
 chain fixtures are thereby exact (injected dots), not hash-approximate. ``StubJudge`` /
@@ -14,6 +15,7 @@ from collections.abc import Sequence
 from datetime import datetime
 
 import numpy as np
+import pytest
 
 from evalgen.contracts import (
     TAXONOMY_V1,
@@ -133,3 +135,19 @@ class RaisingJudge:
 
     def judge(self, input_text: str, output_text: str) -> Judgment:
         raise self._error
+
+
+# ------------------------------------------------- Phase 5: export-demo artifacts
+
+
+@pytest.fixture(scope="session")
+def demo_export_artifacts():
+    """The demo pipeline's (ExportOutcome, ExportManifest), built ONCE per session.
+
+    The export contract / serialize / demo batteries all need a fully coherent
+    manifest; rebuilding the pipeline (incl. the 10k-resample bootstrap) per test
+    would dominate the suite. Deterministic except the quarantined volatile section.
+    """
+    from evalgen.export_demo import build_export_artifacts
+
+    return build_export_artifacts()

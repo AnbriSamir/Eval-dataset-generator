@@ -16,7 +16,8 @@ production logs (TraceSpan JSONL from multi-agent-orchestrator · generic JSONL)
                                                                          [Phase 3 ✔]
   → validate/   human subset · Cohen's κ (global + per-class) · bootstrap CI95
                                                                          [Phase 4 ✔]
-  → export/     golden.jsonl · meta.json provenance · contamination guard
+  → export/     golden.jsonl · meta.json provenance · contamination guard · κ gate
+                                                                         [Phase 5 ✔]
 ```
 
 ## Contracts + ingest (Phase 1 — implemented, [ADR-0001](decisions/ADR-0001-logrecord-ingestion-redaction.md))
@@ -228,6 +229,72 @@ support-gate boundary; loader strictness battery; template renderers cannot rece
 judgments; validate imports only contracts (AST at every depth) and writes nothing (grep);
 agreement golden byte-equality + double-run identity + banner-first + no leak.
 
+## Export — golden.jsonl + meta.json + the gates (Phase 5 — implemented, [ADR-0005](decisions/ADR-0005-export-provenance-gates.md))
+
+```
+contracts/export.py    GoldenRecord — one golden.jsonl line; identity + texts self-verify
+                       (record_id AND content_hash recomputed from the line's own origin +
+                       texts; labels are the judge's opinion — fenced by golden_jsonl_sha256
+                       + /repro-audit, never by a per-line validator: the claim is SCOPED,
+                       Amendment (b)) · RecordProvenance (basename-only, source-derived
+                       timestamp or null — never wall clock) · BlockedCause/BlockedCandidate
+                       · GateCheckName (5 checks, declaration order pinned) · GateCheck ·
+                       ExportGateOverride (mandatory reason) · ExportGateVerdict ·
+                       ExportGateDecision (self-coherent: verdict must match its own checks,
+                       no-op or out-of-scope override refuses, straddle stated never
+                       asserted) · ExportReport (candidates_in == exported + blocked exact) ·
+                       ExportOutcome (canonical order re-verified from line provenance;
+                       export ∩ few-shot hashes = ∅ BY VALIDATOR — a contaminated export is
+                       unrepresentable) · InputFileDigest/Role · SettingsSnapshot (exact
+                       field mirror of Settings, pinned by test) · VolatileProvenance ·
+                       expected_gate_facts — the ONE gate derivation shared by gate.py and
+                       the manifest validator · ExportManifest (fingerprint chain, M-1
+                       digest copy duty structural, funnel across embedded reports, 11 knob
+                       echoes, full gate recomputation — a meta.json that lies about its own
+                       reports refuses to deserialize)
+export/gate.py         evaluate_export_gate — pure, five checks (headline_ready · status ok
+                       · instrument binding on full JudgeFingerprint equality · ground-truth
+                       bound · rounded κ >= min_export_kappa), override scope = check 5 ONLY
+                       enforced at the seam; CI95 straddle stated
+export/assemble.py     assemble_export — refuses a blocked decision BEFORE touching a
+                       candidate; resolves record + stratum (miss = typed caller bug);
+                       recomputes every candidate's canonical hash against the hashes the
+                       judge ACTUALLY saw; a collision blocks with the colliding CONTENT
+                       HASH named (never a few-shot id — the fingerprint's tuples are
+                       independently sorted, no pairing exists: Amendment (a))
+export/serialize.py    THE canonical recipes: compact sorted-keys ensure_ascii=False lines +
+                       two-section meta.json (deterministic / volatile) ·
+                       canonical_deterministic_bytes — the ONE /repro-audit byte path
+export/render.py       deterministic text report: gate table, loud override, contamination
+                       accounting, full digests (the text golden transitively pins the
+                       dataset and meta goldens); volatile values never rendered
+export/writer.py       the ONLY writing module: bytes, UTF-8, LF; per-file temp + atomic
+                       replace, PAIR staged before either rename (a staging failure leaves
+                       the previous pair intact; the two-rename residual window is stated —
+                       a torn pair is digest-detectable via golden_jsonl_sha256:
+                       Amendment (c))
+export_demo.py         make export → re-runs the fixture pipeline + agreement, gate
+                       GENUINELY BLOCKS (κ 0.513109 < 0.6), exports via the explicit
+                       loudly-rendered override; !! SYNTHETIC banner mandatory; writes
+                       data/out/ (gitignored); the SOLE clock/git/platform reads of the
+                       export path (_collect_volatile) — byte-pinned by three goldens
+                       (export_output.txt / export_dataset.txt / export_meta.txt)
+```
+
+Invariants the tests pin: forged identity/texts refuse (wrong id, wrong hash, edited text)
+while the label-flip boundary is pinned as SCOPED (flip validates per line; the file-level
+fence — flipped digest ≠ bound digest, regeneration reproduces the bound digest — fires on
+the red team's own payload); the red-team MAJOR-1 payload replayed on the real committed
+store (fingerprint tuples proven non-parallel; a ≥2-shot collision's detail names the true
+hash and never an id); gate checks each failing alone + boundary pair (0.6 passes) +
+straddle stated + override refusals; manifest forgeries refuse (funnel breaks at all 5
+seams, knob echoes ×10, κ shaved 1 ulp, CI dropped/widened, override laundering, M-1 digest
+mismatch); canonical recipes pinned to byte literals; writer pair-staging (simulated crash
+on the second stage leaves the previous pair byte-intact, no temp left); export AST/grep
+battery (imports only contracts, no clock/git/uuid/subprocess, writes confined to
+writer.py); export_demo triple-golden byte-equality + double-run identity + banner-first +
+leak scan; demo and agreement goldens byte-untouched this phase.
+
 ## Module boundaries (enforced from day 0)
 
 - `contracts` is imported by everyone and imports no one (pinned by a test).
@@ -249,7 +316,13 @@ agreement golden byte-equality + double-run identity + banner-first + no leak.
   the ONE module allowed to see both raters and it only measures: no write capability
   (grep-pinned), knobs injected by the composition layer, never imported from config.
   `agreement_demo` is composition: imports the pipeline, nothing imports it.
-- `export` depends on everything; nothing depends on `export`.
+- `export` depends on everything at the *data* level but imports only `contracts`
+  (+ stdlib) — AST-walked at every depth; every input arrives as an already-validated
+  frozen model. No clock/git/uuid/subprocess anywhere under `export/` (grep-pinned);
+  `writer.py` is the sole module with write operations (grep-pinned — the inverse of
+  `validate/`'s no-write rule). Nothing depends on `export` except composition:
+  `export_demo` imports the pipeline, nothing imports it, and it alone collects the
+  volatile values (clock, git SHA, platform) that land quarantined in meta.json.
 
 ## Decisions
 
@@ -301,3 +374,23 @@ protocol, clustering choice, taxonomy design, κ protocol, export format).
   `min_class_support` + the header gates line (M-2), the empty-input bootstrap
   refusal (N-1), and the Phase 5 rule that a headline with status ≠ `ok` blocks
   export exactly like `headline_ready = False`.
+- [ADR-0005 — Export: canonical golden.jsonl, the two-section meta.json provenance,
+  the contamination guard, and the κ gate with its deliberate
+  override](decisions/ADR-0005-export-provenance-gates.md) — Phase 5
+  (implemented; amended after the pre-commit red-team pass): self-verifying
+  `GoldenRecord` lines (judge labels
+  only — human labels never exported per-record; id + content-hash recomputed by
+  validator), canonical-JSON byte discipline in `record_sort_key` order, the
+  two-section `meta.json` (`deterministic` / `volatile`) embedding the ENTIRE
+  validated report chain + per-input SHA-256 + the copied `human_labels_sha256`
+  (M-1 duty made structural) + a funnel validator, the contamination guard as an
+  `ExportOutcome` validator (export ∩ few-shots = ∅ unrepresentable), and the
+  five-check κ gate (headline_ready / status ok / fingerprint binding /
+  ground-truth bound / κ ≥ `min_export_kappa`) with a stated CI95 straddle and a
+  typed, reasoned, non-silent override scoped to the value check only.
+  Amendments (2026-08-01): a blocked collision's evidence is the colliding
+  content hash, never a few-shot id (MAJOR-1 — the fingerprint's id/hash tuples
+  are independently sorted, no pairing exists); the per-line self-verification
+  claim scoped to identity + texts with label integrity owned by
+  `golden_jsonl_sha256` + `/repro-audit` (MINOR-1); pair-staged writes with the
+  residual two-rename window stated and digest-detectable (MINOR-2).

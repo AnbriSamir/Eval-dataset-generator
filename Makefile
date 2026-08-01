@@ -31,5 +31,8 @@ demo:  ## End-to-end pipeline on committed fixture logs — offline, determinist
 agreement:  ## Cohen's kappa + CI95 of judge vs human labels — the headline number
 	python -m evalgen.agreement_demo
 
-export:  ## Phase 5+: golden.jsonl + meta.json provenance from a run
-	@echo "make export lands in Phase 5 (export + contamination guard + provenance)." && exit 1
+# Phase 5: offline machinery proof — on the committed fixtures the gate genuinely
+# blocks (kappa 0.513109 < 0.6) and the demo exports via the explicit, loudly-rendered
+# override (ADR-0005 options §5). Writes to gitignored data/out/; golden-pinned.
+export:  ## Produce golden.jsonl + meta.json provenance in data/out/ — offline, deterministic
+	python -m evalgen.export_demo

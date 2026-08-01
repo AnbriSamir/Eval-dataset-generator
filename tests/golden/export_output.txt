@@ -1,0 +1,40 @@
+!! SYNTHETIC — annotations_synthetic.jsonl + FakeJudge + a DELIBERATE gate
+!! override: machinery proof, NOT a shippable dataset. The real export waits
+!! for data/labels/human_labels.jsonl and a kappa that clears the gate.
+
+evalgen export — golden set + provenance
+========================================
+
+run         judge=fake  model=fake-judge-v1  taxonomy=tax-d9ca3b87b403  prompt=b963c9e7aa28
+inputs      annotations_synthetic.jsonl   [human_labels]
+              sha256=2beaf42e8fd6a7f84f2ef569afca534857db57e07f34f1725255213ddac55e18
+            cluster_demo.jsonl            [source_log]
+              sha256=1eb4be029b41f25ac8e8d47be7403b03a98f18388d361bcb36c38f6c5073888d
+            generic_demo.jsonl            [source_log]
+              sha256=50e6f9896768989bdacf156051fee8c87391f472c3491bbfe3f8c00a638319f7
+            judge_v1.jsonl                [few_shot_store]
+              sha256=103877e90af3e5de9cc58e4af42d5f39b8b2b4aecc4827e6f6ad1b5262ffcc9d
+            tracespans_demo.jsonl         [source_log]
+              sha256=30a24e1fd51798a2b5431a52791dcb60304b48d4cc01f5b6eb2c204d2f2c7742
+
+gate        min_export_kappa=0.6
+  [pass] headline_ready      n_matched=40 >= min_human_labels=30
+  [pass] headline_status     ok
+  [pass] instrument_binding  agreement fingerprint == labeling fingerprint
+  [pass] ground_truth_bound  human_labels_sha256=2beaf42e8fd6…
+  [FAIL] kappa_threshold     kappa=0.513109 < min_export_kappa=0.6
+  verdict     blocked -> OVERRIDDEN (deliberate)
+  override    "synthetic machinery proof: FakeJudge verdicts are hash-derived noise, the gate
+               correctly blocks kappa=0.513109 < 0.6; overridden deliberately to exercise the full
+               export path offline (never a real-data precedent)"
+  headline    kappa=0.513109 (n=40)  CI95=[0.286421, 0.707241]  — carried on this export's face
+
+contamination  (export ∩ few-shots on canonical content_hash)
+  candidates=49  blocked_at_export=0
+  note: 1 collision already excluded at labeling (rec-d1087e0ca3da3367) — never a candidate
+
+export
+  candidates=49  exported=49  blocked=0
+  golden.jsonl   49 lines   sha256=c05cdcfa0ed2316767ddee9b0a0061a067b760cbecde67a89e824effec623343
+  meta.json    deterministic sha256=721c1675b51ee06aa90fb57a4b5d21b9a27dd460d4a0a141e81ede9079d96212
+  volatile       git_commit + generated_at + environment recorded in meta.json — not rendered

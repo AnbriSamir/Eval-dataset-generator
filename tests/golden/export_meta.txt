@@ -1,0 +1,1017 @@
+{
+  "agreement": {
+    "accounting": {
+      "human_in": 42,
+      "human_only": [
+        {
+          "cause": "not_in_run",
+          "record_id": "rec-083298153276e970"
+        },
+        {
+          "cause": "fewshot_collision",
+          "record_id": "rec-d1087e0ca3da3367"
+        }
+      ],
+      "judge_only_ids": [
+        "rec-17323e235e1e1812",
+        "rec-219bbb2b999ff9c2",
+        "rec-2ff675dd24fd7880",
+        "rec-45340f7659c0b9e6",
+        "rec-480d0aa5a9457494",
+        "rec-5133258a231a3948",
+        "rec-5342ee5eb3c46573",
+        "rec-c0d7b5986ffbf0da",
+        "rec-f9e1699074bcd6cb"
+      ],
+      "judged_in": 49,
+      "n_matched": 40
+    },
+    "annotators": [
+      "synthetic"
+    ],
+    "axes": [
+      {
+        "axis": "task_type",
+        "class_order": [
+          "factual_query",
+          "procedural_request",
+          "troubleshooting",
+          "planning_or_reasoning",
+          "other"
+        ],
+        "confusion": [
+          [
+            1,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            9,
+            3,
+            1,
+            0
+          ],
+          [
+            0,
+            3,
+            8,
+            0,
+            1
+          ],
+          [
+            0,
+            1,
+            1,
+            4,
+            1
+          ],
+          [
+            1,
+            1,
+            0,
+            1,
+            4
+          ]
+        ],
+        "disagreements": [
+          {
+            "human_label": "other",
+            "judge_confidence": "high",
+            "judge_label": "factual_query",
+            "judge_rationale": "synthetic fake-judge verdict (digest b44012b1) — offline demo/tests only",
+            "record_id": "rec-f469c4171d1b2785"
+          },
+          {
+            "human_label": "other",
+            "judge_confidence": "medium",
+            "judge_label": "planning_or_reasoning",
+            "judge_rationale": "synthetic fake-judge verdict (digest 26d604ab) — offline demo/tests only",
+            "record_id": "rec-ccf2c7490864b9db"
+          },
+          {
+            "human_label": "other",
+            "judge_confidence": "medium",
+            "judge_label": "procedural_request",
+            "judge_rationale": "synthetic fake-judge verdict (digest 2ee9a088) — offline demo/tests only",
+            "record_id": "rec-decabc0573dfb253"
+          },
+          {
+            "human_label": "planning_or_reasoning",
+            "judge_confidence": "medium",
+            "judge_label": "other",
+            "judge_rationale": "synthetic fake-judge verdict (digest db07ac13) — offline demo/tests only",
+            "record_id": "rec-9b36bf3aece7578d"
+          },
+          {
+            "human_label": "planning_or_reasoning",
+            "judge_confidence": "high",
+            "judge_label": "procedural_request",
+            "judge_rationale": "synthetic fake-judge verdict (digest 74b98a57) — offline demo/tests only",
+            "record_id": "rec-f8102818860818b2"
+          },
+          {
+            "human_label": "planning_or_reasoning",
+            "judge_confidence": "medium",
+            "judge_label": "troubleshooting",
+            "judge_rationale": "synthetic fake-judge verdict (digest 25073dc7) — offline demo/tests only",
+            "record_id": "rec-d45211a456b277dc"
+          },
+          {
+            "human_label": "procedural_request",
+            "judge_confidence": "high",
+            "judge_label": "planning_or_reasoning",
+            "judge_rationale": "synthetic fake-judge verdict (digest 7b982713) — offline demo/tests only",
+            "record_id": "rec-cf1afb802995bbcd"
+          },
+          {
+            "human_label": "procedural_request",
+            "judge_confidence": "medium",
+            "judge_label": "troubleshooting",
+            "judge_rationale": "synthetic fake-judge verdict (digest 70a891df) — offline demo/tests only",
+            "record_id": "rec-996ce817c0eda631"
+          },
+          {
+            "human_label": "procedural_request",
+            "judge_confidence": "high",
+            "judge_label": "troubleshooting",
+            "judge_rationale": "synthetic fake-judge verdict (digest a70c0097) — offline demo/tests only",
+            "record_id": "rec-eb78f7082d5d0fef"
+          },
+          {
+            "human_label": "procedural_request",
+            "judge_confidence": "high",
+            "judge_label": "troubleshooting",
+            "judge_rationale": "synthetic fake-judge verdict (digest 4d56c327) — offline demo/tests only",
+            "record_id": "rec-f374b8ec672fb60a"
+          },
+          {
+            "human_label": "troubleshooting",
+            "judge_confidence": "medium",
+            "judge_label": "other",
+            "judge_rationale": "synthetic fake-judge verdict (digest 8b096700) — offline demo/tests only",
+            "record_id": "rec-8ac9f496595e95b8"
+          },
+          {
+            "human_label": "troubleshooting",
+            "judge_confidence": "high",
+            "judge_label": "procedural_request",
+            "judge_rationale": "synthetic fake-judge verdict (digest 835618db) — offline demo/tests only",
+            "record_id": "rec-189adcb306a8c328"
+          },
+          {
+            "human_label": "troubleshooting",
+            "judge_confidence": "medium",
+            "judge_label": "procedural_request",
+            "judge_rationale": "synthetic fake-judge verdict (digest 5676527a) — offline demo/tests only",
+            "record_id": "rec-884a023cbcb4d44e"
+          },
+          {
+            "human_label": "troubleshooting",
+            "judge_confidence": "low",
+            "judge_label": "procedural_request",
+            "judge_rationale": "synthetic fake-judge verdict (digest 014ed750) — offline demo/tests only",
+            "record_id": "rec-c1a67f62f2e4d615"
+          }
+        ],
+        "global_kappa": {
+          "ci95": {
+            "b_degenerate": 0,
+            "b_total": 10000,
+            "lower": 0.314075,
+            "method": "percentile",
+            "upper": 0.723195
+          },
+          "kappa": 0.52862,
+          "pe": 0.2575,
+          "po": 0.65,
+          "status": "ok"
+        },
+        "min_class_support": 5,
+        "per_class": [
+          {
+            "both": 1,
+            "class_name": "factual_query",
+            "human_support": 1,
+            "judge_support": 2,
+            "value": {
+              "ci95": null,
+              "kappa": null,
+              "pe": null,
+              "po": null,
+              "status": "insufficient_support"
+            }
+          },
+          {
+            "both": 9,
+            "class_name": "procedural_request",
+            "human_support": 13,
+            "judge_support": 14,
+            "value": {
+              "ci95": {
+                "b_degenerate": 0,
+                "b_total": 10000,
+                "lower": 0.189856,
+                "method": "percentile",
+                "upper": 0.762611
+              },
+              "kappa": 0.497207,
+              "pe": 0.5525,
+              "po": 0.775,
+              "status": "ok"
+            }
+          },
+          {
+            "both": 8,
+            "class_name": "troubleshooting",
+            "human_support": 12,
+            "judge_support": 12,
+            "value": {
+              "ci95": {
+                "b_degenerate": 0,
+                "b_total": 10000,
+                "lower": 0.202658,
+                "method": "percentile",
+                "upper": 0.787234
+              },
+              "kappa": 0.52381,
+              "pe": 0.58,
+              "po": 0.8,
+              "status": "ok"
+            }
+          },
+          {
+            "both": 4,
+            "class_name": "planning_or_reasoning",
+            "human_support": 7,
+            "judge_support": 6,
+            "value": {
+              "ci95": {
+                "b_degenerate": 2,
+                "b_total": 10000,
+                "lower": 0.090909,
+                "method": "percentile",
+                "upper": 0.856631
+              },
+              "kappa": 0.541284,
+              "pe": 0.7275,
+              "po": 0.875,
+              "status": "ok"
+            }
+          },
+          {
+            "both": 4,
+            "class_name": "other",
+            "human_support": 7,
+            "judge_support": 6,
+            "value": {
+              "ci95": {
+                "b_degenerate": 1,
+                "b_total": 10000,
+                "lower": 0.119446,
+                "method": "percentile",
+                "upper": 0.856631
+              },
+              "kappa": 0.541284,
+              "pe": 0.7275,
+              "po": 0.875,
+              "status": "ok"
+            }
+          }
+        ]
+      },
+      {
+        "axis": "outcome",
+        "class_order": [
+          "correct",
+          "partially_correct",
+          "incorrect",
+          "unjudgeable"
+        ],
+        "confusion": [
+          [
+            5,
+            3,
+            0,
+            1
+          ],
+          [
+            2,
+            11,
+            3,
+            1
+          ],
+          [
+            0,
+            2,
+            11,
+            0
+          ],
+          [
+            0,
+            0,
+            1,
+            0
+          ]
+        ],
+        "disagreements": [
+          {
+            "human_label": "correct",
+            "judge_confidence": "high",
+            "judge_label": "partially_correct",
+            "judge_rationale": "synthetic fake-judge verdict (digest 67358455) — offline demo/tests only",
+            "record_id": "rec-91f350d70ee60bd9"
+          },
+          {
+            "human_label": "correct",
+            "judge_confidence": "high",
+            "judge_label": "partially_correct",
+            "judge_rationale": "synthetic fake-judge verdict (digest c1edf05b) — offline demo/tests only",
+            "record_id": "rec-94ccac8945e3bd1e"
+          },
+          {
+            "human_label": "correct",
+            "judge_confidence": "medium",
+            "judge_label": "partially_correct",
+            "judge_rationale": "synthetic fake-judge verdict (digest 2ee9a088) — offline demo/tests only",
+            "record_id": "rec-decabc0573dfb253"
+          },
+          {
+            "human_label": "correct",
+            "judge_confidence": "medium",
+            "judge_label": "unjudgeable",
+            "judge_rationale": "synthetic fake-judge verdict (digest db07ac13) — offline demo/tests only",
+            "record_id": "rec-9b36bf3aece7578d"
+          },
+          {
+            "human_label": "incorrect",
+            "judge_confidence": "low",
+            "judge_label": "partially_correct",
+            "judge_rationale": "synthetic fake-judge verdict (digest 34a9bcb2) — offline demo/tests only",
+            "record_id": "rec-d75a5d9866b5e52b"
+          },
+          {
+            "human_label": "incorrect",
+            "judge_confidence": "high",
+            "judge_label": "partially_correct",
+            "judge_rationale": "synthetic fake-judge verdict (digest 74b98a57) — offline demo/tests only",
+            "record_id": "rec-f8102818860818b2"
+          },
+          {
+            "human_label": "partially_correct",
+            "judge_confidence": "high",
+            "judge_label": "correct",
+            "judge_rationale": "synthetic fake-judge verdict (digest a70c0097) — offline demo/tests only",
+            "record_id": "rec-eb78f7082d5d0fef"
+          },
+          {
+            "human_label": "partially_correct",
+            "judge_confidence": "high",
+            "judge_label": "correct",
+            "judge_rationale": "synthetic fake-judge verdict (digest b44012b1) — offline demo/tests only",
+            "record_id": "rec-f469c4171d1b2785"
+          },
+          {
+            "human_label": "partially_correct",
+            "judge_confidence": "high",
+            "judge_label": "incorrect",
+            "judge_rationale": "synthetic fake-judge verdict (digest 731660b0) — offline demo/tests only",
+            "record_id": "rec-c84e05c141516b51"
+          },
+          {
+            "human_label": "partially_correct",
+            "judge_confidence": "medium",
+            "judge_label": "incorrect",
+            "judge_rationale": "synthetic fake-judge verdict (digest 26d604ab) — offline demo/tests only",
+            "record_id": "rec-ccf2c7490864b9db"
+          },
+          {
+            "human_label": "partially_correct",
+            "judge_confidence": "low",
+            "judge_label": "incorrect",
+            "judge_rationale": "synthetic fake-judge verdict (digest 97527a13) — offline demo/tests only",
+            "record_id": "rec-d0f74b81bb6d0529"
+          },
+          {
+            "human_label": "partially_correct",
+            "judge_confidence": "medium",
+            "judge_label": "unjudgeable",
+            "judge_rationale": "synthetic fake-judge verdict (digest 25073dc7) — offline demo/tests only",
+            "record_id": "rec-d45211a456b277dc"
+          },
+          {
+            "human_label": "unjudgeable",
+            "judge_confidence": "high",
+            "judge_label": "incorrect",
+            "judge_rationale": "synthetic fake-judge verdict (digest 4d56c327) — offline demo/tests only",
+            "record_id": "rec-f374b8ec672fb60a"
+          }
+        ],
+        "global_kappa": {
+          "ci95": {
+            "b_degenerate": 0,
+            "b_total": 10000,
+            "lower": 0.286421,
+            "method": "percentile",
+            "upper": 0.707241
+          },
+          "kappa": 0.513109,
+          "pe": 0.3325,
+          "po": 0.675,
+          "status": "ok"
+        },
+        "min_class_support": 5,
+        "per_class": [
+          {
+            "both": 5,
+            "class_name": "correct",
+            "human_support": 9,
+            "judge_support": 7,
+            "value": {
+              "ci95": {
+                "b_degenerate": 0,
+                "b_total": 10000,
+                "lower": 0.140625,
+                "method": "percentile",
+                "upper": 0.827586
+              },
+              "kappa": 0.533074,
+              "pe": 0.67875,
+              "po": 0.85,
+              "status": "ok"
+            }
+          },
+          {
+            "both": 11,
+            "class_name": "partially_correct",
+            "human_support": 17,
+            "judge_support": 16,
+            "value": {
+              "ci95": {
+                "b_degenerate": 0,
+                "b_total": 10000,
+                "lower": 0.127907,
+                "method": "percentile",
+                "upper": 0.69697
+              },
+              "kappa": 0.43299,
+              "pe": 0.515,
+              "po": 0.725,
+              "status": "ok"
+            }
+          },
+          {
+            "both": 11,
+            "class_name": "incorrect",
+            "human_support": 13,
+            "judge_support": 15,
+            "value": {
+              "ci95": {
+                "b_degenerate": 0,
+                "b_total": 10000,
+                "lower": 0.390244,
+                "method": "percentile",
+                "upper": 0.890411
+              },
+              "kappa": 0.671233,
+              "pe": 0.54375,
+              "po": 0.85,
+              "status": "ok"
+            }
+          },
+          {
+            "both": 0,
+            "class_name": "unjudgeable",
+            "human_support": 1,
+            "judge_support": 2,
+            "value": {
+              "ci95": null,
+              "kappa": null,
+              "pe": null,
+              "po": null,
+              "status": "insufficient_support"
+            }
+          }
+        ]
+      }
+    ],
+    "bootstrap_resamples": 10000,
+    "headline_ready": true,
+    "human_labels_sha256": "2beaf42e8fd6a7f84f2ef569afca534857db57e07f34f1725255213ddac55e18",
+    "human_labels_source": "annotations_synthetic.jsonl",
+    "judge": {
+      "few_shot_content_hashes": [
+        "35b14b1def8b64c8ee2cf7f03b28d9a571474185a0d8dbb8ac922b78a63ce630",
+        "367ac9d7c3cd6a4c48960d287dcaa2b1293f78ca84d5cf8e902f503afc10cbd4",
+        "82f37399468911bf52a63eeb7c48953e10bcc19304687018c3f74a9e50ccd959",
+        "d45ee6cb9d718facd96ef6b37535b9af6533481d0153353f4bf86c331460e82b",
+        "e91a668e80a0de7a8c832f55c808a7b5951eaa8c6838a51126ae9f648bae30ae"
+      ],
+      "few_shot_ids": [
+        "fs-46dacbf301812eec",
+        "fs-49a68d3a4a04e748",
+        "fs-49bd000a07756f47",
+        "fs-966cc1d5fa0d0d00",
+        "fs-976a1408ba367d28"
+      ],
+      "judge_name": "fake",
+      "model_id": "fake-judge-v1",
+      "prompt_sha256": "b963c9e7aa28840b0252ff6378e96ff5673e5c7c0b83c1c550a3c2a60eeb91e4",
+      "taxonomy_id": "tax-d9ca3b87b403"
+    },
+    "min_class_support": 5,
+    "min_human_labels": 30,
+    "seed": 1750,
+    "taxonomy_id": "tax-d9ca3b87b403"
+  },
+  "clustering": {
+    "clusters": [
+      {
+        "cluster_id": "cl-20714a1ef2e1",
+        "record_ids": [
+          "rec-091fd142459095f7",
+          "rec-219bbb2b999ff9c2",
+          "rec-45340f7659c0b9e6",
+          "rec-4642c539b7b29ae3",
+          "rec-480d0aa5a9457494",
+          "rec-5d247122fa704582",
+          "rec-73481257eb076a75",
+          "rec-996ce817c0eda631",
+          "rec-c1a67f62f2e4d615",
+          "rec-c84e05c141516b51",
+          "rec-cf1afb802995bbcd",
+          "rec-d0f74b81bb6d0529",
+          "rec-e8b3437ddf218299"
+        ]
+      },
+      {
+        "cluster_id": "cl-83b5c3674ec3",
+        "record_ids": [
+          "rec-083298153276e970",
+          "rec-1cbd5ae757464011",
+          "rec-2ff675dd24fd7880",
+          "rec-3b4502a745a5d5a1",
+          "rec-7e11ce59b29a4580",
+          "rec-8ac9f496595e95b8",
+          "rec-91f350d70ee60bd9",
+          "rec-c67c4896e7d79b42",
+          "rec-eb78f7082d5d0fef",
+          "rec-f8102818860818b2",
+          "rec-f9e1699074bcd6cb"
+        ]
+      },
+      {
+        "cluster_id": "cl-2c464a809396",
+        "record_ids": [
+          "rec-01f7067c8a507bbe",
+          "rec-358de05acfe294ea",
+          "rec-3690f9a993e5dc9c",
+          "rec-479227ce7e9b3395",
+          "rec-4b155d4a5fa8b03c",
+          "rec-5133258a231a3948",
+          "rec-531a5cc3fa66ec4b",
+          "rec-613f7d447f64987c",
+          "rec-c9120b19b3b978e6",
+          "rec-d75a5d9866b5e52b"
+        ]
+      },
+      {
+        "cluster_id": "cl-824fa8ffc0f8",
+        "record_ids": [
+          "rec-04b2539057892521",
+          "rec-5342ee5eb3c46573",
+          "rec-58ccbba47fe47168",
+          "rec-94ccac8945e3bd1e",
+          "rec-c0d7b5986ffbf0da",
+          "rec-ccf2c7490864b9db",
+          "rec-d1087e0ca3da3367",
+          "rec-f469c4171d1b2785"
+        ]
+      }
+    ],
+    "embedder": {
+      "analyzer": "char_wb",
+      "dim": 512,
+      "name": "hashing",
+      "ngram_max": 5,
+      "ngram_min": 3
+    },
+    "metric": "euclidean_l2norm",
+    "min_cluster_size": 5,
+    "noise_record_ids": [
+      "rec-17323e235e1e1812",
+      "rec-189adcb306a8c328",
+      "rec-34700e24d413eb15",
+      "rec-36cd38ec6dbe2d3e",
+      "rec-7bd41b3a5c30240a",
+      "rec-802038cabe9059c3",
+      "rec-884a023cbcb4d44e",
+      "rec-9b36bf3aece7578d",
+      "rec-a1e792344b054feb",
+      "rec-d45211a456b277dc",
+      "rec-decabc0573dfb253",
+      "rec-f374b8ec672fb60a"
+    ],
+    "records_in": 54
+  },
+  "dedup": {
+    "embedder": {
+      "analyzer": "char_wb",
+      "dim": 512,
+      "name": "hashing",
+      "ngram_max": 5,
+      "ngram_min": 3
+    },
+    "exact_dropped": 3,
+    "exact_entries": [
+      {
+        "content_hash": "c229c3a815b9b406bb326c1bede2528d74f7eef867a142dd11fea582f09910fa",
+        "dropped_record_id": "rec-1eedc0a1e303f024",
+        "kept_record_id": "rec-802038cabe9059c3"
+      },
+      {
+        "content_hash": "80c3da21d40e5622e50270a901b2eafdc21bc624b01d5f9d1930216544dcc0a8",
+        "dropped_record_id": "rec-66655921ccee08fb",
+        "kept_record_id": "rec-c84e05c141516b51"
+      },
+      {
+        "content_hash": "d1255d0d7279b8a2dd23c105b233370cfe83309474d1c9d63b961907489118c4",
+        "dropped_record_id": "rec-b2d2a2c44ab02f3b",
+        "kept_record_id": "rec-7bd41b3a5c30240a"
+      }
+    ],
+    "id_collapsed": 0,
+    "near_dropped": 5,
+    "near_dropped_via_chain": 1,
+    "near_entries": [
+      {
+        "dropped_record_id": "rec-0d97eeeeeea9f26b",
+        "kept_record_id": "rec-531a5cc3fa66ec4b",
+        "similarity": 0.980491,
+        "via_chain": false
+      },
+      {
+        "dropped_record_id": "rec-5f08b6a7c5971f52",
+        "kept_record_id": "rec-083298153276e970",
+        "similarity": 0.969524,
+        "via_chain": false
+      },
+      {
+        "dropped_record_id": "rec-62c19f4d20783f5b",
+        "kept_record_id": "rec-d1087e0ca3da3367",
+        "similarity": 1.0,
+        "via_chain": false
+      },
+      {
+        "dropped_record_id": "rec-962f74d7d43e1a1c",
+        "kept_record_id": "rec-c84e05c141516b51",
+        "similarity": 0.983013,
+        "via_chain": false
+      },
+      {
+        "dropped_record_id": "rec-d829e64df1f0efad",
+        "kept_record_id": "rec-083298153276e970",
+        "similarity": 0.910607,
+        "via_chain": true
+      }
+    ],
+    "records_in": 62,
+    "records_out": 54,
+    "threshold": 0.92
+  },
+  "embedder": {
+    "analyzer": "char_wb",
+    "dim": 512,
+    "name": "hashing",
+    "ngram_max": 5,
+    "ngram_min": 3
+  },
+  "export": {
+    "blocked": [],
+    "candidates_in": 49,
+    "exported": 49,
+    "gate": {
+      "checks": [
+        {
+          "detail": "n_matched=40 >= min_human_labels=30",
+          "name": "headline_ready",
+          "passed": true
+        },
+        {
+          "detail": "ok",
+          "name": "headline_status",
+          "passed": true
+        },
+        {
+          "detail": "agreement fingerprint == labeling fingerprint",
+          "name": "instrument_binding",
+          "passed": true
+        },
+        {
+          "detail": "human_labels_sha256=2beaf42e8fd6…",
+          "name": "ground_truth_bound",
+          "passed": true
+        },
+        {
+          "detail": "kappa=0.513109 < min_export_kappa=0.6",
+          "name": "kappa_threshold",
+          "passed": false
+        }
+      ],
+      "ci_lower": 0.286421,
+      "ci_straddles_threshold": false,
+      "ci_upper": 0.707241,
+      "kappa": 0.513109,
+      "min_export_kappa": 0.6,
+      "override": {
+        "reason": "synthetic machinery proof: FakeJudge verdicts are hash-derived noise, the gate correctly blocks kappa=0.513109 < 0.6; overridden deliberately to exercise the full export path offline (never a real-data precedent)"
+      },
+      "verdict": "passed_with_override"
+    },
+    "judge": {
+      "few_shot_content_hashes": [
+        "35b14b1def8b64c8ee2cf7f03b28d9a571474185a0d8dbb8ac922b78a63ce630",
+        "367ac9d7c3cd6a4c48960d287dcaa2b1293f78ca84d5cf8e902f503afc10cbd4",
+        "82f37399468911bf52a63eeb7c48953e10bcc19304687018c3f74a9e50ccd959",
+        "d45ee6cb9d718facd96ef6b37535b9af6533481d0153353f4bf86c331460e82b",
+        "e91a668e80a0de7a8c832f55c808a7b5951eaa8c6838a51126ae9f648bae30ae"
+      ],
+      "few_shot_ids": [
+        "fs-46dacbf301812eec",
+        "fs-49a68d3a4a04e748",
+        "fs-49bd000a07756f47",
+        "fs-966cc1d5fa0d0d00",
+        "fs-976a1408ba367d28"
+      ],
+      "judge_name": "fake",
+      "model_id": "fake-judge-v1",
+      "prompt_sha256": "b963c9e7aa28840b0252ff6378e96ff5673e5c7c0b83c1c550a3c2a60eeb91e4",
+      "taxonomy_id": "tax-d9ca3b87b403"
+    }
+  },
+  "export_format_version": 1,
+  "golden_jsonl_sha256": "c05cdcfa0ed2316767ddee9b0a0061a067b760cbecde67a89e824effec623343",
+  "ingest": [
+    {
+      "lines_read": 8,
+      "lines_rejected": 3,
+      "lines_skipped": 2,
+      "records_normalized": 3,
+      "reject_samples": [
+        {
+          "detail": "mapped key(s) absent: a",
+          "line_no": 4,
+          "reason": "missing_field"
+        },
+        {
+          "detail": "Expecting value: line 1 column 1 (char 0)",
+          "line_no": 6,
+          "reason": "invalid_json"
+        },
+        {
+          "detail": "expected a JSON object, got int",
+          "line_no": 7,
+          "reason": "schema_mismatch"
+        }
+      ],
+      "rejects_by_reason": {
+        "invalid_json": 1,
+        "missing_field": 1,
+        "schema_mismatch": 1
+      },
+      "skips_by_reason": {
+        "blank_line": 1,
+        "no_exchange": 1
+      },
+      "source_kind": "generic_jsonl",
+      "source_name": "generic_demo.jsonl",
+      "timestamps_unparsed": 1
+    },
+    {
+      "lines_read": 53,
+      "lines_rejected": 0,
+      "lines_skipped": 0,
+      "records_normalized": 53,
+      "reject_samples": [],
+      "rejects_by_reason": {},
+      "skips_by_reason": {},
+      "source_kind": "generic_jsonl",
+      "source_name": "cluster_demo.jsonl",
+      "timestamps_unparsed": 0
+    },
+    {
+      "lines_read": 16,
+      "lines_rejected": 4,
+      "lines_skipped": 6,
+      "records_normalized": 6,
+      "reject_samples": [
+        {
+          "detail": "Expecting value: line 1 column 39 (char 38)",
+          "line_no": 12,
+          "reason": "invalid_json"
+        },
+        {
+          "detail": "expected a JSON object, got list",
+          "line_no": 13,
+          "reason": "schema_mismatch"
+        },
+        {
+          "detail": "1 validation error for TraceSpanMirror\nstatus\n  Input should be 'ok', 'error' or 'blocked' [type=enum, input_value='panicked', input_type=str]\n    For further information visit https://errors.pydantic",
+          "line_no": 14,
+          "reason": "schema_mismatch"
+        },
+        {
+          "detail": "'utf-8' codec can't decode byte 0xff in position 18: invalid start byte",
+          "line_no": 16,
+          "reason": "invalid_encoding"
+        }
+      ],
+      "rejects_by_reason": {
+        "invalid_encoding": 1,
+        "invalid_json": 1,
+        "schema_mismatch": 2
+      },
+      "skips_by_reason": {
+        "action_not_candidate": 2,
+        "blank_line": 1,
+        "no_exchange": 1,
+        "status_not_ok": 2
+      },
+      "source_kind": "tracespan",
+      "source_name": "tracespans_demo.jsonl",
+      "timestamps_unparsed": 0
+    }
+  ],
+  "input_files": [
+    {
+      "name": "judge_v1.jsonl",
+      "role": "few_shot_store",
+      "sha256": "103877e90af3e5de9cc58e4af42d5f39b8b2b4aecc4827e6f6ad1b5262ffcc9d"
+    },
+    {
+      "name": "annotations_synthetic.jsonl",
+      "role": "human_labels",
+      "sha256": "2beaf42e8fd6a7f84f2ef569afca534857db57e07f34f1725255213ddac55e18"
+    },
+    {
+      "name": "cluster_demo.jsonl",
+      "role": "source_log",
+      "sha256": "1eb4be029b41f25ac8e8d47be7403b03a98f18388d361bcb36c38f6c5073888d"
+    },
+    {
+      "name": "generic_demo.jsonl",
+      "role": "source_log",
+      "sha256": "50e6f9896768989bdacf156051fee8c87391f472c3491bbfe3f8c00a638319f7"
+    },
+    {
+      "name": "tracespans_demo.jsonl",
+      "role": "source_log",
+      "sha256": "30a24e1fd51798a2b5431a52791dcb60304b48d4cc01f5b6eb2c204d2f2c7742"
+    }
+  ],
+  "labeling": {
+    "failed": 0,
+    "failure_entries": [],
+    "failures_by_reason": {},
+    "fewshot_collision_record_ids": [
+      "rec-d1087e0ca3da3367"
+    ],
+    "judge": {
+      "few_shot_content_hashes": [
+        "35b14b1def8b64c8ee2cf7f03b28d9a571474185a0d8dbb8ac922b78a63ce630",
+        "367ac9d7c3cd6a4c48960d287dcaa2b1293f78ca84d5cf8e902f503afc10cbd4",
+        "82f37399468911bf52a63eeb7c48953e10bcc19304687018c3f74a9e50ccd959",
+        "d45ee6cb9d718facd96ef6b37535b9af6533481d0153353f4bf86c331460e82b",
+        "e91a668e80a0de7a8c832f55c808a7b5951eaa8c6838a51126ae9f648bae30ae"
+      ],
+      "few_shot_ids": [
+        "fs-46dacbf301812eec",
+        "fs-49a68d3a4a04e748",
+        "fs-49bd000a07756f47",
+        "fs-966cc1d5fa0d0d00",
+        "fs-976a1408ba367d28"
+      ],
+      "judge_name": "fake",
+      "model_id": "fake-judge-v1",
+      "prompt_sha256": "b963c9e7aa28840b0252ff6378e96ff5673e5c7c0b83c1c550a3c2a60eeb91e4",
+      "taxonomy_id": "tax-d9ca3b87b403"
+    },
+    "labeled": 49,
+    "max_labels": 500,
+    "records_in": 50,
+    "refusal_entries": [],
+    "refused": 0,
+    "skipped_budget": 0,
+    "skipped_budget_record_ids": [],
+    "skipped_fewshot_collision": 1
+  },
+  "sampling": {
+    "records_in": 54,
+    "sample_size_requested": 50,
+    "seed": 1750,
+    "strata": [
+      {
+        "cluster_id": "cl-20714a1ef2e1",
+        "quota": 12,
+        "sampled_record_ids": [
+          "rec-091fd142459095f7",
+          "rec-219bbb2b999ff9c2",
+          "rec-45340f7659c0b9e6",
+          "rec-4642c539b7b29ae3",
+          "rec-480d0aa5a9457494",
+          "rec-5d247122fa704582",
+          "rec-996ce817c0eda631",
+          "rec-c1a67f62f2e4d615",
+          "rec-c84e05c141516b51",
+          "rec-cf1afb802995bbcd",
+          "rec-d0f74b81bb6d0529",
+          "rec-e8b3437ddf218299"
+        ],
+        "stratum_size": 13
+      },
+      {
+        "cluster_id": "noise",
+        "quota": 11,
+        "sampled_record_ids": [
+          "rec-17323e235e1e1812",
+          "rec-189adcb306a8c328",
+          "rec-34700e24d413eb15",
+          "rec-7bd41b3a5c30240a",
+          "rec-802038cabe9059c3",
+          "rec-884a023cbcb4d44e",
+          "rec-9b36bf3aece7578d",
+          "rec-a1e792344b054feb",
+          "rec-d45211a456b277dc",
+          "rec-decabc0573dfb253",
+          "rec-f374b8ec672fb60a"
+        ],
+        "stratum_size": 12
+      },
+      {
+        "cluster_id": "cl-83b5c3674ec3",
+        "quota": 10,
+        "sampled_record_ids": [
+          "rec-1cbd5ae757464011",
+          "rec-2ff675dd24fd7880",
+          "rec-3b4502a745a5d5a1",
+          "rec-7e11ce59b29a4580",
+          "rec-8ac9f496595e95b8",
+          "rec-91f350d70ee60bd9",
+          "rec-c67c4896e7d79b42",
+          "rec-eb78f7082d5d0fef",
+          "rec-f8102818860818b2",
+          "rec-f9e1699074bcd6cb"
+        ],
+        "stratum_size": 11
+      },
+      {
+        "cluster_id": "cl-2c464a809396",
+        "quota": 9,
+        "sampled_record_ids": [
+          "rec-01f7067c8a507bbe",
+          "rec-358de05acfe294ea",
+          "rec-3690f9a993e5dc9c",
+          "rec-479227ce7e9b3395",
+          "rec-4b155d4a5fa8b03c",
+          "rec-5133258a231a3948",
+          "rec-531a5cc3fa66ec4b",
+          "rec-c9120b19b3b978e6",
+          "rec-d75a5d9866b5e52b"
+        ],
+        "stratum_size": 10
+      },
+      {
+        "cluster_id": "cl-824fa8ffc0f8",
+        "quota": 8,
+        "sampled_record_ids": [
+          "rec-04b2539057892521",
+          "rec-5342ee5eb3c46573",
+          "rec-58ccbba47fe47168",
+          "rec-94ccac8945e3bd1e",
+          "rec-c0d7b5986ffbf0da",
+          "rec-ccf2c7490864b9db",
+          "rec-d1087e0ca3da3367",
+          "rec-f469c4171d1b2785"
+        ],
+        "stratum_size": 8
+      }
+    ],
+    "total_sampled": 50
+  },
+  "settings": {
+    "bootstrap_resamples": 10000,
+    "hash_embedding_dim": 512,
+    "judge_model": "claude-opus-4-8",
+    "judge_model_fast": "claude-sonnet-4-6",
+    "max_labels_per_run": 500,
+    "min_class_support": 5,
+    "min_cluster_size": 5,
+    "min_export_kappa": 0.6,
+    "min_human_labels": 30,
+    "near_dup_threshold": 0.92,
+    "sample_size": 50,
+    "seed": 1750
+  }
+}

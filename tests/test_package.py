@@ -218,3 +218,71 @@ def test_agreement_axis_mirrors_taxonomy() -> None:
     assert tuple(member.value for member in AgreementAxis) == tuple(
         axis.name for axis in TAXONOMY_V1.axes
     )
+
+
+# --------------------------------------------------- Phase 5: export/ boundaries
+# ADR-0005 rule 5 — export imports ONLY contracts (+ a stdlib allowlist), reads no
+# clock/git/env (volatile values are INJECTED by the composition layer), and writes
+# through exactly one module.
+
+_EXPORT_STDLIB_ALLOWLIST = {
+    "__future__",
+    "collections",
+    "collections.abc",
+    "enum",
+    "hashlib",
+    "json",
+    "pathlib",
+    "typing",
+}
+
+
+def test_export_imports_only_contracts() -> None:
+    # AST-walked at every depth (the label/validate battery pattern): every import
+    # under export/ is contracts, an export-internal module, or allowlisted stdlib.
+    for path in sorted((SRC / "export").glob("*.py")):
+        for module in _imported_modules_any_depth(path):
+            allowed = (
+                module.startswith("evalgen.contracts")
+                or module.startswith("evalgen.export")
+                or module.split(".")[0] in _EXPORT_STDLIB_ALLOWLIST
+            )
+            assert allowed, f"{path.name}: {module}"
+
+
+def test_export_never_reads_clock_git_or_environment() -> None:
+    # Volatility is quarantined in the composition layer (export_demo) — a pure
+    # export function that could read a clock would break byte-identical exports.
+    for path in sorted((SRC / "export").glob("*.py")):
+        text = path.read_text(encoding="utf-8")
+        for token in ("datetime.now", "time.", "uuid", "subprocess", "os.environ"):
+            assert token not in text, f"{path.name} contains {token!r}"
+
+
+def test_export_writes_only_in_the_writer_module() -> None:
+    # The inverse of validate/'s no-write rule: exactly ONE module may write.
+    for path in sorted((SRC / "export").glob("*.py")):
+        if path.name == "writer.py":
+            continue
+        text = path.read_text(encoding="utf-8")
+        for token in ("open(", "write_text", "write_bytes", "mkdir", ".write("):
+            assert token not in text, f"{path.name} contains {token!r}"
+
+
+def test_export_and_export_demo_never_import_anthropic() -> None:
+    # Phase 5 is 100 % offline: the SDK must not leak into the export path.
+    paths = sorted((SRC / "export").glob("*.py")) + [SRC / "export_demo.py"]
+    for path in paths:
+        for module in _imported_modules_any_depth(path):
+            assert module != "anthropic", f"{path.name}: {module}"
+            assert not module.startswith("anthropic."), f"{path.name}: {module}"
+
+
+def test_nothing_imports_the_export_demo() -> None:
+    # Composition layer, demo pattern: it imports the pipeline, nothing imports it.
+    for path in sorted(SRC.rglob("*.py")):
+        if path.name == "export_demo.py":
+            continue
+        text = path.read_text(encoding="utf-8")
+        assert "evalgen.export_demo" not in text, path
+        assert "import export_demo" not in text, path
