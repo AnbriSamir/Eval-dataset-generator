@@ -70,11 +70,11 @@ class TestTextGolden:
 
     def test_the_gate_actually_blocked_and_the_override_shouts(self, demo_text) -> None:
         assert re.search(
-            r"\[FAIL\] kappa_threshold\s+kappa=0\.513109 < min_export_kappa=0\.6", demo_text
+            r"\[FAIL\] kappa_threshold\s+kappa=0.565581 < min_export_kappa=0.6", demo_text
         )
         assert "verdict     blocked -> OVERRIDDEN (deliberate)" in demo_text
         assert "synthetic machinery proof" in demo_text  # the reason, verbatim
-        assert "kappa=0.513109 (n=40)  CI95=[0.286421, 0.707241]" in demo_text
+        assert "kappa=0.565581 (n=40)  CI95=[0.361881, 0.757581]" in demo_text
 
     def test_kappa_never_travels_naked(self, demo_text) -> None:
         assert "n=40" in demo_text
@@ -84,7 +84,7 @@ class TestTextGolden:
     def test_the_funnel_and_contamination_counts(self, demo_text) -> None:
         assert "candidates=49  blocked_at_export=0" in demo_text
         assert "candidates=49  exported=49  blocked=0" in demo_text
-        assert "note: 1 collision already excluded at labeling (rec-d1087e0ca3da3367)" in demo_text
+        assert "note: 1 collision already excluded at labeling (rec-5e3329f36f536ec4)" in demo_text
 
     def test_volatile_values_are_never_rendered(self, demo_text) -> None:
         assert "recorded in meta.json — not rendered" in demo_text

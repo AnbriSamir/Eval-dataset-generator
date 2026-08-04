@@ -70,7 +70,7 @@ def test_double_load_is_byte_identical() -> None:
 def test_iso_timestamp_is_parsed() -> None:
     records, _ = load()
     first = {r.origin.line_no: r for r in records}[1]
-    assert first.timestamp == datetime(2026, 5, 14, 9, 30, tzinfo=UTC)
+    assert first.timestamp == datetime(2026, 6, 9, 10, 30, tzinfo=UTC)
 
 
 def test_bad_clock_demotes_to_none_and_warns_never_drops() -> None:
@@ -88,8 +88,8 @@ def test_bad_clock_demotes_to_none_and_warns_never_drops() -> None:
 def test_dot_paths_resolve_into_nested_objects() -> None:
     records, _ = load()
     first = {r.origin.line_no: r for r in records}[1]
-    assert first.origin.span_id == "evt-0001"  # meta.id
-    assert first.origin.task_id == "conv-42"  # meta.conv
+    assert first.origin.span_id == "evt-0101"  # meta.id
+    assert first.origin.task_id == "conv-70"  # meta.conv
 
 
 def test_metadata_is_opt_in_only() -> None:
@@ -166,16 +166,16 @@ def test_planted_pii_is_redacted_on_the_fixture() -> None:
     second = {r.origin.line_no: r for r in records}[2]
     assert "AKIAIOSFODNN7EXAMPLE" not in second.input_text
     assert "[REDACTED:aws_key]" in second.input_text
-    assert "sanbri" not in second.input_text  # Windows user path's username segment
+    assert "jdupont" not in second.input_text  # Windows user path's username segment
     assert "[REDACTED:user_path]" in second.input_text
     everything = "\n".join(r.model_dump_json() for r in records) + report.model_dump_json()
     assert "AKIAIOSFODNN7EXAMPLE" not in everything
-    assert "sanbri" not in everything
+    assert "jdupont" not in everything
 
 
 def test_accented_french_content_survives_normalization() -> None:
-    # NFKC must not mangle legitimate accented text (péage stays péage).
+    # NFKC must not mangle legitimate accented text (synthèses stays synthèses).
     records, _ = load()
     first = {r.origin.line_no: r for r in records}[1]
-    assert "péage" in first.input_text
-    assert "télépéage" in first.output_text
+    assert "synthèses" in first.input_text
+    assert "année" in first.output_text and "considéré" in first.output_text

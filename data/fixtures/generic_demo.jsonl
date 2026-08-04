@@ -1,8 +1,8 @@
-{"meta": {"id": "evt-0001", "ts": "2026-05-14T09:30:00+00:00", "conv": "conv-42"}, "q": "Quels sont les horaires du péage de Saint-Arnoult ?", "a": "Le péage est ouvert 24h/24 ; les voies de télépéage restent actives en continu.", "channel": "web", "lang": "fr"}
-{"meta": {"id": "evt-0002", "ts": "2026-05-14T09:31:12+00:00", "conv": "conv-42"}, "q": "L'export plante sur C:\\Users\\sanbri\\exports\\trafic.csv avec la clé AKIAIOSFODNN7EXAMPLE, que faire ?", "a": "Ne partagez jamais une clé d'accès : révoquez-la depuis la console IAM, puis relancez l'export.", "channel": "web", "lang": "fr"}
-{"meta": {"id": "evt-0003", "ts": "yesterday", "conv": "conv-43"}, "q": "Le trafic est-il fluide sur l'A10 ce matin ?", "a": "Oui, aucun ralentissement signalé entre Orléans et Tours.", "channel": "web", "lang": "fr"}
-{"meta": {"id": "evt-0004", "ts": "2026-05-14T09:40:00+00:00", "conv": "conv-44"}, "q": "Où trouver les tarifs 2026 ?", "channel": "web", "lang": "fr"}
-{"meta": {"id": "evt-0005", "ts": "2026-05-14T09:41:00+00:00", "conv": "conv-44"}, "q": "", "a": "Je n'ai pas compris votre question.", "channel": "web", "lang": "fr"}
-not-json at all
+{"meta": {"id": "evt-0101", "ts": "2026-06-09T10:30:00+00:00", "conv": "conv-70"}, "q": "Que signifie TMJA dans les synthèses de trafic ?", "a": "Trafic Moyen Journalier Annuel : la moyenne sur l'année des débits journaliers du tronçon considéré.", "channel": "interne", "lang": "fr"}
+{"meta": {"id": "evt-0102", "ts": "2026-06-09T10:31:12+00:00", "conv": "conv-70"}, "q": "L'export du calage plante sur C:\\Users\\jdupont\\exports\\calage_a10.csv avec la clé AKIAIOSFODNN7EXAMPLE, que faire ?", "a": "Ne partagez jamais une clé d'accès : révoquez-la depuis la console IAM, puis relancez l'export.", "channel": "interne", "lang": "fr"}
+{"meta": {"id": "evt-0103", "ts": "yesterday", "conv": "conv-71"}, "q": "Le redressement du millésime en cours est-il terminé pour la N118 ?", "a": "Oui, la carte des débits redressés de la N118 est disponible dans la visionneuse.", "channel": "interne", "lang": "fr"}
+{"meta": {"id": "evt-0104", "ts": "2026-06-09T10:40:00+00:00", "conv": "conv-72"}, "q": "Où trouver la documentation du référentiel routier ?", "channel": "interne", "lang": "fr"}
+{"meta": {"id": "evt-0105", "ts": "2026-06-09T10:41:00+00:00", "conv": "conv-72"}, "q": "​​​", "a": "Je n'ai pas compris votre question.", "channel": "interne", "lang": "fr"}
+debit;vitesse;taux — ligne CSV égarée dans le JSONL
 42
 

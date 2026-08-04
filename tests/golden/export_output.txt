@@ -5,36 +5,36 @@
 evalgen export — golden set + provenance
 ========================================
 
-run         judge=fake  model=fake-judge-v1  taxonomy=tax-d8ba44dd70c7  prompt=84d409b1acf9
+run         judge=fake  model=fake-judge-v1  taxonomy=tax-d8ba44dd70c7  prompt=b714f9ad2e94
 inputs      annotations_synthetic.jsonl   [human_labels]
-              sha256=41a147e868b17fdb7d78a3c6c74ac252cd0762b16dbd5c66e6b01ff3b1f75745
+              sha256=dfed5b686cb8609c987c1b19d9c747ef58a7896f56caddeb2571f48cfa6537d4
             cluster_demo.jsonl            [source_log]
-              sha256=1eb4be029b41f25ac8e8d47be7403b03a98f18388d361bcb36c38f6c5073888d
+              sha256=afa5818e8b03a51648031a79b1c208332a177f6b078acfe60f8d01b1b0ef96a4
             generic_demo.jsonl            [source_log]
-              sha256=50e6f9896768989bdacf156051fee8c87391f472c3491bbfe3f8c00a638319f7
+              sha256=0262134191acbcb9c6f97a54c517f7716643b29bdb92569f139986e2c249558f
             judge_v1.jsonl                [few_shot_store]
-              sha256=103877e90af3e5de9cc58e4af42d5f39b8b2b4aecc4827e6f6ad1b5262ffcc9d
+              sha256=91fc5d1dde394e630320dd0d09d9ef99d9007f0ee88bb3b7664a0f8dbb6a4711
             tracespans_demo.jsonl         [source_log]
-              sha256=30a24e1fd51798a2b5431a52791dcb60304b48d4cc01f5b6eb2c204d2f2c7742
+              sha256=dac7cf0012c68560299ac7cc3b998e72c2434d9abc8edcfd6f798c6147491e54
 
 gate        min_export_kappa=0.6
   [pass] headline_ready      n_matched=40 >= min_human_labels=30
   [pass] headline_status     ok
   [pass] instrument_binding  agreement fingerprint == labeling fingerprint
-  [pass] ground_truth_bound  human_labels_sha256=41a147e868b1…
-  [FAIL] kappa_threshold     kappa=0.513109 < min_export_kappa=0.6
+  [pass] ground_truth_bound  human_labels_sha256=dfed5b686cb8…
+  [FAIL] kappa_threshold     kappa=0.565581 < min_export_kappa=0.6
   verdict     blocked -> OVERRIDDEN (deliberate)
   override    "synthetic machinery proof: FakeJudge verdicts are hash-derived noise, the gate
-               correctly blocks kappa=0.513109 < 0.6; overridden deliberately to exercise the full
+               correctly blocks kappa=0.565581 < 0.6; overridden deliberately to exercise the full
                export path offline (never a real-data precedent)"
-  headline    kappa=0.513109 (n=40)  CI95=[0.286421, 0.707241]  — carried on this export's face
+  headline    kappa=0.565581 (n=40)  CI95=[0.361881, 0.757581]  — carried on this export's face
 
 contamination  (export ∩ few-shots on canonical content_hash)
   candidates=49  blocked_at_export=0
-  note: 1 collision already excluded at labeling (rec-d1087e0ca3da3367) — never a candidate
+  note: 1 collision already excluded at labeling (rec-5e3329f36f536ec4) — never a candidate
 
 export
   candidates=49  exported=49  blocked=0
-  golden.jsonl   49 lines   sha256=20b0a38dd63745f498fe362079729c2e396ff5312e8dc9c66883258790c8a60c
-  meta.json    deterministic sha256=25ed98c4d91b35a2d5d7faa4cd0d6839c12bc0ae6c94558952c797d465d4f755
+  golden.jsonl   49 lines   sha256=92dc56ffa4abad7d80b68fb848b2127ac58aea2e186a4def4db164fdd76eafa0
+  meta.json    deterministic sha256=814c0d18276dec7e0cb7c159b571d9aabf373053449039bb6d1f35342a5d773f
   volatile       git_commit + generated_at + environment recorded in meta.json — not rendered

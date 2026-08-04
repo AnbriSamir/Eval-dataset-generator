@@ -41,7 +41,7 @@ from evalgen.validate import render_annotator_instructions
 GOLDEN = Path(__file__).resolve().parent / "golden" / "annotation_template_output.txt"
 
 #: The planted few-shot collision twin (demo/agreement pins, ADR-0003 rule 8).
-COLLISION_RECORD_ID = "rec-d1087e0ca3da3367"
+COLLISION_RECORD_ID = "rec-5e3329f36f536ec4"
 
 _EMAIL = re.compile(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b")
 

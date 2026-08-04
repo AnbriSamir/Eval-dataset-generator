@@ -73,7 +73,7 @@ def test_label_stage_shows_the_planted_fewshot_collision() -> None:
     # rule 10): the planted twin is skipped, counted, and named.
     out = run_demo()
     assert "fewshot_collisions=1" in out
-    assert "collision  rec-d1087e0ca3da3367" in out
+    assert "collision  rec-5e3329f36f536ec4" in out
 
 
 def test_label_stage_marks_fake_verdicts_as_synthetic() -> None:

@@ -57,12 +57,19 @@ def test_kappa_never_travels_naked() -> None:
 def test_the_fewshot_collision_corollary_is_printed() -> None:
     # ADR-0003 corollary made visible: the judge-seen record can never enter kappa.
     out = run_agreement_demo()
-    assert re.search(r"human_only\s+fewshot_collision\s+rec-d1087e0ca3da3367", out)
+    assert re.search(r"human_only\s+fewshot_collision\s+rec-5e3329f36f536ec4", out)
 
 
-def test_the_support_gate_is_visible() -> None:
+def test_every_class_clears_the_support_gate_and_reports_a_kappa() -> None:
+    # The FCD corpus is engineered so every task_type AND outcome class reaches
+    # min_class_support (>= 5) on the sampled set — the direct fix of the earlier
+    # fixture where a class fell below support and its per-class kappa was
+    # suppressed. So NO class is gated out, and each per-class row carries a kappa=
+    # rather than the "insufficient_support" marker.
     out = run_agreement_demo()
-    assert "insufficient_support" in out
+    assert "insufficient_support" not in out
+    # Both axes present, and every per-class line under them shows a kappa.
+    assert "[axis task_type]" in out and "[axis outcome]" in out
 
 
 def test_the_report_is_bound_to_the_fixture_bytes() -> None:

@@ -6,7 +6,7 @@ STRICTLY offline: the ``--judge anthropic`` battery mocks the SDK CLIENT CLASS
 place the real judge constructs it. The ``--judge fake`` battery is the full
 deterministic path: pipeline -> FakeJudge -> strict loader join -> AgreementReport
 -> JSON run report, with sums pinned against the Phase 4 goldens (judged_in=49,
-human_in=42, matched=40, headline kappa=0.513109).
+human_in=42, matched=40, headline kappa=0.565581).
 """
 
 from __future__ import annotations
@@ -168,7 +168,7 @@ def test_fake_path_is_green_with_exact_sums(fake_run) -> None:
     assert "judged_in=49" in out
     assert "human_in=42" in out
     assert "matched=40" in out
-    assert "kappa=0.513109" in out  # the outcome-axis headline, agreement-golden pin
+    assert "kappa=0.565581" in out  # the outcome-axis headline, agreement-golden pin
 
 
 def test_fake_path_writes_the_json_run_report(fake_run) -> None:
@@ -196,7 +196,7 @@ def test_fake_path_writes_the_json_run_report(fake_run) -> None:
     assert payload["agreement_report"]["accounting"]["n_matched"] == 40
     # The headline is a derived property (not serialized): read the outcome axis.
     outcome_axis = next(a for a in payload["agreement_report"]["axes"] if a["axis"] == "outcome")
-    assert outcome_axis["global_kappa"]["kappa"] == 0.513109
+    assert outcome_axis["global_kappa"]["kappa"] == 0.565581
     assert payload["labeling_report"]["records_in"] == 50
     assert payload["labeling_report"]["labeled"] == 49
     assert payload["labeling_report"]["skipped_fewshot_collision"] == 1

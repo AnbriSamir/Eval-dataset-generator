@@ -8,7 +8,7 @@ sibling of ``agreement_demo.py``: imports the pipeline + validate + export; noth
 imports it. The wiring is deliberately duplicated (composition layers repeat
 wiring, they own no logic; the demo and agreement goldens stay byte-untouched).
 
-On the committed fixtures the gate GENUINELY BLOCKS (headline κ = 0.513109 < 0.6)
+On the committed fixtures the gate GENUINELY BLOCKS (headline κ = 0.565581 < 0.6)
 — so this demo exports via the explicit, loudly-rendered override. That IS the
 machinery proof: the committed golden shows the real failing check, the override
 shouting its reason, and the honest low κ on the export's face. The banner is
@@ -78,7 +78,7 @@ _GENERIC_MAPPING = GenericMapping(
 _OVERRIDE = ExportGateOverride(
     reason=(
         "synthetic machinery proof: FakeJudge verdicts are hash-derived noise, the "
-        "gate correctly blocks kappa=0.513109 < 0.6; overridden deliberately to "
+        "gate correctly blocks kappa=0.565581 < 0.6; overridden deliberately to "
         "exercise the full export path offline (never a real-data precedent)"
     )
 )
