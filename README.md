@@ -5,17 +5,19 @@
 > validated golden dataset** — agreement **measured** (Cohen's κ + bootstrap CI95), never declared.
 
 [![CI](https://github.com/anbsamsam17/Eval-dataset-generator/actions/workflows/ci.yml/badge.svg)](https://github.com/anbsamsam17/Eval-dataset-generator/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/tests-612%20offline-brightgreen)](#honest-numbers)
+[![Tests](https://img.shields.io/badge/tests-658%20offline-brightgreen)](#honest-numbers)
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue)](#)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Status](https://img.shields.io/badge/status-complete-brightgreen)](#roadmap)
 
-> ✅ **Complete.** All six pipeline stages implemented, **612 offline tests**, CI green
+> ✅ **Complete.** All six pipeline stages implemented, **658 offline tests**, CI green
 > (lint · typecheck · test) — no API key, no Docker, no network. Three zero-argument CLIs
 > (`make demo` · `make agreement` · `make export`) are **byte-identical between runs** and
 > pinned by committed golden files. Every number in this README reproduces from one of
-> those commands or is pinned by the test suite. Nothing is declared without a
-> measurement behind it.
+> those commands or is pinned by the test suite — except the one that can't be: the
+> **[real human-vs-judge κ](#the-real-κ-measured)** comes from a live-LLM run and is
+> bound instead to its committed run report and ground-truth digests. Nothing is
+> declared without a measurement behind it.
 
 **The differentiator is not the stack — it is dedup done honestly + coverage by
 clustering + agreement measured with κ/CI95 + full provenance.** A golden set with hidden
@@ -90,7 +92,7 @@ decision is an ADR in [`docs/decisions/`](docs/decisions/).
 
 | | Measured | The honest fine print |
 |---|---|---|
-| **Test suite** | **612 offline tests**, CI green | no API key, no Docker, no network; includes byte-equality against committed goldens, double-run identity, and the red-team payloads replayed verbatim |
+| **Test suite** | **658 offline tests**, CI green | no API key, no Docker, no network; includes byte-equality against committed goldens, double-run identity, and the red-team payloads replayed verbatim |
 | **Demo funnel** | 62 records in → 54 after dedup (3 exact + 5 near, 1 chain-flagged) → 4 clusters + 12 noise → 50 sampled → 49 labeled | `make demo`, byte-pinned by `tests/golden/demo_output.txt`; fixtures are synthetic — cluster counts are machinery proof, not findings |
 | **Agreement machinery** | κ = **0.513109** (outcome axis, n=40), CI95 **[0.286421, 0.707241]**, B=10000, seed 1750, per-class table + confusion matrix | `make agreement`, byte-pinned — **SYNTHETIC by design**, see below |
 | **The gate fails honestly** | export gate **blocks**: 0.513109 < 0.6 | `make export`, byte-pinned; the demo exports only through an explicit override whose reason prints on the export's face |
@@ -109,12 +111,44 @@ machinery is already proven byte-for-byte. And on the committed fixtures the exp
 **genuinely blocks** — a pipeline demonstrated failing honestly is worth more than one
 demonstrated only passing.
 
+## The real κ (measured)
+
+Then the real session happened: a human annotator filled the blind template
+(49 exchanges, no judge output anywhere in sight — the annotation CLI refuses to even
+write into a directory holding judge artifacts), and `claude-opus-4-8` judged the same
+49 records live. Perfect join: 49/49 matched, zero orphans. The committed run report is
+[`docs/reports/agreement_run_report.20260804T002205Z-7c2b30d6.json`](docs/reports/agreement_run_report.20260804T002205Z-7c2b30d6.json),
+bound to the exact ground-truth bytes (`human_labels_sha256=eceeb0a9…`); a live-LLM run
+is not byte-deterministic, so every number below travels with its digests.
+
+| Axis | κ | CI95 (B=10000) | Band |
+|---|---|---|---|
+| `task_type` — *what is this exchange?* | **0.861** (n=49, p_o=0.918) | [0.722, 0.967] | almost perfect |
+| `outcome` — *is the answer correct?* (**the headline**) | **0.263** (n=49, p_o=0.755) | [**−0.024**, 0.533] | fair |
+
+**This unfavorable headline is the repo's thesis working, published exactly as
+measured.** Raw agreement on `outcome` is 75.5% — sounds fine — but both raters say
+`correct` most of the time, so chance alone predicts 66.8% (p_e): κ collapses to 0.26
+and its CI95 straddles zero. A percent-agreement metric would have shipped a lie; the
+κ machinery refused. And the export gate **blocks this dataset for real**
+(0.263 < 0.6) — with genuine stakes this time.
+
+The disagreement drill-down turns the low number into an actionable finding instead of
+a shrug: **7 of the 12 `outcome` disagreements are `correct → unjudgeable` on live
+traffic-status questions** ("is traffic flowing on the A10 right now?"). The human
+graded *plausibility*; the judge applied the written definition of `unjudgeable`
+(*"the answer depends on missing context"*) to claims no transcript can verify. That
+is not noise — it is an **annotation-guideline gap**, surfaced by exactly the
+drill-down built to surface it. The flywheel's next turn is now concrete: sharpen the
+`outcome` definitions for live-status claims, relabel, re-measure — and only then
+should the gate open.
+
 ## Quickstart
 
 ```bash
 git clone https://github.com/anbsamsam17/Eval-dataset-generator && cd Eval-dataset-generator
 make install     # pip install -e ".[dev]"
-make test        # 612 offline tests — no API key, no Docker, no network
+make test        # 658 offline tests — no API key, no Docker, no network
 make demo        # ingest → dedup → cluster → sample → label, on committed fixtures
 make agreement   # Cohen's κ + CI95, judge vs (synthetic) human labels
 make export      # the κ gate + golden.jsonl + meta.json provenance
@@ -229,7 +263,7 @@ data/fixtures/      committed demo logs + synthetic annotations (say SYNTHETIC o
 data/fewshots/      the judge's few-shot store — redaction-clean by construction
 data/labels/        real human ground truth lands here — hook-protected, agent writes blocked
 docs/decisions/     the five ADRs (red-team amendments included)
-tests/              612 offline tests, incl. golden byte-equality + replayed red-team payloads
+tests/              658 offline tests, incl. golden byte-equality + replayed red-team payloads
 ```
 
 Module boundaries are enforced by tests, not convention: `contracts` imports no sibling;
@@ -251,18 +285,26 @@ same recursion as the sibling repos.
 Done:
 
 - [x] Phases 0–5: contracts + ingest/redaction · dedup/cluster/sampling · judge ·
-  agreement · export — 612 offline tests, five ADRs, three byte-pinned CLIs
+  agreement · export — five ADRs, three byte-pinned CLIs (612 offline tests then;
+  658 with the real-session CLI pair below)
 - [x] Red-team pass on every phase, with closures recorded as ADR amendments and
   regression tests replaying each payload
 
 Next — the honest part:
 
-- [ ] **Real human labels → the real κ.** Fill the generated annotation template into
-  `data/labels/human_labels.jsonl` (hook-protected: humans only) and re-run the
-  agreement machinery. The `!! SYNTHETIC` banner disappears with the fixture; the
-  measured number is published as-is, favorable or not.
-- [ ] Real-data umbrella CLI — explicit flags only (`--judge anthropic`, `--labels …`,
-  `--allow-low-kappa "<reason>"`); never autodetection.
+- [x] **Real human labels → the real κ — measured, published as-is.** A human
+  annotator filled the blind template into `data/labels/human_labels.jsonl`
+  (hook-protected: humans only) and the live judge ran. See
+  [The real κ](#the-real-κ-measured) above — outcome κ = **0.263158** with a CI95
+  straddling zero, exactly the kind of unfavorable number this rule exists for.
+- [x] Real-data CLI pair — explicit flags only, never autodetection: `make annotate`
+  emits the blank template into `data/annotation/` (structurally apart from judge
+  output — each CLI refuses a directory holding the other family's artifacts), and
+  `python -m evalgen.agreement_run --labels … --judge {fake,anthropic}` computes the
+  agreement with the `!! SYNTHETIC` banner decided on label *content* (never bytes
+  alone) and a per-run audit trail for live-judge re-rolls.
+- [ ] Real-data export behind `--allow-low-kappa "<reason>"` — the Phase 5 gate and its
+  override contract ship today; the explicit flag waits for the real κ session.
 - [ ] Near-dup threshold calibration on real labeled pairs — the protocol, harness, and
   report validator ship today; 0.92 stays a default until measured.
 - [ ] Semantic embedding backend behind the `Embedder` Protocol, with its own

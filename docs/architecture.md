@@ -295,6 +295,64 @@ battery (imports only contracts, no clock/git/uuid/subprocess, writes confined t
 writer.py); export_demo triple-golden byte-equality + double-run identity + banner-first +
 leak scan; demo and agreement goldens byte-untouched this phase.
 
+## Real-data CLIs — annotation + agreement run (Phase 6 — implemented, [ADR-0004 amendment 2026-08-04](decisions/ADR-0004-agreement-kappa-protocol.md))
+
+The two composition layers that wire the Phase 4 machinery to the REAL labeling
+session (README roadmap: explicit flags only, never autodetection).
+
+```
+annotation_cli.py      make annotate → re-runs the fixture pipeline (FakeJudge solely to
+                       know the labelable set + few-shot collisions; verdicts DISCARDED —
+                       renderer signatures cannot receive them) and writes the fillable
+                       annotation_template.jsonl + annotation_instructions.txt to
+                       data/annotation/ — a directory that NEVER holds judge output
+                       (red-team F-1: the blank exam must not sit next to the answer key);
+                       REFUSES (typed error, nothing written) a target directory containing
+                       golden.jsonl / meta.json / agreement_run_report*.json · the planted
+                       few-shot collision is excluded AND documented on the CLI's face ·
+                       zero-arg, offline, byte-pinned by
+                       tests/golden/annotation_template_output.txt (the stdout sha256 lines
+                       transitively pin both artifacts)
+agreement_run.py       python -m evalgen.agreement_run --labels PATH --judge {fake,anthropic}
+                       [--model ID] [--out DIR] — REQUIRED explicit flags (no default labels
+                       file, no autodetected judge; --model refused with --judge fake) ·
+                       strict Phase 4 loader join · report bound to the exact ground-truth
+                       bytes (human_labels_sha256, the M-1 pattern) · SYNTHETIC banner from
+                       INDEPENDENT triggers (judge=fake · byte identity with the committed
+                       fixture · canonical (record_id, task_type, outcome) content identity
+                       — re-encoding cannot shed it · the pinned annotator="synthetic"
+                       marker), reasons printed AND recorded (synthetic_reasons) — red-team
+                       F-2 · cost preflight (planned_judge_calls) printed BEFORE the first
+                       API call · AnthropicJudge reached only via the sanctioned deep import
+                       in the --judge anthropic branch (fake path never loads the SDK) ·
+                       JSON run report: fake → fixed basename, volatile null, byte-
+                       deterministic; anthropic → per-run agreement_run_report.<run_id>.json
+                       with a quarantined volatile stamp (run_id + UTC generated_at) so
+                       re-rolled runs accumulate instead of silently replacing each other
+                       (red-team F-3: cherry-picking visible, never invisible) · refuses an
+                       --out holding annotation artifacts (the F-1 mirror guard, before any
+                       API cost)
+Makefile               make annotate wired; the real κ run is deliberately NOT a make
+                       target — the flags must be typed (never autodetection)
+```
+
+Invariants the tests pin: golden byte-equality + double-run identity of `annotation_cli`
+(stdout digests == written artifact bytes); template == the labelable set exactly, empty
+label fields, zero judge information (fingerprint/verdict tokens unrepresentable);
+the F-1 payload replayed (each judge artifact in turn refuses the template write; a mixed
+`--out` refuses with zero SDK calls; `data/annotation/` ≠ `data/out/` pinned as constants);
+the F-2 payloads replayed (CRLF re-encode and trailing-newline re-encode keep the banner
+and `synthetic: true`; the annotator marker alone triggers; genuinely different labels
+print REAL DATA with empty reasons); the F-3 payload replayed (two mocked real runs →
+two stamped per-run reports, the first byte-untouched; fake path fixed-basename
+byte-identical across runs with `volatile: null`); the mocked-SDK §2 battery at CLI level
+(49 calls: adaptive thinking, effort high, `output_format=JudgeVerdict`, no
+temperature/top_p/top_k/budget_tokens; served model id stored, never the requested echo);
+cost line flushed before call #1; fake-path sums pinned to the Phase 4 goldens
+(judged_in=49, human_in=42, matched=40, headline κ=0.513109); composition-layer AST
+battery (+3: nothing imports the CLIs; `annotation_cli` never imports `anthropic`;
+`agreement_run` reaches the SDK only through `evalgen.label.anthropic_judge`).
+
 ## Module boundaries (enforced from day 0)
 
 - `contracts` is imported by everyone and imports no one (pinned by a test).
@@ -323,6 +381,15 @@ leak scan; demo and agreement goldens byte-untouched this phase.
   `validate/`'s no-write rule). Nothing depends on `export` except composition:
   `export_demo` imports the pipeline, nothing imports it, and it alone collects the
   volatile values (clock, git SHA, platform) that land quarantined in meta.json.
+- `annotation_cli` and `agreement_run` are composition (demo pattern): they import
+  the pipeline, nothing imports them (AST-walked — grep would false-positive on the
+  user-facing text that legitimately NAMES the `agreement_run` command).
+  `annotation_cli` never imports `anthropic` at any depth; `agreement_run` reaches
+  the SDK only through the sanctioned `evalgen.label.anthropic_judge` deep import
+  inside the `--judge anthropic` branch. Their write targets are disjoint BY GUARD:
+  human-facing artifacts in `data/annotation/`, judge outputs in `data/out/` — each
+  CLI refuses a directory holding the other family's artifacts (ADR-0004 amendment
+  2026-08-04, F-1).
 
 ## Decisions
 
@@ -373,7 +440,11 @@ protocol, clustering choice, taxonomy design, κ protocol, export format).
   report-level `human_labels_sha256` ground-truth binding (M-1), report-level
   `min_class_support` + the header gates line (M-2), the empty-input bootstrap
   refusal (N-1), and the Phase 5 rule that a headline with status ≠ `ok` blocks
-  export exactly like `headline_ready = False`.
+  export exactly like `headline_ready = False`. Amendments (2026-08-04, the
+  real-agreement-CLI red-team pass): the annotation directory structurally
+  separated from judge output with mutual refusal guards (F-1), synthetic
+  detection by independent content-based triggers, never bytes alone (F-2), and
+  the per-run stamped real-judge run report so re-rolls accumulate visibly (F-3).
 - [ADR-0005 — Export: canonical golden.jsonl, the two-section meta.json provenance,
   the contamination guard, and the κ gate with its deliberate
   override](decisions/ADR-0005-export-provenance-gates.md) — Phase 5

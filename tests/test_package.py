@@ -286,3 +286,37 @@ def test_nothing_imports_the_export_demo() -> None:
         text = path.read_text(encoding="utf-8")
         assert "evalgen.export_demo" not in text, path
         assert "import export_demo" not in text, path
+
+
+# ------------------------------------------- Phase 6: the real-data CLI boundaries
+# The umbrella CLIs are composition layers (demo pattern): they import the pipeline,
+# nothing imports them. AST-walked (not grepped) because annotation_cli legitimately
+# NAMES `python -m evalgen.agreement_run` in its user-facing next-steps text.
+
+
+def test_nothing_imports_the_cli_composition_layers() -> None:
+    for target in ("evalgen.annotation_cli", "evalgen.agreement_run"):
+        own_file = target.rsplit(".", 1)[1] + ".py"
+        for path in sorted(SRC.rglob("*.py")):
+            if path.name == own_file:
+                continue
+            for module in _imported_modules_any_depth(path):
+                assert not module.startswith(target), f"{path.name}: {module}"
+
+
+def test_annotation_cli_never_imports_anthropic() -> None:
+    # The template emitter is 100 % offline — the SDK has no business in it.
+    for module in _imported_modules_any_depth(SRC / "annotation_cli.py"):
+        assert module != "anthropic", module
+        assert not module.startswith("anthropic."), module
+
+
+def test_agreement_run_reaches_the_sdk_only_through_the_real_judge_module() -> None:
+    # ADR-0003 rule 4: the real judge is reached by an explicit deep import at the
+    # composition layer — agreement_run never imports `anthropic` itself, so the
+    # --judge fake path never loads the SDK.
+    modules = _imported_modules_any_depth(SRC / "agreement_run.py")
+    for module in modules:
+        assert module != "anthropic", module
+        assert not module.startswith("anthropic."), module
+    assert any(module.startswith("evalgen.label.anthropic_judge") for module in modules)

@@ -1,7 +1,7 @@
 # eval-dataset-generator — reproducible entry points.
 # Agents and humans drive the repo through these targets (CLAUDE.md §4).
 
-.PHONY: install test lint fmt typecheck demo agreement export
+.PHONY: install test lint fmt typecheck demo agreement export annotate
 
 install:
 	pip install -e ".[dev]"
@@ -36,3 +36,14 @@ agreement:  ## Cohen's kappa + CI95 of judge vs human labels — the headline nu
 # override (ADR-0005 options §5). Writes to gitignored data/out/; golden-pinned.
 export:  ## Produce golden.jsonl + meta.json provenance in data/out/ — offline, deterministic
 	python -m evalgen.export_demo
+
+# Phase 6: the real labeling session. `make annotate` emits the fillable template +
+# instructions (offline, deterministic, zero judge info) into data/annotation/ —
+# NEVER data/out/, which holds judge verdicts (the CLI refuses a directory that does);
+# the human fills the template OUTSIDE any agent and saves it as
+# data/labels/human_labels.jsonl (hook-protected).
+# The real kappa run is NOT a make target on purpose — explicit flags only, never
+# autodetection (README roadmap):
+#   python -m evalgen.agreement_run --labels data/labels/human_labels.jsonl --judge anthropic
+annotate:  ## Emit annotation_template.jsonl + annotation_instructions.txt into data/annotation/
+	python -m evalgen.annotation_cli

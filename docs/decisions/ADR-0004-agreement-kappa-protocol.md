@@ -3,7 +3,9 @@
 **Status:** Accepted (2026-07-31) — amended 2026-08-01 after the pre-commit
 red-team pass (see Amendment: (a) M-1 report-level ground-truth binding,
 (b) M-2 report-level support gate, (c) NIT dispositions, (d) Phase 5 export-gate
-clarification)
+clarification) — amended 2026-08-04 after the real-agreement-CLI red-team pass
+(see Amendment: (e) F-1 annotation-directory separation, (f) F-2 content-based
+synthetic detection, (g) F-3 per-run real-judge audit trail)
 
 ## Context
 
@@ -587,3 +589,73 @@ spec cannot meet a `None` unprepared.
 `tests/golden/agreement_output.txt` gains exactly two header lines (`labels
 sha256=…`, `gates …`); every κ, CI, count, confusion cell and disagreement line is
 byte-identical to the pre-amendment golden. The demo golden stays untouched.
+
+## Amendment (2026-08-04) — real-agreement-CLI red-team closures (F-1 / F-2 / F-3)
+
+The adversarial review of the real-data CLIs (`annotation_cli`, `agreement_run` —
+the Options §7 deferred wiring) returned 1 HIGH + 2 MEDIUM
+(`.workflow-handoff/redteam.md`). All three are closed before commit; each closure
+ships with regression tests replaying the red team's executed payload. The common
+thread is this ADR's own doctrine: guarantees must be structural, not procedural.
+
+**(e) F-1 (HIGH) — the annotation artifacts get their own directory, and mixing is
+refused on BOTH sides.** Options §1 made verdicts unrepresentable in the template
+*signature*, but the first CLI wiring wrote the blank template into `data/out/` —
+the same default directory where `export_demo` drops `golden.jsonl`/`meta.json`
+and `agreement_run` drops its run report, all carrying the judge's verdicts for
+the same 49 record_ids. The human sent there to fetch the template found the
+answer key one file away (anchoring — the exact bias §1's structural design
+exists to prevent). Closure, structural on both sides of the seam:
+`annotation_cli` writes to **`data/annotation/`** (gitignored, human-facing
+artifacts ONLY) and **refuses** (typed `JudgeArtifactsPresentError`, nothing
+written, exit 2) any target directory containing `golden.jsonl`, `meta.json`, or
+`agreement_run_report*.json`; `agreement_run` enforces the mirror guard — it
+refuses (exit 2, before the pipeline runs and before any API cost) an `--out`
+containing `annotation_template.jsonl` or `annotation_instructions.txt`. The
+stdout report states the separation and the refusal rule on its face. Regression:
+the payload replayed — a directory holding each judge artifact in turn refuses
+the template write; a mixed `--out` refuses with zero SDK calls (recording
+client).
+
+**(f) F-2 (MEDIUM) — "synthetic" is decided on label CONTENT, never on bytes
+alone.** The first wiring flagged synthetic iff `sha256(--labels bytes)` equaled
+the committed fixture's digest; a CRLF/trailing-newline re-encode kept the exact
+synthetic labels but shed the `!! SYNTHETIC` banner and recorded
+`synthetic: false` — a real-data-looking κ over labels §7 calls meaningless by
+design. Closure: three INDEPENDENT data-side triggers, any of which forces the
+banner and `synthetic: true` (byte identity remains one trigger, never the only
+one): (1) byte identity with the fixture; (2) **canonical label content** — the
+sorted `(record_id, task_type, outcome)` tuples equal the fixture's, so
+re-encoding, field reordering, note edits and annotator renames cannot shed the
+banner (only actually different labels can — and a fabricated variant is forgery,
+out of scope for honesty labeling); (3) the fixture's pinned
+`annotator == "synthetic"` marker, now a trigger rather than a printed hint.
+Plus `judge == fake`, as before. Every reason that fired is printed in the banner
+and recorded in the run report (`synthetic_reasons`). Regression: the CRLF
+payload replayed byte-for-byte (banner survives, `synthetic: true`), the formerly
+*blessed* trailing-newline path inverted, the marker-alone case pinned, and the
+genuinely-real shape (different labels AND different annotator) still prints the
+REAL DATA header with `synthetic_reasons == []`.
+
+**(g) F-3 (MEDIUM) — real-judge runs leave a per-run trace; re-rolls cannot erase
+each other.** The run report was written to one fixed basename via atomic
+replace, with no timestamp or run id: κ-gaming failure mode 5 at run granularity
+— re-roll the (non-deterministic) real judge until κ clears the gate, keep the
+lucky run, no evidence the others existed. Closure: a `--judge anthropic` run
+writes `agreement_run_report.<run_id>.json` and stamps a quarantined `volatile`
+section (`run_id`, UTC `generated_at` — the `export_demo` `VolatileProvenance`
+discipline: the composition layer is the only clock reader, volatile values never
+enter deterministic surfaces). Discarded runs accumulate side by side; the stdout
+footer names the exact per-run file. This makes cherry-picking *visible*, not
+impossible — consistent with "measured, never declared". The fake path is
+byte-deterministic by contract and keeps the fixed basename with
+`volatile: null`. Regression: two mocked real runs into the same `--out` → two
+stamped reports, first one byte-untouched; the fixed basename never used by the
+real path; fake double-run byte-identity re-pinned.
+
+**Golden regeneration #2 for this phase (sanctioned, reviewed line-by-line):**
+`tests/golden/annotation_template_output.txt` — only the `files` block changes
+(the `data/annotation/` home + the separation statement); both artifact sha256
+digests are byte-identical to the pre-amendment golden, proving the template and
+instructions themselves carry zero change. The demo, agreement and export goldens
+stay untouched.

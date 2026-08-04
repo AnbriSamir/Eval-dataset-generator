@@ -1,0 +1,477 @@
+{
+  "agreement_report": {
+    "accounting": {
+      "human_in": 49,
+      "human_only": [],
+      "judge_only_ids": [],
+      "judged_in": 49,
+      "n_matched": 49
+    },
+    "annotators": [
+      "samir"
+    ],
+    "axes": [
+      {
+        "axis": "task_type",
+        "class_order": [
+          "factual_query",
+          "procedural_request",
+          "troubleshooting",
+          "planning_or_reasoning",
+          "other"
+        ],
+        "confusion": [
+          [
+            28,
+            2,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            5,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            10,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            2,
+            0
+          ],
+          [
+            0,
+            2,
+            0,
+            0,
+            0
+          ]
+        ],
+        "disagreements": [
+          {
+            "human_label": "factual_query",
+            "judge_confidence": "medium",
+            "judge_label": "procedural_request",
+            "judge_rationale": "The input asks how the télépéage badge works in partner car parks. The output explains that the badge opens the parking barriers and that billing is monthly, which addresses the mechanism asked about with no visible error. It is concise but covers the core of how it functions, so correct.",
+            "record_id": "rec-58ccbba47fe47168"
+          },
+          {
+            "human_label": "factual_query",
+            "judge_confidence": "low",
+            "judge_label": "procedural_request",
+            "judge_rationale": "The input asks which channel to use to send the on-call report before 8am, so it is a procedural request. The output does name a channel ('canal incidents'), which addresses the asked question, but it appends an irrelevant non-sequitur about an API key being revoked that adds confusion and does not relate to the question. The channel answer itself cannot be fully verified without context, and the extraneous peripheral content makes this incomplete/off rather than cleanly correct.",
+            "record_id": "rec-7bd41b3a5c30240a"
+          },
+          {
+            "human_label": "other",
+            "judge_confidence": "medium",
+            "judge_label": "procedural_request",
+            "judge_rationale": "The input asks for an action to be performed — use a fallback key and rotate it — making this a procedural request. The output reports the rotation completed, the old key revoked, and offers a fallback contact if access fails, which directly and coherently addresses the request with no visible error. Confidence is medium because the actual success of the rotation cannot be independently verified from the exchange, but nothing shown is inconsistent.",
+            "record_id": "rec-189adcb306a8c328"
+          },
+          {
+            "human_label": "other",
+            "judge_confidence": "medium",
+            "judge_label": "procedural_request",
+            "judge_rationale": "The input asks to retry the export and report the final status — an action-plus-report request. The output states the export completed after one retry with a specific row count, directly addressing both the retry and the status report with no visible logical inconsistency. Actual success cannot be independently verified, but from the exchange alone the response coherently and completely fulfills the request.",
+            "record_id": "rec-884a023cbcb4d44e"
+          }
+        ],
+        "global_kappa": {
+          "ci95": {
+            "b_degenerate": 0,
+            "b_total": 10000,
+            "lower": 0.721817,
+            "method": "percentile",
+            "upper": 0.966667
+          },
+          "kappa": 0.86119,
+          "pe": 0.411912,
+          "po": 0.918367,
+          "status": "ok"
+        },
+        "min_class_support": 5,
+        "per_class": [
+          {
+            "both": 28,
+            "class_name": "factual_query",
+            "human_support": 30,
+            "judge_support": 28,
+            "value": {
+              "ci95": {
+                "b_degenerate": 0,
+                "b_total": 10000,
+                "lower": 0.785276,
+                "method": "percentile",
+                "upper": 1.0
+              },
+              "kappa": 0.915663,
+              "pe": 0.516035,
+              "po": 0.959184,
+              "status": "ok"
+            }
+          },
+          {
+            "both": 5,
+            "class_name": "procedural_request",
+            "human_support": 5,
+            "judge_support": 9,
+            "value": {
+              "ci95": {
+                "b_degenerate": 1,
+                "b_total": 10000,
+                "lower": 0.309859,
+                "method": "percentile",
+                "upper": 0.928882
+              },
+              "kappa": 0.671141,
+              "pe": 0.75177,
+              "po": 0.918367,
+              "status": "ok"
+            }
+          },
+          {
+            "both": 10,
+            "class_name": "troubleshooting",
+            "human_support": 10,
+            "judge_support": 10,
+            "value": {
+              "ci95": {
+                "b_degenerate": 0,
+                "b_total": 10000,
+                "lower": 1.0,
+                "method": "percentile",
+                "upper": 1.0
+              },
+              "kappa": 1.0,
+              "pe": 0.675135,
+              "po": 1.0,
+              "status": "ok"
+            }
+          },
+          {
+            "both": 2,
+            "class_name": "planning_or_reasoning",
+            "human_support": 2,
+            "judge_support": 2,
+            "value": {
+              "ci95": null,
+              "kappa": null,
+              "pe": null,
+              "po": null,
+              "status": "insufficient_support"
+            }
+          },
+          {
+            "both": 0,
+            "class_name": "other",
+            "human_support": 2,
+            "judge_support": 0,
+            "value": {
+              "ci95": null,
+              "kappa": null,
+              "pe": null,
+              "po": null,
+              "status": "insufficient_support"
+            }
+          }
+        ]
+      },
+      {
+        "axis": "outcome",
+        "class_order": [
+          "correct",
+          "partially_correct",
+          "incorrect",
+          "unjudgeable"
+        ],
+        "confusion": [
+          [
+            34,
+            4,
+            0,
+            7
+          ],
+          [
+            1,
+            1,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            2
+          ]
+        ],
+        "disagreements": [
+          {
+            "human_label": "correct",
+            "judge_confidence": "medium",
+            "judge_label": "partially_correct",
+            "judge_rationale": "The input reports a broken weekly export producing an empty file, so this is troubleshooting. The output offers one plausible cause — the selected week not being closed — which is a reasonable diagnostic step but addresses only a single possible reason for an empty file without covering other likely causes or confirming the fix. This makes it a helpful but incomplete response, hence partially_correct.",
+            "record_id": "rec-3690f9a993e5dc9c"
+          },
+          {
+            "human_label": "correct",
+            "judge_confidence": "medium",
+            "judge_label": "partially_correct",
+            "judge_rationale": "The input reports a failing Excel export download and asks for help — troubleshooting. The output offers a plausible first-line fix (clear browser cache or try private browsing), which is a reasonable but generic step that may not address the actual cause; it provides a possible remedy without confirming or covering other likely causes, so it is incomplete rather than clearly wrong.",
+            "record_id": "rec-5133258a231a3948"
+          },
+          {
+            "human_label": "correct",
+            "judge_confidence": "low",
+            "judge_label": "partially_correct",
+            "judge_rationale": "The input asks which channel to use to send the on-call report before 8am, so it is a procedural request. The output does name a channel ('canal incidents'), which addresses the asked question, but it appends an irrelevant non-sequitur about an API key being revoked that adds confusion and does not relate to the question. The channel answer itself cannot be fully verified without context, and the extraneous peripheral content makes this incomplete/off rather than cleanly correct.",
+            "record_id": "rec-7bd41b3a5c30240a"
+          },
+          {
+            "human_label": "correct",
+            "judge_confidence": "low",
+            "judge_label": "partially_correct",
+            "judge_rationale": "The input asks about the current, live traffic state on the A29 between Rouen and Le Havre — a factual query about real-time conditions. The output affirms fluid traffic ('oui') and adds a 55-minute estimate, but explicitly qualifies it 'dans des conditions normales', which describes a generic baseline rather than the actual live situation asked about. It addresses the question but sidesteps confirming real-time fluidity, so it is incomplete rather than a clear correct answer.",
+            "record_id": "rec-91f350d70ee60bd9"
+          },
+          {
+            "human_label": "correct",
+            "judge_confidence": "medium",
+            "judge_label": "unjudgeable",
+            "judge_rationale": "The input asks about live traffic conditions on the A88 toward Sées this morning \that tratraffic is normal with no incidents. Verifying this requires real-time traffic data that is not present in the exchange, so the correctness of the claim cannot be assessed from the exchange alone. The task_type is clearly a factual (live status) query.",
+            "record_id": "rec-1cbd5ae757464011"
+          },
+          {
+            "human_label": "correct",
+            "judge_confidence": "high",
+            "judge_label": "unjudgeable",
+            "judge_rationale": "The input asks whether traffic is currently flowing on the A28 toward Alençon — a live, real-time factual query. The output asserts traffic is fluid, but this claim depends on real-time data that is not present in the exchange and cannot be verified from what is shown. Judging correctness is therefore impossible, so unjudgeable, though the task_type remains a factual query.",
+            "record_id": "rec-7e11ce59b29a4580"
+          },
+          {
+            "human_label": "correct",
+            "judge_confidence": "medium",
+            "judge_label": "unjudgeable",
+            "judge_rationale": "The input asks for the toll rates at Saint-Arnoult — a factual query. The output gives a specific price (9,10 euros for class 1), but I have no reliable reference to verify this exact tariff, and it addresses only one vehicle class rather than the full range of tarifs requested. Since the accuracy of the specific figure cannot be confirmed from the exchange alone, it is unjudgeable.",
+            "record_id": "rec-c1a67f62f2e4d615"
+          },
+          {
+            "human_label": "correct",
+            "judge_confidence": "medium",
+            "judge_label": "unjudgeable",
+            "judge_rationale": "The input asks about live traffic conditions on the A10 this morning \be be verified from the exchange alone \\u2014 real-time traffic status depends on data not present here. The output gives a plausible, self-consistent answer (no slowdowns between Orl/th cannot be confirmed or refuted, so judging correctness is impossible; hence unjudgeable. The task_type remains a clear factual query.",
+            "record_id": "rec-c67c4896e7d79b42"
+          },
+          {
+            "human_label": "correct",
+            "judge_confidence": "medium",
+            "judge_label": "unjudgeable",
+            "judge_rationale": "The input asks for the live traffic status on the A13 this morning \\information. The output claims no slowdowns, but live traffic conditions depend on real-time data not present in the exchange, so the accuracy of the claim cannot be verified from what is shown. The task_type is clearly a factual query, but grading the outcome is impossible here.",
+            "record_id": "rec-eb78f7082d5d0fef"
+          },
+          {
+            "human_label": "correct",
+            "judge_confidence": "high",
+            "judge_label": "unjudgeable",
+            "judge_rationale": "The input asks for the live traffic status on the A131 at the Tancarville bridge — a real-time factual query. The output claims traffic is flowing in both directions, but this depends on current conditions not visible in the exchange, so the claim cannot be verified. Grading is impossible from the exchange alone, hence unjudgeable.",
+            "record_id": "rec-f8102818860818b2"
+          },
+          {
+            "human_label": "correct",
+            "judge_confidence": "medium",
+            "judge_label": "unjudgeable",
+            "judge_rationale": "The input asks whether traffic is flowing smoothly at the Guerville viaduct — a live, real-time factual query. The output gives a specific claim (dense traffic, add 10 minutes) that depends on current traffic data not present in the exchange, so its correctness cannot be verified from the exchange alone. Hence unjudgeable, though the task_type is clearly a factual query.",
+            "record_id": "rec-f9e1699074bcd6cb"
+          },
+          {
+            "human_label": "partially_correct",
+            "judge_confidence": "medium",
+            "judge_label": "correct",
+            "judge_rationale": "The input asks whether traffic flows smoothly on the A84 toward Caen at end of day — a factual/status query. The output directly addresses this, stating that slowdowns are typical between 17h and 19h near Caen, which plausibly answers the question with no visible error. Graded as correct since it addresses exactly what was asked.",
+            "record_id": "rec-8ac9f496595e95b8"
+          }
+        ],
+        "global_kappa": {
+          "ci95": {
+            "b_degenerate": 0,
+            "b_total": 10000,
+            "lower": -0.02439,
+            "method": "percentile",
+            "upper": 0.532698
+          },
+          "kappa": 0.263158,
+          "pe": 0.667638,
+          "po": 0.755102,
+          "status": "ok"
+        },
+        "min_class_support": 5,
+        "per_class": [
+          {
+            "both": 34,
+            "class_name": "correct",
+            "human_support": 45,
+            "judge_support": 35,
+            "value": {
+              "ci95": {
+                "b_degenerate": 0,
+                "b_total": 10000,
+                "lower": -0.038869,
+                "method": "percentile",
+                "upper": 0.511628
+              },
+              "kappa": 0.236364,
+              "pe": 0.6793,
+              "po": 0.755102,
+              "status": "ok"
+            }
+          },
+          {
+            "both": 1,
+            "class_name": "partially_correct",
+            "human_support": 2,
+            "judge_support": 5,
+            "value": {
+              "ci95": {
+                "b_degenerate": 16,
+                "b_total": 10000,
+                "lower": -0.067797,
+                "method": "percentile",
+                "upper": 0.657343
+              },
+              "kappa": 0.241486,
+              "pe": 0.865473,
+              "po": 0.897959,
+              "status": "ok"
+            }
+          },
+          {
+            "both": 0,
+            "class_name": "incorrect",
+            "human_support": 0,
+            "judge_support": 0,
+            "value": {
+              "ci95": null,
+              "kappa": null,
+              "pe": null,
+              "po": null,
+              "status": "absent"
+            }
+          },
+          {
+            "both": 2,
+            "class_name": "unjudgeable",
+            "human_support": 2,
+            "judge_support": 9,
+            "value": {
+              "ci95": {
+                "b_degenerate": 0,
+                "b_total": 10000,
+                "lower": 0.0,
+                "method": "percentile",
+                "upper": 0.655778
+              },
+              "kappa": 0.318091,
+              "pe": 0.790504,
+              "po": 0.857143,
+              "status": "ok"
+            }
+          }
+        ]
+      }
+    ],
+    "bootstrap_resamples": 10000,
+    "headline_ready": true,
+    "human_labels_sha256": "eceeb0a9aa00118db7420360e51e4a0ed669d575a547da0104f8644b3fd80157",
+    "human_labels_source": "human_labels.jsonl",
+    "judge": {
+      "few_shot_content_hashes": [
+        "35b14b1def8b64c8ee2cf7f03b28d9a571474185a0d8dbb8ac922b78a63ce630",
+        "367ac9d7c3cd6a4c48960d287dcaa2b1293f78ca84d5cf8e902f503afc10cbd4",
+        "82f37399468911bf52a63eeb7c48953e10bcc19304687018c3f74a9e50ccd959",
+        "d45ee6cb9d718facd96ef6b37535b9af6533481d0153353f4bf86c331460e82b",
+        "e91a668e80a0de7a8c832f55c808a7b5951eaa8c6838a51126ae9f648bae30ae"
+      ],
+      "few_shot_ids": [
+        "fs-46dacbf301812eec",
+        "fs-49a68d3a4a04e748",
+        "fs-49bd000a07756f47",
+        "fs-966cc1d5fa0d0d00",
+        "fs-976a1408ba367d28"
+      ],
+      "judge_name": "anthropic",
+      "model_id": "claude-opus-4-8",
+      "prompt_sha256": "b963c9e7aa28840b0252ff6378e96ff5673e5c7c0b83c1c550a3c2a60eeb91e4",
+      "taxonomy_id": "tax-d9ca3b87b403"
+    },
+    "min_class_support": 5,
+    "min_human_labels": 30,
+    "seed": 1750,
+    "taxonomy_id": "tax-d9ca3b87b403"
+  },
+  "judge_kind": "anthropic",
+  "labeling_report": {
+    "failed": 0,
+    "failure_entries": [],
+    "failures_by_reason": {},
+    "fewshot_collision_record_ids": [
+      "rec-d1087e0ca3da3367"
+    ],
+    "judge": {
+      "few_shot_content_hashes": [
+        "35b14b1def8b64c8ee2cf7f03b28d9a571474185a0d8dbb8ac922b78a63ce630",
+        "367ac9d7c3cd6a4c48960d287dcaa2b1293f78ca84d5cf8e902f503afc10cbd4",
+        "82f37399468911bf52a63eeb7c48953e10bcc19304687018c3f74a9e50ccd959",
+        "d45ee6cb9d718facd96ef6b37535b9af6533481d0153353f4bf86c331460e82b",
+        "e91a668e80a0de7a8c832f55c808a7b5951eaa8c6838a51126ae9f648bae30ae"
+      ],
+      "few_shot_ids": [
+        "fs-46dacbf301812eec",
+        "fs-49a68d3a4a04e748",
+        "fs-49bd000a07756f47",
+        "fs-966cc1d5fa0d0d00",
+        "fs-976a1408ba367d28"
+      ],
+      "judge_name": "anthropic",
+      "model_id": "claude-opus-4-8",
+      "prompt_sha256": "b963c9e7aa28840b0252ff6378e96ff5673e5c7c0b83c1c550a3c2a60eeb91e4",
+      "taxonomy_id": "tax-d9ca3b87b403"
+    },
+    "labeled": 49,
+    "max_labels": 500,
+    "records_in": 50,
+    "refusal_entries": [],
+    "refused": 0,
+    "skipped_budget": 0,
+    "skipped_budget_record_ids": [],
+    "skipped_fewshot_collision": 1
+  },
+  "labels_file": "human_labels.jsonl",
+  "labels_sha256": "eceeb0a9aa00118db7420360e51e4a0ed669d575a547da0104f8644b3fd80157",
+  "requested_model_id": "claude-opus-4-8",
+  "schema": "evalgen.agreement_run_report.v1",
+  "served_model_ids": [
+    "claude-opus-4-8"
+  ],
+  "synthetic": false,
+  "synthetic_reasons": [],
+  "volatile": {
+    "generated_at": "2026-08-04T00:22:05+00:00",
+    "run_id": "20260804T002205Z-7c2b30d6"
+  }
+}
