@@ -15,6 +15,14 @@
 
 ## The real κ (measured)
 
+> **Being re-measured on the domain corpus.** The demo fixtures have since moved to a
+> real working domain — machine-learning redressement of Floating Car Data — and a fresh
+> double-blind κ on that corpus is the pending next step. The numbers below are from the
+> earlier corpus's session; that session's disagreement drill-down is what drove the
+> taxonomy v2 sharpening ([ADR-0006](docs/decisions/ADR-0006-taxonomy-v2-live-status-convention.md)),
+> and its committed report stays as the method's provenance. The result will be
+> republished as-is once the domain corpus is relabeled.
+
 The proof is a real, double-blind session: a human annotator filled the blind template
 (49 exchanges, no judge output anywhere in sight — the annotation CLI refuses to even
 write into a directory holding judge artifacts), and `claude-opus-4-8` judged the same
@@ -155,14 +163,14 @@ visible in the run itself:
 
 ```
 [2/5] dedup   threshold=0.92  embedder=hashing dim=512 char_wb(3,5)
-  in=62  out=54  id_collapsed=0  exact=3  near=5 (via_chain=1)
+  in=64  out=56  id_collapsed=0  exact=3  near=5 (via_chain=1)
   …
-  near   rec-d829e64df1f0efad -> kept rec-083298153276e970  sim=0.910607  [chain]
+  near   rec-e022b434d327f609 -> kept rec-e7e848ff300b70bf  sim=0.890676  [chain]
   …
 
-[5/5] label   judge=fake model=fake-judge-v1  taxonomy=tax-d8ba44dd70c7  prompt=84d409b1acf9
+[5/5] label   judge=fake model=fake-judge-v1  taxonomy=tax-d8ba44dd70c7  prompt=b714f9ad2e94
   in=50  labeled=49  refused=0  failed=0  budget_skipped=0  fewshot_collisions=1  (budget=500)
-  collision  rec-d1087e0ca3da3367  (canonical text matches a committed few-shot — never labeled, never exportable)
+  collision  rec-5e3329f36f536ec4  (canonical text matches a committed few-shot — never labeled, never exportable)
 ```
 
 `make agreement` — the banner is mandatory, and κ never travels naked:
@@ -172,7 +180,7 @@ visible in the run itself:
 !! measured kappa. The real number waits for data/labels/human_labels.jsonl.
 
 headline (outcome axis, the export gate's number)
-  kappa=0.513109 (n=40, po=0.675, pe=0.3325)  CI95=[0.286421, 0.707241] (B=10000, degenerate=0)  band=moderate
+  kappa=0.565581 (n=40, po=0.675, pe=0.251875)  CI95=[0.361881, 0.757581] (B=10000, degenerate=0)  band=moderate
 ```
 
 `make export` — five named checks; the failing one fails in public:
@@ -182,8 +190,8 @@ gate        min_export_kappa=0.6
   [pass] headline_ready      n_matched=40 >= min_human_labels=30
   [pass] headline_status     ok
   [pass] instrument_binding  agreement fingerprint == labeling fingerprint
-  [pass] ground_truth_bound  human_labels_sha256=41a147e868b1…
-  [FAIL] kappa_threshold     kappa=0.513109 < min_export_kappa=0.6
+  [pass] ground_truth_bound  human_labels_sha256=dfed5b686cb8…
+  [FAIL] kappa_threshold     kappa=0.565581 < min_export_kappa=0.6
   verdict     blocked -> OVERRIDDEN (deliberate)
 ```
 
@@ -196,9 +204,9 @@ findings, and say so on their face:
 | | Measured | The honest fine print |
 |---|---|---|
 | **Test suite** | **677 offline tests**, CI green | no API key, no Docker, no network; includes byte-equality against committed goldens, double-run identity, and the red-team payloads replayed verbatim |
-| **Demo funnel** | 62 records in → 54 after dedup (3 exact + 5 near, 1 chain-flagged) → 4 clusters + 12 noise → 50 sampled → 49 labeled | `make demo`, byte-pinned by `tests/golden/demo_output.txt`; fixtures are synthetic — cluster counts are machinery proof, not findings |
-| **Agreement machinery** | κ = **0.513109** (outcome axis, n=40), CI95 **[0.286421, 0.707241]**, B=10000, seed 1750, per-class table + confusion matrix | `make agreement`, byte-pinned — **SYNTHETIC by design**, see below |
-| **The gate fails honestly** | export gate **blocks**: 0.513109 < 0.6 | `make export`, byte-pinned; the demo exports only through an explicit override whose reason prints on the export's face |
+| **Demo funnel** | 64 records in → 56 after dedup (3 exact + 5 near, 1 chain-flagged) → 5 clusters + 21 noise → 50 sampled → 49 labeled | `make demo`, byte-pinned by `tests/golden/demo_output.txt`; fixtures are synthetic — cluster counts are machinery proof, not findings |
+| **Agreement machinery** | κ = **0.565581** (outcome axis, n=40), CI95 **[0.361881, 0.757581]**, B=10000, seed 1750, per-class table + confusion matrix (every class clears `min_class_support`) | `make agreement`, byte-pinned — **SYNTHETIC by design**, see below |
+| **The gate fails honestly** | export gate **blocks**: 0.565581 < 0.6 | `make export`, byte-pinned; the demo exports only through an explicit override whose reason prints on the export's face |
 | **The product** | `golden.jsonl` (49 lines; identity + texts self-verify per line, labels fenced by the file digest in `meta.json`) + `meta.json` (input SHA-256s, all knobs, the full validated report chain) | written to gitignored `data/out/`; `/repro-audit` byte-diffs both against regeneration |
 
 **Why publishing a fake κ is a feature.** The κ above is deliberately meaningless as a
