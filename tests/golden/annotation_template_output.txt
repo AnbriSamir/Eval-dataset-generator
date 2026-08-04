@@ -1,0 +1,27 @@
+evalgen annotation — template + instructions for the real labeling session
+==========================================================================
+
+!! Fill the template OUTSIDE any agent (a plain text editor), then save it as
+!! data/labels/human_labels.jsonl — that path is hook-protected (agents cannot
+!! write it, and that is the point: writable ground truth would let an agent
+!! fabricate its own kappa).
+
+pipeline    sampled=50  labelable=49  fewshot_collisions=1  (budget=500)
+  excluded  rec-d1087e0ca3da3367  [fewshot_collision]
+            deliberate: the judge holds these records' answer keys, so they
+            can never be labeled, never enter the kappa join, never reach an
+            export — annotating them would waste human effort.
+
+files       written to data/annotation/ — kept apart from data/out/ on purpose:
+            data/out/ holds the judge's verdicts for these same records
+            (golden.jsonl, meta.json, agreement run reports); a blank template
+            must never sit next to the answer key, and this CLI refuses any
+            directory that contains those artifacts.
+  annotation_template.jsonl      49 lines   sha256=d44106e94838af42c6908f3e1daec2f143c5bee69bdf1d558fe8e375fc10cdec
+  annotation_instructions.txt    29 lines   sha256=d3ac44c1b8955a2cc027a804f4bb97ab29dfe3246242a5ff4a3e845127cd226c
+
+next
+  1. answer every line per the instructions (task_type, outcome, annotator)
+  2. save as data/labels/human_labels.jsonl — outside any agent
+  3. python -m evalgen.agreement_run --labels data/labels/human_labels.jsonl
+       --judge anthropic
