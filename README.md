@@ -70,9 +70,10 @@ are exactly what this codebase exists to get right — and to *prove* it got rig
 
 ---
 
-## The flywheel (a three-repo portfolio)
+## The flywheel (three repos that feed each other)
 
-This is the third leg of a loop: *production traces → eval data → better systems*.
+This is the third leg of a loop I run on my own tooling: *production traces → eval data
+→ better systems*.
 
 - [`multi-agent-orchestrator`](https://github.com/anbsamsam17/multi-agent-orchestrator) —
   agents as production infrastructure. Every decision it makes is a typed, costed
