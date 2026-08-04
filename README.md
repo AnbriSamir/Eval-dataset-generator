@@ -3,9 +3,9 @@
 > Everyone evaluates LLM systems; almost nobody can say where their eval set came from.
 > This repo turns **raw production logs** into a **labeled, deduplicated, statistically
 > validated golden dataset** — agreement **measured** (Cohen's κ + bootstrap CI95),
-> never declared. And measured for real: the headline human-vs-judge κ came back
-> **0.26**, and the export gate **blocks the repo's own dataset**. That is the system
-> working.
+> never declared. Measured for real, twice: a first run blocked at **κ = 0.26** and
+> surfaced a guideline gap; after the fix, it re-ran at **κ = 0.80** on the author's real
+> domain, and the gate opened. The improvement loop, closed on itself.
 
 [![CI](https://github.com/anbsamsam17/Eval-dataset-generator/actions/workflows/ci.yml/badge.svg)](https://github.com/anbsamsam17/Eval-dataset-generator/actions/workflows/ci.yml)
 [![Tests](https://img.shields.io/badge/tests-677%20offline-brightgreen)](#the-machinery-was-proven-on-synthetic-data-first)
@@ -13,56 +13,53 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Status](https://img.shields.io/badge/status-complete-brightgreen)](#roadmap)
 
-## The real κ (measured)
+## The real κ (measured) — and a full flywheel turn
 
-> **Being re-measured on the domain corpus.** The demo fixtures have since moved to a
-> real working domain — machine-learning redressement of Floating Car Data — and a fresh
-> double-blind κ on that corpus is the pending next step. The numbers below are from the
-> earlier corpus's session; that session's disagreement drill-down is what drove the
-> taxonomy v2 sharpening ([ADR-0006](docs/decisions/ADR-0006-taxonomy-v2-live-status-convention.md)),
-> and its committed report stays as the method's provenance. The result will be
-> republished as-is once the domain corpus is relabeled.
+Both numbers below come from real, double-blind sessions: a human annotator fills a blind
+template (no judge output anywhere in sight — the annotation CLI refuses to even write
+into a directory holding judge artifacts), then `claude-opus-4-8` judges the same records
+live. A live-LLM run is not byte-deterministic, so every κ is bound to its committed run
+report and the exact ground-truth bytes it was measured on.
 
-The proof is a real, double-blind session: a human annotator filled the blind template
-(49 exchanges, no judge output anywhere in sight — the annotation CLI refuses to even
-write into a directory holding judge artifacts), and `claude-opus-4-8` judged the same
-49 records live. Perfect join: 49/49 matched, zero orphans. The committed run report is
-[`docs/reports/agreement_run_report.20260804T002205Z-7c2b30d6.json`](docs/reports/agreement_run_report.20260804T002205Z-7c2b30d6.json),
-bound to the exact ground-truth bytes (`human_labels_sha256=eceeb0a9…`); a live-LLM run
-is not byte-deterministic, so every number below travels with its digests.
+**Turn 1 — the honest failure that drove a fix.** The first corpus was a set of generic
+traffic Q&A. The headline came back **`outcome` κ = 0.263** (n=49, CI95 **[−0.024, 0.533]**,
+straddling zero) — and the export gate **blocked it** (0.263 < 0.6). Raw agreement was
+75.5%, but both raters skew `correct`, so chance alone predicts 66.8%: a percent-agreement
+metric would have shipped a passing-looking dataset; κ refused. The drill-down then made
+the low number *actionable*: most `outcome` disagreements were `correct → unjudgeable` on
+live-status questions ("is traffic flowing right now?") — the human graded plausibility,
+the judge applied the letter of `unjudgeable` to claims no transcript can verify. Not
+noise: an **annotation-guideline gap**. It drove **taxonomy v2**
+([ADR-0006](docs/decisions/ADR-0006-taxonomy-v2-live-status-convention.md)) — live claims
+are graded *as responses*; `unjudgeable` is reserved for defective inputs. (v1 stays
+frozen, so [turn 1's report](docs/reports/agreement_run_report.20260804T002205Z-7c2b30d6.json)
+keeps its provenance, and the pipeline refuses to measure v1 labels against a v2 judge.)
+
+**Turn 2 — re-measured on the real work, with the sharpened guideline.** The demo corpus
+then moved to the author's actual domain — machine-learning **redressement of Floating Car
+Data** (partial probe-vehicle flow → true all-vehicle flow, road-reference features
+calibrated on SIREO permanent stations and pneumatic tubes) — and the session was re-run
+under v2. Perfect join: 49/49 matched, zero orphans.
+[Committed report](docs/reports/agreement_run_report.20260804T160003Z-76d0eacb.json),
+`human_labels_sha256=83649922…`:
 
 | Axis | κ | CI95 (B=10000) | Band |
 |---|---|---|---|
-| `task_type` — *what is this exchange?* | **0.861** (n=49, p_o=0.918) | [0.722, 0.967] | almost perfect |
-| `outcome` — *is the answer correct?* (**the headline**) | **0.263** (n=49, p_o=0.755) | [**−0.024**, 0.533] | fair |
+| `task_type` — *what is this exchange?* | **0.870** (n=49, p_o=0.939) | [0.722, 1.0] | almost perfect |
+| `outcome` — *is the answer correct?* (**the headline**) | **0.804** (n=49, p_o=0.878) | [0.652, 0.933] | almost perfect |
 
-**And the export gate blocks this dataset for real** (0.263 < 0.6). This unfavorable
-headline is the repo's thesis working, published exactly as measured:
+**This time the gate opens** — 0.804 clears 0.6, and even the CI95 lower bound (0.652)
+sits above it. Every `outcome` class now has the support to report its own κ (0.88
+`correct`, 0.56 `partially_correct`, 0.85 `incorrect`, 0.90 `unjudgeable`) — the
+corpus was engineered for that, the fix of turn 1's under-supported classes. Just six
+`outcome` disagreements remain, all one-step (`→ partially_correct`).
 
-- **A percent-agreement metric would have shipped a lie; the κ machinery refused.**
-  Raw agreement on `outcome` is 75.5% — sounds fine — but both raters say `correct`
-  most of the time, so chance alone predicts 66.8% (p_e): κ collapses to 0.26 and its
-  CI95 straddles zero.
-- **The gate blocks my own dataset.** κ below 0.6 blocks the export — no exception for
-  the author. The only escape is a typed override with a mandatory reason, rendered
-  loudly on the export's face; this dataset does not ship until the number earns it.
-- **The disagreement drill-down turns the low number into an actionable finding instead
-  of a shrug:** 7 of the 12 `outcome` disagreements are `correct → unjudgeable`, six of
-  them on live traffic-status questions ("is traffic flowing on the A10 right now?"),
-  the seventh on an equally unverifiable tariff query. The human
-  graded *plausibility*; the judge applied the written definition of `unjudgeable`
-  (*"the answer depends on missing context"*) to claims no transcript can verify. That
-  is not noise — it is an **annotation-guideline gap**, surfaced by exactly the
-  drill-down built to surface it. The flywheel's next turn is now concrete: sharpen the
-  `outcome` definitions for live-status claims, relabel, re-measure — and only then
-  should the gate open. The sharpening has landed as **taxonomy v2**
-  ([ADR-0006](docs/decisions/ADR-0006-taxonomy-v2-live-status-convention.md): live
-  claims are graded *as responses*; `unjudgeable` is reserved for defective inputs);
-  v1 stays frozen so this report's provenance never breaks, and the pipeline refuses
-  to measure v1 labels against the v2 judge. The relabel + re-measure are next.
-
-Per-class κ tables, both confusion matrices, and every disagreement with the judge's
-rationale are in the committed run report.
+**What this pair is, and isn't.** It is one honest measurement that failed and blocked,
+a guideline fix it motivated, and a second honest measurement that passed — the
+improvement loop this whole repo exists to run, executed on itself. It is **not** a
+controlled A/B: turn 2 changed both the guideline *and* the corpus (from generic traffic
+to a coherent domain set), so the lift is not attributable to v2 alone. Both reports ship
+verbatim; read each κ with its n, its supports, and its interval.
 
 > ✅ **Complete.** All six pipeline stages implemented, **677 offline tests**, CI green
 > (lint · typecheck · test) — no API key, no Docker, no network. Three zero-argument
@@ -219,9 +216,10 @@ resamples excluded *and counted*, self-validating reports that recompute their o
 every deserialization — a report that lies about its own numbers refuses to exist. When
 the real human labels landed in `data/labels/human_labels.jsonl`, only the number
 changed — the machinery was already proven byte-for-byte. And on the committed fixtures
-the export gate **genuinely blocks** — a pipeline demonstrated failing honestly is
-worth more than one demonstrated only passing. The same gate now blocks
-[the real dataset](#the-real-κ-measured).
+the export gate **genuinely blocks** (κ = 0.565581 < 0.6) — a pipeline demonstrated
+failing honestly is worth more than one demonstrated only passing. The
+[real domain dataset](#the-real-κ-measured) *clears* the same gate at κ = 0.80; the
+first real run did not, and blocked. Both outcomes are the gate doing its job.
 
 ## What the red team caught
 
@@ -316,14 +314,14 @@ Done:
 
 - [x] Phases 0–5: contracts + ingest/redaction · dedup/cluster/sampling · judge ·
   agreement · export — five ADRs, three byte-pinned CLIs (612 offline tests then;
-  658 with the real-session CLI pair below, 673 with taxonomy v2)
+  658 with the real-session CLI pair below, 677 with taxonomy v2 + the domain corpus)
 - [x] Red-team pass on every phase, with closures recorded as ADR amendments and
   regression tests replaying each payload
-- [x] **Real human labels → the real κ — measured, published as-is.** A human
-  annotator filled the blind template into `data/labels/human_labels.jsonl`
-  (hook-protected: humans only) and the live judge ran. See
-  [The real κ](#the-real-κ-measured) above — outcome κ = **0.263158** with a CI95
-  straddling zero, exactly the kind of unfavorable number this rule exists for.
+- [x] **Real human labels → the real κ — measured twice, published as-is.** Turn 1
+  (generic corpus): outcome κ = **0.263158**, CI95 straddling zero, gate blocked —
+  the unfavorable number this rule exists for. Turn 2 (domain corpus, v2 guideline):
+  outcome κ = **0.803869**, CI95 [0.652, 0.933], gate opens. Both live-judge runs are
+  committed under [`docs/reports/`](docs/reports/); see [The real κ](#the-real-κ-measured).
 - [x] Real-data CLI pair — explicit flags only, never autodetection: `make annotate`
   emits the blank template into `data/annotation/` (structurally apart from judge
   output — each CLI refuses a directory holding the other family's artifacts), and
@@ -339,11 +337,12 @@ Next — the honest part:
   grades inherently live claims *as responses* and reserves `unjudgeable` for
   defective inputs; v1 stays frozen for provenance and `agreement_run` refuses v1
   labels against the v2 judge (both directions, before any API cost).
-- [ ] Relabel under v2 (`make annotate` → human fills outside any agent),
-  re-measure, publish whatever comes back — the gate stays closed until the
-  number earns it.
-- [ ] Real-data export behind `--allow-low-kappa "<reason>"` — the Phase 5 gate and its
-  override contract ship today; the explicit flag waits for a κ worth arguing about.
+- [x] Relabel under v2 on the domain corpus and re-measure — done: outcome
+  κ = **0.804** on the FCD-redressement set, gate clears (turn 2 above), every
+  `outcome` class now with the support to report its own κ.
+- [ ] Real-data export now that a κ clears the gate — wire `make export` to the domain
+  run's report (the Phase 5 gate + provenance ship today); the `--allow-low-kappa
+  "<reason>"` override stays for the runs that don't.
 - [ ] Near-dup threshold calibration on real labeled pairs — the protocol, harness, and
   report validator ship today; 0.92 stays a default until measured.
 - [ ] Semantic embedding backend behind the `Embedder` Protocol, with its own
