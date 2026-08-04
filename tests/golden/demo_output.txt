@@ -3,58 +3,59 @@ evalgen demo — offline pipeline on committed fixtures
 
 [1/5] ingest
   generic_demo.jsonl     8 read | 3 records | 3 rejected | 2 skipped
-  cluster_demo.jsonl     53 read | 53 records | 0 rejected | 0 skipped
+  cluster_demo.jsonl     55 read | 55 records | 0 rejected | 0 skipped
   tracespans_demo.jsonl  16 read | 6 records | 4 rejected | 6 skipped
-  total records: 62
+  total records: 64
 
 [2/5] dedup   threshold=0.92  embedder=hashing dim=512 char_wb(3,5)
-  in=62  out=54  id_collapsed=0  exact=3  near=5 (via_chain=1)
-  exact  rec-1eedc0a1e303f024 -> kept rec-802038cabe9059c3
-  exact  rec-66655921ccee08fb -> kept rec-c84e05c141516b51
-  exact  rec-b2d2a2c44ab02f3b -> kept rec-7bd41b3a5c30240a
-  near   rec-0d97eeeeeea9f26b -> kept rec-531a5cc3fa66ec4b  sim=0.980491
-  near   rec-5f08b6a7c5971f52 -> kept rec-083298153276e970  sim=0.969524
-  near   rec-62c19f4d20783f5b -> kept rec-d1087e0ca3da3367  sim=1.0
-  near   rec-962f74d7d43e1a1c -> kept rec-c84e05c141516b51  sim=0.983013
-  near   rec-d829e64df1f0efad -> kept rec-083298153276e970  sim=0.910607  [chain]
+  in=64  out=56  id_collapsed=0  exact=3  near=5 (via_chain=1)
+  exact  rec-171d2c9325160fa1 -> kept rec-56f73b7af2a99c77
+  exact  rec-2fbb2e8635439749 -> kept rec-e03fa8d3d334b21a
+  exact  rec-846990e6c4bd3615 -> kept rec-252e371d49d93d4f
+  near   rec-16274d736bdc1b90 -> kept rec-e7e848ff300b70bf  sim=0.95598
+  near   rec-621568b3eabf3270 -> kept rec-56f73b7af2a99c77  sim=0.992859
+  near   rec-7ca6406c6d67a0cd -> kept rec-5e3329f36f536ec4  sim=1.0
+  near   rec-e022b434d327f609 -> kept rec-e7e848ff300b70bf  sim=0.890676  [chain]
+  near   rec-e039344ff3fa5172 -> kept rec-20afed2cd9b13d65  sim=0.98349
 
 [3/5] cluster   min_cluster_size=5  metric=euclidean_l2norm
-  cl-20714a1ef2e1  size=13  "Quels sont les horaires du péage de Saint-Arnoult ?"
-  cl-83b5c3674ec3  size=11  "Le trafic est-il fluide sur l'A10 ce matin entre Orléans et Tou…"
-  cl-2c464a809396  size=10  "L'export des données de trafic échoue avec une erreur 500, que …"
-  cl-824fa8ffc0f8  size=8  "Comment activer le badge télépéage sur ma nouvelle voiture ?"
-  noise            size=12
+  cl-4aef2f40856d  size=8  "Comment varie le taux de pénétration FCD selon le type de route…"
+  cl-0425425ffeb0  size=7  "Pour le calage du modèle, quel rôle jouent les stations permane…"
+  cl-2b8bcf62844e  size=7  "Dans le référentiel routier, que contient la fiche d'un tronçon…"
+  cl-b2d730f411ca  size=7  "Quelles features alimentent le modèle de redressement TV sur le…"
+  cl-92d81a608a00  size=6  "L'export des débits redressés échoue avec une erreur 500, que f…"
+  noise            size=21
 
 [4/5] sample   seed=1750  requested=50  sampled=50
-  cl-20714a1ef2e1  quota 12/13   rec-091fd142459095f7, rec-219bbb2b999ff9c2,
-                                 rec-45340f7659c0b9e6, rec-4642c539b7b29ae3,
-                                 rec-480d0aa5a9457494, rec-5d247122fa704582,
-                                 rec-996ce817c0eda631, rec-c1a67f62f2e4d615,
-                                 rec-c84e05c141516b51, rec-cf1afb802995bbcd,
-                                 rec-d0f74b81bb6d0529, rec-e8b3437ddf218299
-  noise            quota 11/12   rec-17323e235e1e1812, rec-189adcb306a8c328,
-                                 rec-34700e24d413eb15, rec-7bd41b3a5c30240a,
-                                 rec-802038cabe9059c3, rec-884a023cbcb4d44e,
-                                 rec-9b36bf3aece7578d, rec-a1e792344b054feb,
-                                 rec-d45211a456b277dc, rec-decabc0573dfb253,
-                                 rec-f374b8ec672fb60a
-  cl-83b5c3674ec3  quota 10/11   rec-1cbd5ae757464011, rec-2ff675dd24fd7880,
-                                 rec-3b4502a745a5d5a1, rec-7e11ce59b29a4580,
-                                 rec-8ac9f496595e95b8, rec-91f350d70ee60bd9,
-                                 rec-c67c4896e7d79b42, rec-eb78f7082d5d0fef,
-                                 rec-f8102818860818b2, rec-f9e1699074bcd6cb
-  cl-2c464a809396  quota 9/10   rec-01f7067c8a507bbe, rec-358de05acfe294ea,
-                                rec-3690f9a993e5dc9c, rec-479227ce7e9b3395,
-                                rec-4b155d4a5fa8b03c, rec-5133258a231a3948,
-                                rec-531a5cc3fa66ec4b, rec-c9120b19b3b978e6,
-                                rec-d75a5d9866b5e52b
-  cl-824fa8ffc0f8  quota 8/8   rec-04b2539057892521, rec-5342ee5eb3c46573,
-                               rec-58ccbba47fe47168, rec-94ccac8945e3bd1e,
-                               rec-c0d7b5986ffbf0da, rec-ccf2c7490864b9db,
-                               rec-d1087e0ca3da3367, rec-f469c4171d1b2785
+  noise            quota 19/21   rec-030752bfebd438d1, rec-2153c81883736337,
+                                 rec-235c3fe74c2ba024, rec-252e371d49d93d4f,
+                                 rec-2ea190a62fc01b7d, rec-368a10eee5ab332c,
+                                 rec-53c05ff645629553, rec-53eefd5ecc70ea8f,
+                                 rec-695e1bcd1b261c86, rec-83a16bcd6ea9d33e,
+                                 rec-8e81a9acf0d8ee90, rec-9920348f8d6ac75b,
+                                 rec-b9ea19be1679fda2, rec-c7e1968a85f5e02f,
+                                 rec-cab4dc578c0ee548, rec-e03fa8d3d334b21a,
+                                 rec-ee869a3efca94707, rec-f153a5c714327250,
+                                 rec-f557719099465128
+  cl-4aef2f40856d  quota 7/8   rec-203a5e37bdbe90f2, rec-3f969b63beb135e4,
+                               rec-56f73b7af2a99c77, rec-5cd56e8fce6e6230,
+                               rec-5f6925c198678614, rec-87be22454869f629,
+                               rec-c652b6b48188f7a0
+  cl-0425425ffeb0  quota 6/7   rec-23e9d97854cbb976, rec-351371b4eec35e19,
+                               rec-4b7898610921e05d, rec-9314a5ae882a7f37,
+                               rec-bc48caff2d9ab4de, rec-f91ac94b77400493
+  cl-2b8bcf62844e  quota 6/7   rec-4e305bc7a0d2546d, rec-5e3329f36f536ec4,
+                               rec-9a37d2c904957b56, rec-a8561cccbaeeeb72,
+                               rec-a986cd0a130159e0, rec-deead34d921d17d0
+  cl-b2d730f411ca  quota 6/7   rec-0a0fcb7cd991d514, rec-b04167122ca5fb29,
+                               rec-dc1025d3cb950390, rec-e04f4073ba446553,
+                               rec-e7e848ff300b70bf, rec-fc2b8ef10cf8e1b3
+  cl-92d81a608a00  quota 6/6   rec-1170a833f15311fd, rec-1ea9c45812f5b11c,
+                               rec-20afed2cd9b13d65, rec-420d883582e17998,
+                               rec-7faca83e0f1c73f7, rec-9555976a8662f312
 
-[5/5] label   judge=fake model=fake-judge-v1  taxonomy=tax-d9ca3b87b403  prompt=b963c9e7aa28
+[5/5] label   judge=fake model=fake-judge-v1  taxonomy=tax-d8ba44dd70c7  prompt=b714f9ad2e94
   in=50  labeled=49  refused=0  failed=0  budget_skipped=0  fewshot_collisions=1  (budget=500)
-  collision  rec-d1087e0ca3da3367  (canonical text matches a committed few-shot — never labeled, never exportable)
-  outcome    correct=9  partially_correct=16  incorrect=15  unjudgeable=9   [synthetic fake-judge verdicts]
-  task_type  factual_query=6  procedural_request=15  troubleshooting=14  planning_or_reasoning=6  other=8
+  collision  rec-5e3329f36f536ec4  (canonical text matches a committed few-shot — never labeled, never exportable)
+  outcome    correct=11  partially_correct=12  incorrect=11  unjudgeable=15   [synthetic fake-judge verdicts]
+  task_type  factual_query=12  procedural_request=11  troubleshooting=9  planning_or_reasoning=9  other=8

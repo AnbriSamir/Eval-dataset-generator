@@ -7,7 +7,7 @@ evalgen annotation — template + instructions for the real labeling session
 !! fabricate its own kappa).
 
 pipeline    sampled=50  labelable=49  fewshot_collisions=1  (budget=500)
-  excluded  rec-d1087e0ca3da3367  [fewshot_collision]
+  excluded  rec-5e3329f36f536ec4  [fewshot_collision]
             deliberate: the judge holds these records' answer keys, so they
             can never be labeled, never enter the kappa join, never reach an
             export — annotating them would waste human effort.
@@ -17,8 +17,8 @@ files       written to data/annotation/ — kept apart from data/out/ on purpose
             (golden.jsonl, meta.json, agreement run reports); a blank template
             must never sit next to the answer key, and this CLI refuses any
             directory that contains those artifacts.
-  annotation_template.jsonl      49 lines   sha256=d44106e94838af42c6908f3e1daec2f143c5bee69bdf1d558fe8e375fc10cdec
-  annotation_instructions.txt    29 lines   sha256=d3ac44c1b8955a2cc027a804f4bb97ab29dfe3246242a5ff4a3e845127cd226c
+  annotation_template.jsonl      49 lines   sha256=88458d15790cf74588414592a1c9fbf96b89b7d4273817aa17f92aa8f8650cdf
+  annotation_instructions.txt    29 lines   sha256=cd996d888f594f634ec903b8abc52cde006331db05efd08c65d636309faed3a9
 
 next
   1. answer every line per the instructions (task_type, outcome, annotator)

@@ -437,7 +437,7 @@ override *actually shouting*.
   corpus; the matched-pair id list is not carried in the report (size). Stated;
   the designed flow (CLI wires one run end-to-end) makes them identical in
   practice, and both reports ride meta.json so divergence is inspectable.
-- **Whole-report embedding makes meta.json tens of KB** — trivial at portfolio
+- **Whole-report embedding makes meta.json tens of KB** — trivial at this
   scale; the revisit trigger is a corpus where `DedupReport` entry lists dominate
   (already ADR-0002's documented scale limit).
 

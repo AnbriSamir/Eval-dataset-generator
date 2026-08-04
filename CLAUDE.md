@@ -8,14 +8,14 @@ non-negotiables that keep this repo's senior signal intact.
 
 ## 1. What this project is
 
-The third leg of the portfolio triad (with `hybrid-rag-pipeline` and
+The third leg of a three-repo system (with `hybrid-rag-pipeline` and
 `multi-agent-orchestrator`): an **evaluation-dataset generator that turns raw
 production logs into a labeled, deduplicated, statistically validated golden set** —
 closing the improvement flywheel (prod traces → eval data → better systems).
 
 - **First-class input: the sibling repo's traces.** `multi-agent-orchestrator` emits
   typed `TraceSpan` JSONL — this repo mines them natively, plus a generic JSONL
-  adapter for any log source. The synergy IS the portfolio narrative.
+  adapter for any log source. The synergy IS the point: each repo feeds the next in daily use.
 - **Mining, typed** — ingestion normalizes heterogeneous logs into a Pydantic
   `LogRecord`; **secrets/PII are redacted at the ingestion boundary**, before
   anything persists.

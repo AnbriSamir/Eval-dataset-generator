@@ -5,23 +5,23 @@
       "human_only": [
         {
           "cause": "not_in_run",
-          "record_id": "rec-083298153276e970"
+          "record_id": "rec-16274d736bdc1b90"
         },
         {
           "cause": "fewshot_collision",
-          "record_id": "rec-d1087e0ca3da3367"
+          "record_id": "rec-5e3329f36f536ec4"
         }
       ],
       "judge_only_ids": [
-        "rec-17323e235e1e1812",
-        "rec-219bbb2b999ff9c2",
-        "rec-2ff675dd24fd7880",
-        "rec-45340f7659c0b9e6",
-        "rec-480d0aa5a9457494",
-        "rec-5133258a231a3948",
-        "rec-5342ee5eb3c46573",
-        "rec-c0d7b5986ffbf0da",
-        "rec-f9e1699074bcd6cb"
+        "rec-1170a833f15311fd",
+        "rec-235c3fe74c2ba024",
+        "rec-368a10eee5ab332c",
+        "rec-53c05ff645629553",
+        "rec-695e1bcd1b261c86",
+        "rec-9314a5ae882a7f37",
+        "rec-a986cd0a130159e0",
+        "rec-c7e1968a85f5e02f",
+        "rec-e04f4073ba446553"
       ],
       "judged_in": 49,
       "n_matched": 40
@@ -41,242 +41,248 @@
         ],
         "confusion": [
           [
-            1,
+            5,
             0,
             0,
-            0,
-            0
-          ],
-          [
-            0,
-            9,
-            3,
-            1,
-            0
-          ],
-          [
-            0,
-            3,
-            8,
             0,
             1
           ],
           [
+            5,
+            5,
             0,
-            1,
-            1,
+            0,
+            0
+          ],
+          [
+            0,
             4,
-            1
+            6,
+            0,
+            0
           ],
           [
-            1,
-            1,
+            0,
             0,
             1,
-            4
+            5,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            3,
+            5
           ]
         ],
         "disagreements": [
           {
+            "human_label": "factual_query",
+            "judge_confidence": "high",
+            "judge_label": "other",
+            "judge_rationale": "synthetic fake-judge verdict (digest f46a0901) — offline demo/tests only",
+            "record_id": "rec-7faca83e0f1c73f7"
+          },
+          {
             "human_label": "other",
+            "judge_confidence": "medium",
+            "judge_label": "planning_or_reasoning",
+            "judge_rationale": "synthetic fake-judge verdict (digest daedb89f) — offline demo/tests only",
+            "record_id": "rec-030752bfebd438d1"
+          },
+          {
+            "human_label": "other",
+            "judge_confidence": "low",
+            "judge_label": "planning_or_reasoning",
+            "judge_rationale": "synthetic fake-judge verdict (digest 8aad4aee) — offline demo/tests only",
+            "record_id": "rec-e03fa8d3d334b21a"
+          },
+          {
+            "human_label": "other",
+            "judge_confidence": "high",
+            "judge_label": "planning_or_reasoning",
+            "judge_rationale": "synthetic fake-judge verdict (digest b7846c5a) — offline demo/tests only",
+            "record_id": "rec-fc2b8ef10cf8e1b3"
+          },
+          {
+            "human_label": "planning_or_reasoning",
+            "judge_confidence": "high",
+            "judge_label": "troubleshooting",
+            "judge_rationale": "synthetic fake-judge verdict (digest 8e4f9c70) — offline demo/tests only",
+            "record_id": "rec-f153a5c714327250"
+          },
+          {
+            "human_label": "procedural_request",
             "judge_confidence": "high",
             "judge_label": "factual_query",
-            "judge_rationale": "synthetic fake-judge verdict (digest b44012b1) — offline demo/tests only",
-            "record_id": "rec-f469c4171d1b2785"
-          },
-          {
-            "human_label": "other",
-            "judge_confidence": "medium",
-            "judge_label": "planning_or_reasoning",
-            "judge_rationale": "synthetic fake-judge verdict (digest 26d604ab) — offline demo/tests only",
-            "record_id": "rec-ccf2c7490864b9db"
-          },
-          {
-            "human_label": "other",
-            "judge_confidence": "medium",
-            "judge_label": "procedural_request",
-            "judge_rationale": "synthetic fake-judge verdict (digest 2ee9a088) — offline demo/tests only",
-            "record_id": "rec-decabc0573dfb253"
-          },
-          {
-            "human_label": "planning_or_reasoning",
-            "judge_confidence": "medium",
-            "judge_label": "other",
-            "judge_rationale": "synthetic fake-judge verdict (digest db07ac13) — offline demo/tests only",
-            "record_id": "rec-9b36bf3aece7578d"
-          },
-          {
-            "human_label": "planning_or_reasoning",
-            "judge_confidence": "high",
-            "judge_label": "procedural_request",
-            "judge_rationale": "synthetic fake-judge verdict (digest 74b98a57) — offline demo/tests only",
-            "record_id": "rec-f8102818860818b2"
-          },
-          {
-            "human_label": "planning_or_reasoning",
-            "judge_confidence": "medium",
-            "judge_label": "troubleshooting",
-            "judge_rationale": "synthetic fake-judge verdict (digest 25073dc7) — offline demo/tests only",
-            "record_id": "rec-d45211a456b277dc"
+            "judge_rationale": "synthetic fake-judge verdict (digest af34544d) — offline demo/tests only",
+            "record_id": "rec-203a5e37bdbe90f2"
           },
           {
             "human_label": "procedural_request",
             "judge_confidence": "high",
-            "judge_label": "planning_or_reasoning",
-            "judge_rationale": "synthetic fake-judge verdict (digest 7b982713) — offline demo/tests only",
-            "record_id": "rec-cf1afb802995bbcd"
+            "judge_label": "factual_query",
+            "judge_rationale": "synthetic fake-judge verdict (digest 5fdf5d0a) — offline demo/tests only",
+            "record_id": "rec-23e9d97854cbb976"
           },
           {
             "human_label": "procedural_request",
             "judge_confidence": "medium",
-            "judge_label": "troubleshooting",
-            "judge_rationale": "synthetic fake-judge verdict (digest 70a891df) — offline demo/tests only",
-            "record_id": "rec-996ce817c0eda631"
+            "judge_label": "factual_query",
+            "judge_rationale": "synthetic fake-judge verdict (digest 6ee87c89) — offline demo/tests only",
+            "record_id": "rec-8e81a9acf0d8ee90"
           },
           {
             "human_label": "procedural_request",
             "judge_confidence": "high",
-            "judge_label": "troubleshooting",
-            "judge_rationale": "synthetic fake-judge verdict (digest a70c0097) — offline demo/tests only",
-            "record_id": "rec-eb78f7082d5d0fef"
+            "judge_label": "factual_query",
+            "judge_rationale": "synthetic fake-judge verdict (digest 7810edd8) — offline demo/tests only",
+            "record_id": "rec-9a37d2c904957b56"
           },
           {
             "human_label": "procedural_request",
             "judge_confidence": "high",
-            "judge_label": "troubleshooting",
-            "judge_rationale": "synthetic fake-judge verdict (digest 4d56c327) — offline demo/tests only",
-            "record_id": "rec-f374b8ec672fb60a"
-          },
-          {
-            "human_label": "troubleshooting",
-            "judge_confidence": "medium",
-            "judge_label": "other",
-            "judge_rationale": "synthetic fake-judge verdict (digest 8b096700) — offline demo/tests only",
-            "record_id": "rec-8ac9f496595e95b8"
-          },
-          {
-            "human_label": "troubleshooting",
-            "judge_confidence": "high",
-            "judge_label": "procedural_request",
-            "judge_rationale": "synthetic fake-judge verdict (digest 835618db) — offline demo/tests only",
-            "record_id": "rec-189adcb306a8c328"
-          },
-          {
-            "human_label": "troubleshooting",
-            "judge_confidence": "medium",
-            "judge_label": "procedural_request",
-            "judge_rationale": "synthetic fake-judge verdict (digest 5676527a) — offline demo/tests only",
-            "record_id": "rec-884a023cbcb4d44e"
+            "judge_label": "factual_query",
+            "judge_rationale": "synthetic fake-judge verdict (digest d2291bc9) — offline demo/tests only",
+            "record_id": "rec-b9ea19be1679fda2"
           },
           {
             "human_label": "troubleshooting",
             "judge_confidence": "low",
             "judge_label": "procedural_request",
-            "judge_rationale": "synthetic fake-judge verdict (digest 014ed750) — offline demo/tests only",
-            "record_id": "rec-c1a67f62f2e4d615"
+            "judge_rationale": "synthetic fake-judge verdict (digest 8840aa02) — offline demo/tests only",
+            "record_id": "rec-351371b4eec35e19"
+          },
+          {
+            "human_label": "troubleshooting",
+            "judge_confidence": "low",
+            "judge_label": "procedural_request",
+            "judge_rationale": "synthetic fake-judge verdict (digest 33a16b58) — offline demo/tests only",
+            "record_id": "rec-4b7898610921e05d"
+          },
+          {
+            "human_label": "troubleshooting",
+            "judge_confidence": "medium",
+            "judge_label": "procedural_request",
+            "judge_rationale": "synthetic fake-judge verdict (digest 1024d087) — offline demo/tests only",
+            "record_id": "rec-56f73b7af2a99c77"
+          },
+          {
+            "human_label": "troubleshooting",
+            "judge_confidence": "medium",
+            "judge_label": "procedural_request",
+            "judge_rationale": "synthetic fake-judge verdict (digest 060955ee) — offline demo/tests only",
+            "record_id": "rec-cab4dc578c0ee548"
           }
         ],
         "global_kappa": {
           "ci95": {
             "b_degenerate": 0,
             "b_total": 10000,
-            "lower": 0.314075,
+            "lower": 0.372549,
             "method": "percentile",
-            "upper": 0.723195
+            "upper": 0.74359
           },
-          "kappa": 0.52862,
-          "pe": 0.2575,
+          "kappa": 0.563863,
+          "pe": 0.1975,
           "po": 0.65,
           "status": "ok"
         },
         "min_class_support": 5,
         "per_class": [
           {
-            "both": 1,
+            "both": 5,
             "class_name": "factual_query",
-            "human_support": 1,
-            "judge_support": 2,
-            "value": {
-              "ci95": null,
-              "kappa": null,
-              "pe": null,
-              "po": null,
-              "status": "insufficient_support"
-            }
-          },
-          {
-            "both": 9,
-            "class_name": "procedural_request",
-            "human_support": 13,
-            "judge_support": 14,
+            "human_support": 6,
+            "judge_support": 10,
             "value": {
               "ci95": {
                 "b_degenerate": 0,
                 "b_total": 10000,
-                "lower": 0.189856,
+                "lower": 0.174264,
                 "method": "percentile",
-                "upper": 0.762611
+                "upper": 0.82684
               },
-              "kappa": 0.497207,
-              "pe": 0.5525,
+              "kappa": 0.538462,
+              "pe": 0.675,
+              "po": 0.85,
+              "status": "ok"
+            }
+          },
+          {
+            "both": 5,
+            "class_name": "procedural_request",
+            "human_support": 10,
+            "judge_support": 9,
+            "value": {
+              "ci95": {
+                "b_degenerate": 0,
+                "b_total": 10000,
+                "lower": 0.02439,
+                "method": "percentile",
+                "upper": 0.688716
+              },
+              "kappa": 0.37931,
+              "pe": 0.6375,
               "po": 0.775,
               "status": "ok"
             }
           },
           {
-            "both": 8,
+            "both": 6,
             "class_name": "troubleshooting",
-            "human_support": 12,
-            "judge_support": 12,
+            "human_support": 10,
+            "judge_support": 7,
             "value": {
               "ci95": {
                 "b_degenerate": 0,
                 "b_total": 10000,
-                "lower": 0.202658,
+                "lower": 0.285714,
                 "method": "percentile",
-                "upper": 0.787234
+                "upper": 0.908257
               },
-              "kappa": 0.52381,
-              "pe": 0.58,
-              "po": 0.8,
-              "status": "ok"
-            }
-          },
-          {
-            "both": 4,
-            "class_name": "planning_or_reasoning",
-            "human_support": 7,
-            "judge_support": 6,
-            "value": {
-              "ci95": {
-                "b_degenerate": 2,
-                "b_total": 10000,
-                "lower": 0.090909,
-                "method": "percentile",
-                "upper": 0.856631
-              },
-              "kappa": 0.541284,
-              "pe": 0.7275,
+              "kappa": 0.62963,
+              "pe": 0.6625,
               "po": 0.875,
               "status": "ok"
             }
           },
           {
-            "both": 4,
-            "class_name": "other",
-            "human_support": 7,
-            "judge_support": 6,
+            "both": 5,
+            "class_name": "planning_or_reasoning",
+            "human_support": 6,
+            "judge_support": 8,
             "value": {
               "ci95": {
                 "b_degenerate": 1,
                 "b_total": 10000,
-                "lower": 0.119446,
+                "lower": 0.270833,
                 "method": "percentile",
-                "upper": 0.856631
+                "upper": 0.925373
               },
-              "kappa": 0.541284,
-              "pe": 0.7275,
-              "po": 0.875,
+              "kappa": 0.655172,
+              "pe": 0.71,
+              "po": 0.9,
+              "status": "ok"
+            }
+          },
+          {
+            "both": 5,
+            "class_name": "other",
+            "human_support": 8,
+            "judge_support": 6,
+            "value": {
+              "ci95": {
+                "b_degenerate": 0,
+                "b_total": 10000,
+                "lower": 0.245283,
+                "method": "percentile",
+                "upper": 0.925373
+              },
+              "kappa": 0.655172,
+              "pe": 0.71,
+              "po": 0.9,
               "status": "ok"
             }
           }
@@ -292,206 +298,212 @@
         ],
         "confusion": [
           [
+            7,
+            0,
+            0,
+            3
+          ],
+          [
+            3,
+            7,
+            0,
+            0
+          ],
+          [
+            0,
+            4,
             5,
-            3,
-            0,
-            1
-          ],
-          [
-            2,
-            11,
-            3,
-            1
-          ],
-          [
-            0,
-            2,
-            11,
             0
           ],
           [
             0,
             0,
-            1,
-            0
+            3,
+            8
           ]
         ],
         "disagreements": [
           {
             "human_label": "correct",
-            "judge_confidence": "high",
-            "judge_label": "partially_correct",
-            "judge_rationale": "synthetic fake-judge verdict (digest 67358455) — offline demo/tests only",
-            "record_id": "rec-91f350d70ee60bd9"
-          },
-          {
-            "human_label": "correct",
-            "judge_confidence": "high",
-            "judge_label": "partially_correct",
-            "judge_rationale": "synthetic fake-judge verdict (digest c1edf05b) — offline demo/tests only",
-            "record_id": "rec-94ccac8945e3bd1e"
-          },
-          {
-            "human_label": "correct",
-            "judge_confidence": "medium",
-            "judge_label": "partially_correct",
-            "judge_rationale": "synthetic fake-judge verdict (digest 2ee9a088) — offline demo/tests only",
-            "record_id": "rec-decabc0573dfb253"
+            "judge_confidence": "low",
+            "judge_label": "unjudgeable",
+            "judge_rationale": "synthetic fake-judge verdict (digest 564332e2) — offline demo/tests only",
+            "record_id": "rec-0a0fcb7cd991d514"
           },
           {
             "human_label": "correct",
             "judge_confidence": "medium",
             "judge_label": "unjudgeable",
-            "judge_rationale": "synthetic fake-judge verdict (digest db07ac13) — offline demo/tests only",
-            "record_id": "rec-9b36bf3aece7578d"
+            "judge_rationale": "synthetic fake-judge verdict (digest 370304e0) — offline demo/tests only",
+            "record_id": "rec-9555976a8662f312"
           },
           {
-            "human_label": "incorrect",
-            "judge_confidence": "low",
-            "judge_label": "partially_correct",
-            "judge_rationale": "synthetic fake-judge verdict (digest 34a9bcb2) — offline demo/tests only",
-            "record_id": "rec-d75a5d9866b5e52b"
-          },
-          {
-            "human_label": "incorrect",
-            "judge_confidence": "high",
-            "judge_label": "partially_correct",
-            "judge_rationale": "synthetic fake-judge verdict (digest 74b98a57) — offline demo/tests only",
-            "record_id": "rec-f8102818860818b2"
-          },
-          {
-            "human_label": "partially_correct",
-            "judge_confidence": "high",
-            "judge_label": "correct",
-            "judge_rationale": "synthetic fake-judge verdict (digest a70c0097) — offline demo/tests only",
-            "record_id": "rec-eb78f7082d5d0fef"
-          },
-          {
-            "human_label": "partially_correct",
-            "judge_confidence": "high",
-            "judge_label": "correct",
-            "judge_rationale": "synthetic fake-judge verdict (digest b44012b1) — offline demo/tests only",
-            "record_id": "rec-f469c4171d1b2785"
-          },
-          {
-            "human_label": "partially_correct",
-            "judge_confidence": "high",
-            "judge_label": "incorrect",
-            "judge_rationale": "synthetic fake-judge verdict (digest 731660b0) — offline demo/tests only",
-            "record_id": "rec-c84e05c141516b51"
-          },
-          {
-            "human_label": "partially_correct",
-            "judge_confidence": "medium",
-            "judge_label": "incorrect",
-            "judge_rationale": "synthetic fake-judge verdict (digest 26d604ab) — offline demo/tests only",
-            "record_id": "rec-ccf2c7490864b9db"
-          },
-          {
-            "human_label": "partially_correct",
-            "judge_confidence": "low",
-            "judge_label": "incorrect",
-            "judge_rationale": "synthetic fake-judge verdict (digest 97527a13) — offline demo/tests only",
-            "record_id": "rec-d0f74b81bb6d0529"
-          },
-          {
-            "human_label": "partially_correct",
+            "human_label": "correct",
             "judge_confidence": "medium",
             "judge_label": "unjudgeable",
-            "judge_rationale": "synthetic fake-judge verdict (digest 25073dc7) — offline demo/tests only",
-            "record_id": "rec-d45211a456b277dc"
+            "judge_rationale": "synthetic fake-judge verdict (digest d4ab5e84) — offline demo/tests only",
+            "record_id": "rec-f557719099465128"
+          },
+          {
+            "human_label": "incorrect",
+            "judge_confidence": "high",
+            "judge_label": "partially_correct",
+            "judge_rationale": "synthetic fake-judge verdict (digest 24d5de2a) — offline demo/tests only",
+            "record_id": "rec-a8561cccbaeeeb72"
+          },
+          {
+            "human_label": "incorrect",
+            "judge_confidence": "high",
+            "judge_label": "partially_correct",
+            "judge_rationale": "synthetic fake-judge verdict (digest 96c11bd8) — offline demo/tests only",
+            "record_id": "rec-bc48caff2d9ab4de"
+          },
+          {
+            "human_label": "incorrect",
+            "judge_confidence": "high",
+            "judge_label": "partially_correct",
+            "judge_rationale": "synthetic fake-judge verdict (digest 177d1e07) — offline demo/tests only",
+            "record_id": "rec-dc1025d3cb950390"
+          },
+          {
+            "human_label": "incorrect",
+            "judge_confidence": "high",
+            "judge_label": "partially_correct",
+            "judge_rationale": "synthetic fake-judge verdict (digest 1aa5db79) — offline demo/tests only",
+            "record_id": "rec-e7e848ff300b70bf"
+          },
+          {
+            "human_label": "partially_correct",
+            "judge_confidence": "high",
+            "judge_label": "correct",
+            "judge_rationale": "synthetic fake-judge verdict (digest 96809f7e) — offline demo/tests only",
+            "record_id": "rec-3f969b63beb135e4"
+          },
+          {
+            "human_label": "partially_correct",
+            "judge_confidence": "low",
+            "judge_label": "correct",
+            "judge_rationale": "synthetic fake-judge verdict (digest dfa4c821) — offline demo/tests only",
+            "record_id": "rec-5cd56e8fce6e6230"
+          },
+          {
+            "human_label": "partially_correct",
+            "judge_confidence": "high",
+            "judge_label": "correct",
+            "judge_rationale": "synthetic fake-judge verdict (digest 3e8c126b) — offline demo/tests only",
+            "record_id": "rec-83a16bcd6ea9d33e"
+          },
+          {
+            "human_label": "unjudgeable",
+            "judge_confidence": "medium",
+            "judge_label": "incorrect",
+            "judge_rationale": "synthetic fake-judge verdict (digest b16e6713) — offline demo/tests only",
+            "record_id": "rec-20afed2cd9b13d65"
+          },
+          {
+            "human_label": "unjudgeable",
+            "judge_confidence": "medium",
+            "judge_label": "incorrect",
+            "judge_rationale": "synthetic fake-judge verdict (digest 2df6f4a9) — offline demo/tests only",
+            "record_id": "rec-252e371d49d93d4f"
           },
           {
             "human_label": "unjudgeable",
             "judge_confidence": "high",
             "judge_label": "incorrect",
-            "judge_rationale": "synthetic fake-judge verdict (digest 4d56c327) — offline demo/tests only",
-            "record_id": "rec-f374b8ec672fb60a"
+            "judge_rationale": "synthetic fake-judge verdict (digest 920afc1e) — offline demo/tests only",
+            "record_id": "rec-4e305bc7a0d2546d"
           }
         ],
         "global_kappa": {
           "ci95": {
             "b_degenerate": 0,
             "b_total": 10000,
-            "lower": 0.286421,
+            "lower": 0.361881,
             "method": "percentile",
-            "upper": 0.707241
+            "upper": 0.757581
           },
-          "kappa": 0.513109,
-          "pe": 0.3325,
+          "kappa": 0.565581,
+          "pe": 0.251875,
           "po": 0.675,
           "status": "ok"
         },
         "min_class_support": 5,
         "per_class": [
           {
-            "both": 5,
+            "both": 7,
             "class_name": "correct",
-            "human_support": 9,
-            "judge_support": 7,
+            "human_support": 10,
+            "judge_support": 10,
             "value": {
               "ci95": {
                 "b_degenerate": 0,
                 "b_total": 10000,
-                "lower": 0.140625,
+                "lower": 0.263158,
                 "method": "percentile",
-                "upper": 0.827586
+                "upper": 0.866667
               },
-              "kappa": 0.533074,
-              "pe": 0.67875,
+              "kappa": 0.6,
+              "pe": 0.625,
               "po": 0.85,
               "status": "ok"
             }
           },
           {
-            "both": 11,
+            "both": 7,
             "class_name": "partially_correct",
-            "human_support": 17,
-            "judge_support": 16,
+            "human_support": 10,
+            "judge_support": 11,
             "value": {
               "ci95": {
                 "b_degenerate": 0,
                 "b_total": 10000,
-                "lower": 0.127907,
+                "lower": 0.21875,
                 "method": "percentile",
-                "upper": 0.69697
+                "upper": 0.825581
               },
-              "kappa": 0.43299,
-              "pe": 0.515,
-              "po": 0.725,
+              "kappa": 0.548387,
+              "pe": 0.6125,
+              "po": 0.825,
               "status": "ok"
             }
           },
           {
-            "both": 11,
+            "both": 5,
             "class_name": "incorrect",
-            "human_support": 13,
-            "judge_support": 15,
+            "human_support": 9,
+            "judge_support": 8,
             "value": {
               "ci95": {
                 "b_degenerate": 0,
                 "b_total": 10000,
-                "lower": 0.390244,
+                "lower": 0.105635,
                 "method": "percentile",
-                "upper": 0.890411
+                "upper": 0.776161
               },
-              "kappa": 0.671233,
-              "pe": 0.54375,
+              "kappa": 0.477612,
+              "pe": 0.665,
+              "po": 0.825,
+              "status": "ok"
+            }
+          },
+          {
+            "both": 8,
+            "class_name": "unjudgeable",
+            "human_support": 11,
+            "judge_support": 11,
+            "value": {
+              "ci95": {
+                "b_degenerate": 0,
+                "b_total": 10000,
+                "lower": 0.305556,
+                "method": "percentile",
+                "upper": 0.875
+              },
+              "kappa": 0.623824,
+              "pe": 0.60125,
               "po": 0.85,
               "status": "ok"
-            }
-          },
-          {
-            "both": 0,
-            "class_name": "unjudgeable",
-            "human_support": 1,
-            "judge_support": 2,
-            "value": {
-              "ci95": null,
-              "kappa": null,
-              "pe": null,
-              "po": null,
-              "status": "insufficient_support"
             }
           }
         ]
@@ -499,95 +511,93 @@
     ],
     "bootstrap_resamples": 10000,
     "headline_ready": true,
-    "human_labels_sha256": "2beaf42e8fd6a7f84f2ef569afca534857db57e07f34f1725255213ddac55e18",
+    "human_labels_sha256": "dfed5b686cb8609c987c1b19d9c747ef58a7896f56caddeb2571f48cfa6537d4",
     "human_labels_source": "annotations_synthetic.jsonl",
     "judge": {
       "few_shot_content_hashes": [
-        "35b14b1def8b64c8ee2cf7f03b28d9a571474185a0d8dbb8ac922b78a63ce630",
-        "367ac9d7c3cd6a4c48960d287dcaa2b1293f78ca84d5cf8e902f503afc10cbd4",
-        "82f37399468911bf52a63eeb7c48953e10bcc19304687018c3f74a9e50ccd959",
-        "d45ee6cb9d718facd96ef6b37535b9af6533481d0153353f4bf86c331460e82b",
-        "e91a668e80a0de7a8c832f55c808a7b5951eaa8c6838a51126ae9f648bae30ae"
+        "217870fa3d00552fd36c98422c5a55aa03fb8cde59dd04c15e3aa6733ceab09b",
+        "3c3db6ef41972d1bd5d484e2112394b1e2a933501e376752760404507dced140",
+        "40ff82f89b23a67441174fd87fb8f8786185a92465d632662a7d6b951ef44b7a",
+        "909cbbf7bea996308414d9e7b636c2c12762e6ab4177669c7e722a7df8a0cb27",
+        "ed13b7c2bfb09c9945c93f360e9d888fb2570d10436d6dab05682deffb3ae5a8"
       ],
       "few_shot_ids": [
-        "fs-46dacbf301812eec",
-        "fs-49a68d3a4a04e748",
-        "fs-49bd000a07756f47",
-        "fs-966cc1d5fa0d0d00",
-        "fs-976a1408ba367d28"
+        "fs-09b50ffd0be30a7a",
+        "fs-12ccb3310ea322a0",
+        "fs-4a11315324be252e",
+        "fs-91db99c08533d613",
+        "fs-f134fdfe987df40d"
       ],
       "judge_name": "fake",
       "model_id": "fake-judge-v1",
-      "prompt_sha256": "b963c9e7aa28840b0252ff6378e96ff5673e5c7c0b83c1c550a3c2a60eeb91e4",
-      "taxonomy_id": "tax-d9ca3b87b403"
+      "prompt_sha256": "b714f9ad2e9472c924d980631ace7b2d9c90178e6203142caab158b5cbe497cb",
+      "taxonomy_id": "tax-d8ba44dd70c7"
     },
     "min_class_support": 5,
     "min_human_labels": 30,
     "seed": 1750,
-    "taxonomy_id": "tax-d9ca3b87b403"
+    "taxonomy_id": "tax-d8ba44dd70c7"
   },
   "clustering": {
     "clusters": [
       {
-        "cluster_id": "cl-20714a1ef2e1",
+        "cluster_id": "cl-4aef2f40856d",
         "record_ids": [
-          "rec-091fd142459095f7",
-          "rec-219bbb2b999ff9c2",
-          "rec-45340f7659c0b9e6",
-          "rec-4642c539b7b29ae3",
-          "rec-480d0aa5a9457494",
-          "rec-5d247122fa704582",
-          "rec-73481257eb076a75",
-          "rec-996ce817c0eda631",
-          "rec-c1a67f62f2e4d615",
-          "rec-c84e05c141516b51",
-          "rec-cf1afb802995bbcd",
-          "rec-d0f74b81bb6d0529",
-          "rec-e8b3437ddf218299"
+          "rec-1384b8e21b4bc1c9",
+          "rec-203a5e37bdbe90f2",
+          "rec-3f969b63beb135e4",
+          "rec-56f73b7af2a99c77",
+          "rec-5cd56e8fce6e6230",
+          "rec-5f6925c198678614",
+          "rec-87be22454869f629",
+          "rec-c652b6b48188f7a0"
         ]
       },
       {
-        "cluster_id": "cl-83b5c3674ec3",
+        "cluster_id": "cl-0425425ffeb0",
         "record_ids": [
-          "rec-083298153276e970",
-          "rec-1cbd5ae757464011",
-          "rec-2ff675dd24fd7880",
-          "rec-3b4502a745a5d5a1",
-          "rec-7e11ce59b29a4580",
-          "rec-8ac9f496595e95b8",
-          "rec-91f350d70ee60bd9",
-          "rec-c67c4896e7d79b42",
-          "rec-eb78f7082d5d0fef",
-          "rec-f8102818860818b2",
-          "rec-f9e1699074bcd6cb"
+          "rec-23e9d97854cbb976",
+          "rec-351371b4eec35e19",
+          "rec-4b7898610921e05d",
+          "rec-9314a5ae882a7f37",
+          "rec-97d905d0c10247cc",
+          "rec-bc48caff2d9ab4de",
+          "rec-f91ac94b77400493"
         ]
       },
       {
-        "cluster_id": "cl-2c464a809396",
+        "cluster_id": "cl-2b8bcf62844e",
         "record_ids": [
-          "rec-01f7067c8a507bbe",
-          "rec-358de05acfe294ea",
-          "rec-3690f9a993e5dc9c",
-          "rec-479227ce7e9b3395",
-          "rec-4b155d4a5fa8b03c",
-          "rec-5133258a231a3948",
-          "rec-531a5cc3fa66ec4b",
-          "rec-613f7d447f64987c",
-          "rec-c9120b19b3b978e6",
-          "rec-d75a5d9866b5e52b"
+          "rec-062da0f8ad2d711a",
+          "rec-4e305bc7a0d2546d",
+          "rec-5e3329f36f536ec4",
+          "rec-9a37d2c904957b56",
+          "rec-a8561cccbaeeeb72",
+          "rec-a986cd0a130159e0",
+          "rec-deead34d921d17d0"
         ]
       },
       {
-        "cluster_id": "cl-824fa8ffc0f8",
+        "cluster_id": "cl-b2d730f411ca",
         "record_ids": [
-          "rec-04b2539057892521",
-          "rec-5342ee5eb3c46573",
-          "rec-58ccbba47fe47168",
-          "rec-94ccac8945e3bd1e",
-          "rec-c0d7b5986ffbf0da",
-          "rec-ccf2c7490864b9db",
-          "rec-d1087e0ca3da3367",
-          "rec-f469c4171d1b2785"
+          "rec-0a0fcb7cd991d514",
+          "rec-8832d812c8463b0e",
+          "rec-b04167122ca5fb29",
+          "rec-dc1025d3cb950390",
+          "rec-e04f4073ba446553",
+          "rec-e7e848ff300b70bf",
+          "rec-fc2b8ef10cf8e1b3"
+        ]
+      },
+      {
+        "cluster_id": "cl-92d81a608a00",
+        "record_ids": [
+          "rec-1170a833f15311fd",
+          "rec-1ea9c45812f5b11c",
+          "rec-20afed2cd9b13d65",
+          "rec-420d883582e17998",
+          "rec-7faca83e0f1c73f7",
+          "rec-9555976a8662f312"
         ]
       }
     ],
@@ -601,20 +611,29 @@
     "metric": "euclidean_l2norm",
     "min_cluster_size": 5,
     "noise_record_ids": [
-      "rec-17323e235e1e1812",
-      "rec-189adcb306a8c328",
-      "rec-34700e24d413eb15",
-      "rec-36cd38ec6dbe2d3e",
-      "rec-7bd41b3a5c30240a",
-      "rec-802038cabe9059c3",
-      "rec-884a023cbcb4d44e",
-      "rec-9b36bf3aece7578d",
-      "rec-a1e792344b054feb",
-      "rec-d45211a456b277dc",
-      "rec-decabc0573dfb253",
-      "rec-f374b8ec672fb60a"
+      "rec-030752bfebd438d1",
+      "rec-2153c81883736337",
+      "rec-235c3fe74c2ba024",
+      "rec-252e371d49d93d4f",
+      "rec-2ea190a62fc01b7d",
+      "rec-33d7567ac2f3440f",
+      "rec-368a10eee5ab332c",
+      "rec-48f56c9bfa0b17c4",
+      "rec-53c05ff645629553",
+      "rec-53eefd5ecc70ea8f",
+      "rec-695e1bcd1b261c86",
+      "rec-83a16bcd6ea9d33e",
+      "rec-8e81a9acf0d8ee90",
+      "rec-9920348f8d6ac75b",
+      "rec-b9ea19be1679fda2",
+      "rec-c7e1968a85f5e02f",
+      "rec-cab4dc578c0ee548",
+      "rec-e03fa8d3d334b21a",
+      "rec-ee869a3efca94707",
+      "rec-f153a5c714327250",
+      "rec-f557719099465128"
     ],
-    "records_in": 54
+    "records_in": 56
   },
   "dedup": {
     "embedder": {
@@ -627,19 +646,19 @@
     "exact_dropped": 3,
     "exact_entries": [
       {
-        "content_hash": "c229c3a815b9b406bb326c1bede2528d74f7eef867a142dd11fea582f09910fa",
-        "dropped_record_id": "rec-1eedc0a1e303f024",
-        "kept_record_id": "rec-802038cabe9059c3"
+        "content_hash": "bb4456d4e2a644bd8a85936533e35ebb84a09a072934fe513fb2ff4d543902b3",
+        "dropped_record_id": "rec-171d2c9325160fa1",
+        "kept_record_id": "rec-56f73b7af2a99c77"
       },
       {
-        "content_hash": "80c3da21d40e5622e50270a901b2eafdc21bc624b01d5f9d1930216544dcc0a8",
-        "dropped_record_id": "rec-66655921ccee08fb",
-        "kept_record_id": "rec-c84e05c141516b51"
+        "content_hash": "477eddc88bbeecb732d53c73ef0925a1fc27aad3a5fd8b6e616abe85e30fea86",
+        "dropped_record_id": "rec-2fbb2e8635439749",
+        "kept_record_id": "rec-e03fa8d3d334b21a"
       },
       {
-        "content_hash": "d1255d0d7279b8a2dd23c105b233370cfe83309474d1c9d63b961907489118c4",
-        "dropped_record_id": "rec-b2d2a2c44ab02f3b",
-        "kept_record_id": "rec-7bd41b3a5c30240a"
+        "content_hash": "5700013980266c234b186bfb7d3c50148c282c9b5d61fd3a46b1bcb1b36e8f3c",
+        "dropped_record_id": "rec-846990e6c4bd3615",
+        "kept_record_id": "rec-252e371d49d93d4f"
       }
     ],
     "id_collapsed": 0,
@@ -647,38 +666,38 @@
     "near_dropped_via_chain": 1,
     "near_entries": [
       {
-        "dropped_record_id": "rec-0d97eeeeeea9f26b",
-        "kept_record_id": "rec-531a5cc3fa66ec4b",
-        "similarity": 0.980491,
+        "dropped_record_id": "rec-16274d736bdc1b90",
+        "kept_record_id": "rec-e7e848ff300b70bf",
+        "similarity": 0.95598,
         "via_chain": false
       },
       {
-        "dropped_record_id": "rec-5f08b6a7c5971f52",
-        "kept_record_id": "rec-083298153276e970",
-        "similarity": 0.969524,
+        "dropped_record_id": "rec-621568b3eabf3270",
+        "kept_record_id": "rec-56f73b7af2a99c77",
+        "similarity": 0.992859,
         "via_chain": false
       },
       {
-        "dropped_record_id": "rec-62c19f4d20783f5b",
-        "kept_record_id": "rec-d1087e0ca3da3367",
+        "dropped_record_id": "rec-7ca6406c6d67a0cd",
+        "kept_record_id": "rec-5e3329f36f536ec4",
         "similarity": 1.0,
         "via_chain": false
       },
       {
-        "dropped_record_id": "rec-962f74d7d43e1a1c",
-        "kept_record_id": "rec-c84e05c141516b51",
-        "similarity": 0.983013,
-        "via_chain": false
+        "dropped_record_id": "rec-e022b434d327f609",
+        "kept_record_id": "rec-e7e848ff300b70bf",
+        "similarity": 0.890676,
+        "via_chain": true
       },
       {
-        "dropped_record_id": "rec-d829e64df1f0efad",
-        "kept_record_id": "rec-083298153276e970",
-        "similarity": 0.910607,
-        "via_chain": true
+        "dropped_record_id": "rec-e039344ff3fa5172",
+        "kept_record_id": "rec-20afed2cd9b13d65",
+        "similarity": 0.98349,
+        "via_chain": false
       }
     ],
-    "records_in": 62,
-    "records_out": 54,
+    "records_in": 64,
+    "records_out": 56,
     "threshold": 0.92
   },
   "embedder": {
@@ -710,49 +729,49 @@
           "passed": true
         },
         {
-          "detail": "human_labels_sha256=2beaf42e8fd6…",
+          "detail": "human_labels_sha256=dfed5b686cb8…",
           "name": "ground_truth_bound",
           "passed": true
         },
         {
-          "detail": "kappa=0.513109 < min_export_kappa=0.6",
+          "detail": "kappa=0.565581 < min_export_kappa=0.6",
           "name": "kappa_threshold",
           "passed": false
         }
       ],
-      "ci_lower": 0.286421,
+      "ci_lower": 0.361881,
       "ci_straddles_threshold": false,
-      "ci_upper": 0.707241,
-      "kappa": 0.513109,
+      "ci_upper": 0.757581,
+      "kappa": 0.565581,
       "min_export_kappa": 0.6,
       "override": {
-        "reason": "synthetic machinery proof: FakeJudge verdicts are hash-derived noise, the gate correctly blocks kappa=0.513109 < 0.6; overridden deliberately to exercise the full export path offline (never a real-data precedent)"
+        "reason": "synthetic machinery proof: FakeJudge verdicts are hash-derived noise, the gate correctly blocks kappa=0.565581 < 0.6; overridden deliberately to exercise the full export path offline (never a real-data precedent)"
       },
       "verdict": "passed_with_override"
     },
     "judge": {
       "few_shot_content_hashes": [
-        "35b14b1def8b64c8ee2cf7f03b28d9a571474185a0d8dbb8ac922b78a63ce630",
-        "367ac9d7c3cd6a4c48960d287dcaa2b1293f78ca84d5cf8e902f503afc10cbd4",
-        "82f37399468911bf52a63eeb7c48953e10bcc19304687018c3f74a9e50ccd959",
-        "d45ee6cb9d718facd96ef6b37535b9af6533481d0153353f4bf86c331460e82b",
-        "e91a668e80a0de7a8c832f55c808a7b5951eaa8c6838a51126ae9f648bae30ae"
+        "217870fa3d00552fd36c98422c5a55aa03fb8cde59dd04c15e3aa6733ceab09b",
+        "3c3db6ef41972d1bd5d484e2112394b1e2a933501e376752760404507dced140",
+        "40ff82f89b23a67441174fd87fb8f8786185a92465d632662a7d6b951ef44b7a",
+        "909cbbf7bea996308414d9e7b636c2c12762e6ab4177669c7e722a7df8a0cb27",
+        "ed13b7c2bfb09c9945c93f360e9d888fb2570d10436d6dab05682deffb3ae5a8"
       ],
       "few_shot_ids": [
-        "fs-46dacbf301812eec",
-        "fs-49a68d3a4a04e748",
-        "fs-49bd000a07756f47",
-        "fs-966cc1d5fa0d0d00",
-        "fs-976a1408ba367d28"
+        "fs-09b50ffd0be30a7a",
+        "fs-12ccb3310ea322a0",
+        "fs-4a11315324be252e",
+        "fs-91db99c08533d613",
+        "fs-f134fdfe987df40d"
       ],
       "judge_name": "fake",
       "model_id": "fake-judge-v1",
-      "prompt_sha256": "b963c9e7aa28840b0252ff6378e96ff5673e5c7c0b83c1c550a3c2a60eeb91e4",
-      "taxonomy_id": "tax-d9ca3b87b403"
+      "prompt_sha256": "b714f9ad2e9472c924d980631ace7b2d9c90178e6203142caab158b5cbe497cb",
+      "taxonomy_id": "tax-d8ba44dd70c7"
     }
   },
   "export_format_version": 1,
-  "golden_jsonl_sha256": "c05cdcfa0ed2316767ddee9b0a0061a067b760cbecde67a89e824effec623343",
+  "golden_jsonl_sha256": "92dc56ffa4abad7d80b68fb848b2127ac58aea2e186a4def4db164fdd76eafa0",
   "ingest": [
     {
       "lines_read": 8,
@@ -790,10 +809,10 @@
       "timestamps_unparsed": 1
     },
     {
-      "lines_read": 53,
+      "lines_read": 55,
       "lines_rejected": 0,
       "lines_skipped": 0,
-      "records_normalized": 53,
+      "records_normalized": 55,
       "reject_samples": [],
       "rejects_by_reason": {},
       "skips_by_reason": {},
@@ -848,27 +867,27 @@
     {
       "name": "judge_v1.jsonl",
       "role": "few_shot_store",
-      "sha256": "103877e90af3e5de9cc58e4af42d5f39b8b2b4aecc4827e6f6ad1b5262ffcc9d"
+      "sha256": "c75ecdd561395eefeb8bfde119a6db9145648a47fb22dc4408685d5477b07e79"
     },
     {
       "name": "annotations_synthetic.jsonl",
       "role": "human_labels",
-      "sha256": "2beaf42e8fd6a7f84f2ef569afca534857db57e07f34f1725255213ddac55e18"
+      "sha256": "dfed5b686cb8609c987c1b19d9c747ef58a7896f56caddeb2571f48cfa6537d4"
     },
     {
       "name": "cluster_demo.jsonl",
       "role": "source_log",
-      "sha256": "1eb4be029b41f25ac8e8d47be7403b03a98f18388d361bcb36c38f6c5073888d"
+      "sha256": "afa5818e8b03a51648031a79b1c208332a177f6b078acfe60f8d01b1b0ef96a4"
     },
     {
       "name": "generic_demo.jsonl",
       "role": "source_log",
-      "sha256": "50e6f9896768989bdacf156051fee8c87391f472c3491bbfe3f8c00a638319f7"
+      "sha256": "0262134191acbcb9c6f97a54c517f7716643b29bdb92569f139986e2c249558f"
     },
     {
       "name": "tracespans_demo.jsonl",
       "role": "source_log",
-      "sha256": "30a24e1fd51798a2b5431a52791dcb60304b48d4cc01f5b6eb2c204d2f2c7742"
+      "sha256": "dac7cf0012c68560299ac7cc3b998e72c2434d9abc8edcfd6f798c6147491e54"
     }
   ],
   "labeling": {
@@ -876,27 +895,27 @@
     "failure_entries": [],
     "failures_by_reason": {},
     "fewshot_collision_record_ids": [
-      "rec-d1087e0ca3da3367"
+      "rec-5e3329f36f536ec4"
     ],
     "judge": {
       "few_shot_content_hashes": [
-        "35b14b1def8b64c8ee2cf7f03b28d9a571474185a0d8dbb8ac922b78a63ce630",
-        "367ac9d7c3cd6a4c48960d287dcaa2b1293f78ca84d5cf8e902f503afc10cbd4",
-        "82f37399468911bf52a63eeb7c48953e10bcc19304687018c3f74a9e50ccd959",
-        "d45ee6cb9d718facd96ef6b37535b9af6533481d0153353f4bf86c331460e82b",
-        "e91a668e80a0de7a8c832f55c808a7b5951eaa8c6838a51126ae9f648bae30ae"
+        "217870fa3d00552fd36c98422c5a55aa03fb8cde59dd04c15e3aa6733ceab09b",
+        "3c3db6ef41972d1bd5d484e2112394b1e2a933501e376752760404507dced140",
+        "40ff82f89b23a67441174fd87fb8f8786185a92465d632662a7d6b951ef44b7a",
+        "909cbbf7bea996308414d9e7b636c2c12762e6ab4177669c7e722a7df8a0cb27",
+        "ed13b7c2bfb09c9945c93f360e9d888fb2570d10436d6dab05682deffb3ae5a8"
       ],
       "few_shot_ids": [
-        "fs-46dacbf301812eec",
-        "fs-49a68d3a4a04e748",
-        "fs-49bd000a07756f47",
-        "fs-966cc1d5fa0d0d00",
-        "fs-976a1408ba367d28"
+        "fs-09b50ffd0be30a7a",
+        "fs-12ccb3310ea322a0",
+        "fs-4a11315324be252e",
+        "fs-91db99c08533d613",
+        "fs-f134fdfe987df40d"
       ],
       "judge_name": "fake",
       "model_id": "fake-judge-v1",
-      "prompt_sha256": "b963c9e7aa28840b0252ff6378e96ff5673e5c7c0b83c1c550a3c2a60eeb91e4",
-      "taxonomy_id": "tax-d9ca3b87b403"
+      "prompt_sha256": "b714f9ad2e9472c924d980631ace7b2d9c90178e6203142caab158b5cbe497cb",
+      "taxonomy_id": "tax-d8ba44dd70c7"
     },
     "labeled": 49,
     "max_labels": 500,
@@ -908,94 +927,101 @@
     "skipped_fewshot_collision": 1
   },
   "sampling": {
-    "records_in": 54,
+    "records_in": 56,
     "sample_size_requested": 50,
     "seed": 1750,
     "strata": [
       {
-        "cluster_id": "cl-20714a1ef2e1",
-        "quota": 12,
-        "sampled_record_ids": [
-          "rec-091fd142459095f7",
-          "rec-219bbb2b999ff9c2",
-          "rec-45340f7659c0b9e6",
-          "rec-4642c539b7b29ae3",
-          "rec-480d0aa5a9457494",
-          "rec-5d247122fa704582",
-          "rec-996ce817c0eda631",
-          "rec-c1a67f62f2e4d615",
-          "rec-c84e05c141516b51",
-          "rec-cf1afb802995bbcd",
-          "rec-d0f74b81bb6d0529",
-          "rec-e8b3437ddf218299"
-        ],
-        "stratum_size": 13
-      },
-      {
         "cluster_id": "noise",
-        "quota": 11,
+        "quota": 19,
         "sampled_record_ids": [
-          "rec-17323e235e1e1812",
-          "rec-189adcb306a8c328",
-          "rec-34700e24d413eb15",
-          "rec-7bd41b3a5c30240a",
-          "rec-802038cabe9059c3",
-          "rec-884a023cbcb4d44e",
-          "rec-9b36bf3aece7578d",
-          "rec-a1e792344b054feb",
-          "rec-d45211a456b277dc",
-          "rec-decabc0573dfb253",
-          "rec-f374b8ec672fb60a"
+          "rec-030752bfebd438d1",
+          "rec-2153c81883736337",
+          "rec-235c3fe74c2ba024",
+          "rec-252e371d49d93d4f",
+          "rec-2ea190a62fc01b7d",
+          "rec-368a10eee5ab332c",
+          "rec-53c05ff645629553",
+          "rec-53eefd5ecc70ea8f",
+          "rec-695e1bcd1b261c86",
+          "rec-83a16bcd6ea9d33e",
+          "rec-8e81a9acf0d8ee90",
+          "rec-9920348f8d6ac75b",
+          "rec-b9ea19be1679fda2",
+          "rec-c7e1968a85f5e02f",
+          "rec-cab4dc578c0ee548",
+          "rec-e03fa8d3d334b21a",
+          "rec-ee869a3efca94707",
+          "rec-f153a5c714327250",
+          "rec-f557719099465128"
         ],
-        "stratum_size": 12
+        "stratum_size": 21
       },
       {
-        "cluster_id": "cl-83b5c3674ec3",
-        "quota": 10,
+        "cluster_id": "cl-4aef2f40856d",
+        "quota": 7,
         "sampled_record_ids": [
-          "rec-1cbd5ae757464011",
-          "rec-2ff675dd24fd7880",
-          "rec-3b4502a745a5d5a1",
-          "rec-7e11ce59b29a4580",
-          "rec-8ac9f496595e95b8",
-          "rec-91f350d70ee60bd9",
-          "rec-c67c4896e7d79b42",
-          "rec-eb78f7082d5d0fef",
-          "rec-f8102818860818b2",
-          "rec-f9e1699074bcd6cb"
-        ],
-        "stratum_size": 11
-      },
-      {
-        "cluster_id": "cl-2c464a809396",
-        "quota": 9,
-        "sampled_record_ids": [
-          "rec-01f7067c8a507bbe",
-          "rec-358de05acfe294ea",
-          "rec-3690f9a993e5dc9c",
-          "rec-479227ce7e9b3395",
-          "rec-4b155d4a5fa8b03c",
-          "rec-5133258a231a3948",
-          "rec-531a5cc3fa66ec4b",
-          "rec-c9120b19b3b978e6",
-          "rec-d75a5d9866b5e52b"
-        ],
-        "stratum_size": 10
-      },
-      {
-        "cluster_id": "cl-824fa8ffc0f8",
-        "quota": 8,
-        "sampled_record_ids": [
-          "rec-04b2539057892521",
-          "rec-5342ee5eb3c46573",
-          "rec-58ccbba47fe47168",
-          "rec-94ccac8945e3bd1e",
-          "rec-c0d7b5986ffbf0da",
-          "rec-ccf2c7490864b9db",
-          "rec-d1087e0ca3da3367",
-          "rec-f469c4171d1b2785"
+          "rec-203a5e37bdbe90f2",
+          "rec-3f969b63beb135e4",
+          "rec-56f73b7af2a99c77",
+          "rec-5cd56e8fce6e6230",
+          "rec-5f6925c198678614",
+          "rec-87be22454869f629",
+          "rec-c652b6b48188f7a0"
         ],
         "stratum_size": 8
+      },
+      {
+        "cluster_id": "cl-0425425ffeb0",
+        "quota": 6,
+        "sampled_record_ids": [
+          "rec-23e9d97854cbb976",
+          "rec-351371b4eec35e19",
+          "rec-4b7898610921e05d",
+          "rec-9314a5ae882a7f37",
+          "rec-bc48caff2d9ab4de",
+          "rec-f91ac94b77400493"
+        ],
+        "stratum_size": 7
+      },
+      {
+        "cluster_id": "cl-2b8bcf62844e",
+        "quota": 6,
+        "sampled_record_ids": [
+          "rec-4e305bc7a0d2546d",
+          "rec-5e3329f36f536ec4",
+          "rec-9a37d2c904957b56",
+          "rec-a8561cccbaeeeb72",
+          "rec-a986cd0a130159e0",
+          "rec-deead34d921d17d0"
+        ],
+        "stratum_size": 7
+      },
+      {
+        "cluster_id": "cl-b2d730f411ca",
+        "quota": 6,
+        "sampled_record_ids": [
+          "rec-0a0fcb7cd991d514",
+          "rec-b04167122ca5fb29",
+          "rec-dc1025d3cb950390",
+          "rec-e04f4073ba446553",
+          "rec-e7e848ff300b70bf",
+          "rec-fc2b8ef10cf8e1b3"
+        ],
+        "stratum_size": 7
+      },
+      {
+        "cluster_id": "cl-92d81a608a00",
+        "quota": 6,
+        "sampled_record_ids": [
+          "rec-1170a833f15311fd",
+          "rec-1ea9c45812f5b11c",
+          "rec-20afed2cd9b13d65",
+          "rec-420d883582e17998",
+          "rec-7faca83e0f1c73f7",
+          "rec-9555976a8662f312"
+        ],
+        "stratum_size": 6
       }
     ],
     "total_sampled": 50

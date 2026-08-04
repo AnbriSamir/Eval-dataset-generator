@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 
-from evalgen.contracts import TAXONOMY_V1
+from evalgen.contracts import TAXONOMY_V1, TAXONOMY_V2
 from evalgen.validate import load_human_labels
 from evalgen.validate.errors import (
     DuplicateHumanLabelError,
@@ -111,8 +111,11 @@ def test_committed_fixture_is_marked_synthetic_on_every_line() -> None:
 
 
 def test_committed_fixture_targets_the_demo_taxonomy_and_id_shape() -> None:
+    # The demo taxonomy is TAXONOMY_V2 since ADR-0006 — the fixture migrated with it
+    # (a synthetic machinery fixture follows the pipeline default; the HISTORICAL v1
+    # human labels do not and are refused by the anti-mix guard instead).
     labels = load_human_labels(FIXTURE)
-    assert {label.taxonomy_id for label in labels} == {TAXONOMY_V1.taxonomy_id}
+    assert {label.taxonomy_id for label in labels} == {TAXONOMY_V2.taxonomy_id}
     for label in labels:
         assert re.fullmatch(r"rec-[0-9a-f]{16}", label.record_id)
 

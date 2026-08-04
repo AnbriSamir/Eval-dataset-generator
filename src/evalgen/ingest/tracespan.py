@@ -3,7 +3,7 @@
 The sibling repo emits frozen Pydantic ``TraceSpan`` lines (span_id, task_id, agent,
 action, status, cost fields, free-form payload). We validate against a LOCAL structural
 mirror of that schema rather than importing across repos: a cross-repo import would
-couple two portfolio projects' release cycles and break this repo's offline test
+couple the two repos' release cycles and break this repo's offline test
 discipline; a mirror pins the shape we actually depend on, and a sibling schema change
 surfaces as an explicit ``schema_mismatch`` count instead of an ImportError.
 

@@ -426,7 +426,7 @@ tests exact (injected vectors) and real embedding backends a drop-in with proven
 **Negative (accepted):**
 
 - **O(n²) similarity** (dense n×n in float64) and full drop-entry lists in reports:
-  fine at portfolio/demo scale (≤ ~50k records ≈ 20 GB would *not* be fine — blocking/
+  fine at demo scale (≤ ~50k records ≈ 20 GB would *not* be fine — blocking/
   ANN is the documented revisit trigger, and report size is proportional to drops,
   which is the point: provenance over compactness).
 - **Chain collapse is possible** under union-find; mitigated by visibility

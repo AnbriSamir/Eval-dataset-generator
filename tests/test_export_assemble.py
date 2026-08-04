@@ -240,12 +240,33 @@ class TestRedTeamMajor1Payload:
 
     def test_blocked_detail_names_the_true_hash_and_never_a_wrong_id(self) -> None:
         # End-to-end on the two committed shots whose 2-element zip pairing is
-        # inverted for BOTH members: the candidate copies fs-966cc1d5fa0d0d00's
-        # content; the pre-fix zip map named fs-46dacbf301812eec (the red-team lie).
+        # inverted for BOTH members: the candidate copies the owner's content; the
+        # pre-fix zip map named the OTHER shot's id (the red-team lie). The pair is
+        # derived from the committed store so a corpus change cannot silently defang
+        # the payload — the search asserts such a pair still exists.
         shots = load_few_shots(STORE_PATH, sanitizer=sanitize_text)
-        by_id = {shot.few_shot_id: shot for shot in shots}
-        owner = by_id["fs-966cc1d5fa0d0d00"]
-        wrongly_named = by_id["fs-46dacbf301812eec"]
+        owner = wrongly_named = None
+        for candidate_owner in shots:
+            for other in shots:
+                if other is candidate_owner:
+                    continue
+                pair = (candidate_owner, other)
+                pair_zip = dict(
+                    zip(
+                        sorted(shot.content_hash for shot in pair),
+                        sorted(shot.few_shot_id for shot in pair),
+                        strict=True,
+                    )
+                )
+                if pair_zip[candidate_owner.content_hash] == other.few_shot_id:
+                    owner, wrongly_named = candidate_owner, other
+                    break
+            if owner is not None:
+                break
+        assert owner is not None and wrongly_named is not None, (
+            "the committed store no longer has a 2-shot pair whose zip pairing inverts — "
+            "re-derive the red-team MAJOR-1 payload before touching this battery"
+        )
         pair = (owner, wrongly_named)
         pair_zip = dict(
             zip(

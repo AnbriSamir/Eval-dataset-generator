@@ -34,14 +34,14 @@ from evalgen.annotation_cli import (
     main,
     run_annotation_cli,
 )
-from evalgen.contracts import TAXONOMY_V1
+from evalgen.contracts import TAXONOMY_V2
 from evalgen.label import FAKE_JUDGE_MODEL_ID
 from evalgen.validate import render_annotator_instructions
 
 GOLDEN = Path(__file__).resolve().parent / "golden" / "annotation_template_output.txt"
 
 #: The planted few-shot collision twin (demo/agreement pins, ADR-0003 rule 8).
-COLLISION_RECORD_ID = "rec-d1087e0ca3da3367"
+COLLISION_RECORD_ID = "rec-5e3329f36f536ec4"
 
 _EMAIL = re.compile(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b")
 
@@ -154,7 +154,7 @@ def test_template_lines_carry_empty_label_fields_and_no_verdict(artifacts) -> No
         assert payload["outcome"] == ""
         assert payload["annotator"] == ""
         assert payload["note"] == ""
-        assert payload["taxonomy_id"] == TAXONOMY_V1.taxonomy_id
+        assert payload["taxonomy_id"] == TAXONOMY_V2.taxonomy_id
 
 
 def test_no_judge_information_reaches_the_artifacts(artifacts) -> None:
@@ -176,7 +176,7 @@ def test_no_judge_information_reaches_the_artifacts(artifacts) -> None:
 
 def test_instructions_are_the_pure_renderer_output_verbatim(artifacts) -> None:
     _, instructions, _ = artifacts
-    assert instructions == render_annotator_instructions(TAXONOMY_V1)
+    assert instructions == render_annotator_instructions(TAXONOMY_V2)
 
 
 # ------------------------------------------------------------------ banner + leaks

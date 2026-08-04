@@ -21,9 +21,9 @@ def test_defaults_are_in_valid_ranges() -> None:
     assert s.hash_embedding_dim >= 64
 
 
-def test_seed_matches_portfolio_convention() -> None:
+def test_seed_matches_cross_repo_convention() -> None:
     # The sibling repos pin 1750 as the base seed; provenance comparability
-    # across the portfolio depends on the same default here.
+    # across the three repos depends on the same default here.
     assert Settings(_env_file=None).seed == 1750
 
 

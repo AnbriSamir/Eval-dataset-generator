@@ -21,7 +21,7 @@ PLANTED_SECRETS = (
     "sk-ant-api03-Zx9yW8vU7tS6rQ5pO4nM3lK2",
     "XyZ0123456789012345",  # the zero-width-split key's tail
     "jean.dupont@acme-corp.fr",
-    "jane.smith@other-corp.com",
+    "claire.martin@other-corp.com",
     "+33 6 12 34 56 78",
 )
 
@@ -103,9 +103,9 @@ def test_semantic_content_survives_redaction() -> None:
     # judgeable — not "[REDACTED] soup" (labels and clusters are computed over this).
     records, _ = load()
     by_line = {r.origin.line_no: r for r in records}
-    assert "incident report" in by_line[4].input_text
-    assert "expired certificate" in by_line[4].output_text
-    assert "Export completed after one retry" in by_line[5].output_text
+    assert "incident de collecte" in by_line[4].input_text
+    assert "comptes à prévenir" in by_line[4].output_text
+    assert "export du fichier compteurs" in by_line[5].input_text
 
 
 def test_post_redaction_duplicates_collapse_to_the_same_canonical_text() -> None:
@@ -124,14 +124,14 @@ def test_post_redaction_duplicates_collapse_to_the_same_canonical_text() -> None
 def test_origin_and_metadata_carry_the_span_signals() -> None:
     records, _ = load()
     plan = {r.origin.line_no: r for r in records}[3]
-    assert plan.origin.span_id == "span-3c4d5e6f7081"
-    assert plan.origin.task_id == "task-9c81d2e4f305"
+    assert plan.origin.span_id == "span-c3d4e5f60718"
+    assert plan.origin.task_id == "task-4f7a2b91c6d0"
     assert plan.metadata["agent"] == "supervisor"
     assert plan.metadata["action"] == "plan"
     assert plan.metadata["status"] == "ok"
     assert plan.metadata["model_id"] == "claude-opus-4-8"
-    assert plan.metadata["tokens_in"] == "812"
-    assert plan.metadata["cost_usd"] == "0.0231"
+    assert plan.metadata["tokens_in"] == "786"
+    assert plan.metadata["cost_usd"] == "0.0214"
 
 
 def test_absent_optional_signals_are_omitted_not_stringified_none() -> None:
