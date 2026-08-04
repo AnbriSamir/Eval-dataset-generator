@@ -13,7 +13,7 @@ inputs      annotations_synthetic.jsonl   [human_labels]
             generic_demo.jsonl            [source_log]
               sha256=0262134191acbcb9c6f97a54c517f7716643b29bdb92569f139986e2c249558f
             judge_v1.jsonl                [few_shot_store]
-              sha256=91fc5d1dde394e630320dd0d09d9ef99d9007f0ee88bb3b7664a0f8dbb6a4711
+              sha256=c75ecdd561395eefeb8bfde119a6db9145648a47fb22dc4408685d5477b07e79
             tracespans_demo.jsonl         [source_log]
               sha256=dac7cf0012c68560299ac7cc3b998e72c2434d9abc8edcfd6f798c6147491e54
 
@@ -36,5 +36,5 @@ contamination  (export ∩ few-shots on canonical content_hash)
 export
   candidates=49  exported=49  blocked=0
   golden.jsonl   49 lines   sha256=92dc56ffa4abad7d80b68fb848b2127ac58aea2e186a4def4db164fdd76eafa0
-  meta.json    deterministic sha256=814c0d18276dec7e0cb7c159b571d9aabf373053449039bb6d1f35342a5d773f
+  meta.json    deterministic sha256=139aa2ff973124e08fab37ea51320f43364b0f3be1ec5e788b5af9f7a57ea0d1
   volatile       git_commit + generated_at + environment recorded in meta.json — not rendered
