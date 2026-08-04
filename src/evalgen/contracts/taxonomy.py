@@ -15,12 +15,22 @@ Three load-bearing choices live here:
    definitions; a test pins that its classes mirror the enums member-for-member —
    κ classes and schema enums must never drift apart silently.
 2. **One questionnaire, two annotators.** The judge prompt AND the Phase 4 human-labeler
-   instructions render from the same ``TAXONOMY_V1`` definitions — otherwise κ measures
+   instructions render from the same taxonomy definitions — otherwise κ measures
    instruction drift, not agreement.
 3. **The taxonomy id is content-derived and self-verified** (house style: ``rec-``,
    ``cl-``): a tampered taxonomy refuses to exist, and Phase 4 refuses to join judge and
    human labels across different ``taxonomy_id``s — agreement between different
    questionnaires is not agreement.
+
+**Versioning (ADR-0006):** ``TAXONOMY_V2`` is the pipeline default — same classes, same
+enums, but the ``outcome`` definitions carry the bounded-plausibility convention for
+inherently live claims (the real κ = 0.263158 drill-down showed 7/12 outcome
+disagreements were ``correct → unjudgeable`` on live-status questions — a guideline gap,
+not rater noise). ``TAXONOMY_V1`` stays frozen and importable FOREVER: the committed run
+report ``docs/reports/agreement_run_report.20260804T002205Z-7c2b30d6.json`` and the
+historical human labels reference ``tax-d9ca3b87b403``, and that provenance must never
+break. The ids are content-derived, so v1 and v2 are structurally different
+questionnaires and the anti-mix guards refuse to measure one against the other.
 """
 
 from __future__ import annotations
@@ -229,11 +239,84 @@ _V1_AXES: tuple[TaxonomyAxis, ...] = (
     ),
 )
 
-#: THE shared taxonomy artifact — judge and human labelers answer these exact questions
-#: with these exact definitions (ADR-0003 decision driver: one questionnaire).
+#: The v1 questionnaire — FROZEN HISTORICAL ARTIFACT (ADR-0006). Its id
+#: (``tax-d9ca3b87b403``, pinned by test) is referenced by the committed real-session
+#: run report and by the human's v1 labels; it must stay importable and byte-stable
+#: forever, and it is no longer any pipeline's default.
 TAXONOMY_V1 = LabelTaxonomy(
     taxonomy_id=derive_taxonomy_id(_V1_AXES),
     name="evalgen-label-taxonomy",
     version="v1",
     axes=_V1_AXES,
+)
+
+#: v2 axes (ADR-0006 — the "bounded plausibility" convention). ``task_type`` is v1's
+#: axis object VERBATIM (nothing on that axis changed; κ_task_type = 0.861 needed no
+#: fix). Only the ``outcome`` definitions move, closing the guideline gap the real
+#: double-blind session measured: an answer to an inherently live question (live
+#: traffic, today's rates) is graded AS A RESPONSE — internal consistency and adequacy
+#: to the question — because external verification is neither required nor possible;
+#: ``unjudgeable`` is reserved for defective INPUTS (ambiguous input, incomplete
+#: exchange) and never fires merely because a claim is live. No class added or removed:
+#: the Phase 4 per-class support arithmetic (ADR-0003 options §1) depends on the class
+#: count staying put.
+_V2_AXES: tuple[TaxonomyAxis, ...] = (
+    _V1_AXES[0],
+    TaxonomyAxis(
+        name="outcome",
+        question="Does the output correctly address the input?",
+        classes=(
+            TaxonomyClass(
+                name=OutcomeLabel.CORRECT.value,
+                definition=(
+                    "The output fully addresses the input with no visible factual or "
+                    "logical error. Stylistic differences do not matter. For inherently "
+                    "live claims (live traffic, today's rates), grade the answer AS A "
+                    "RESPONSE: it is correct when it is internally consistent and "
+                    "adequately answers the question — external verification of the "
+                    "live value is neither required nor possible."
+                ),
+            ),
+            TaxonomyClass(
+                name=OutcomeLabel.PARTIALLY_CORRECT.value,
+                definition=(
+                    "The output addresses the input but is incomplete, or contains a "
+                    "minor peripheral error. Any hard factual error on the asked "
+                    "question itself makes the outcome incorrect, not partially_correct. "
+                    "Live claims are graded as responses under the same rule: an answer "
+                    "that covers only part of what was asked, or answers a generic "
+                    "baseline where the live state was asked, is partially_correct — "
+                    "never unjudgeable."
+                ),
+            ),
+            TaxonomyClass(
+                name=OutcomeLabel.INCORRECT.value,
+                definition=(
+                    "The output fails the task or contains a factual or logical error on "
+                    "the very thing that was asked."
+                ),
+            ),
+            TaxonomyClass(
+                name=OutcomeLabel.UNJUDGEABLE.value,
+                definition=(
+                    "No grading is possible from the exchange alone — choose this ONLY "
+                    "when the INPUT is ambiguous or the exchange is incomplete, never "
+                    "merely because the claim is live or externally unverifiable (grade "
+                    "those AS RESPONSES). Choose this only when judging is impossible, "
+                    "not when it is merely hard; it is a label, not an error."
+                ),
+            ),
+        ),
+    ),
+)
+
+#: THE shared taxonomy artifact and pipeline default since ADR-0006 — judge and human
+#: labelers answer these exact questions with these exact definitions (ADR-0003
+#: decision driver: one questionnaire). Any κ measured after ADR-0006 joins v2 labels
+#: with a v2-fingerprinted judge; v1 labels are refused by the anti-mix guards.
+TAXONOMY_V2 = LabelTaxonomy(
+    taxonomy_id=derive_taxonomy_id(_V2_AXES),
+    name="evalgen-label-taxonomy",
+    version="v2",
+    axes=_V2_AXES,
 )

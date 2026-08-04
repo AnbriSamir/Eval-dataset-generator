@@ -499,7 +499,7 @@
     ],
     "bootstrap_resamples": 10000,
     "headline_ready": true,
-    "human_labels_sha256": "2beaf42e8fd6a7f84f2ef569afca534857db57e07f34f1725255213ddac55e18",
+    "human_labels_sha256": "41a147e868b17fdb7d78a3c6c74ac252cd0762b16dbd5c66e6b01ff3b1f75745",
     "human_labels_source": "annotations_synthetic.jsonl",
     "judge": {
       "few_shot_content_hashes": [
@@ -518,13 +518,13 @@
       ],
       "judge_name": "fake",
       "model_id": "fake-judge-v1",
-      "prompt_sha256": "b963c9e7aa28840b0252ff6378e96ff5673e5c7c0b83c1c550a3c2a60eeb91e4",
-      "taxonomy_id": "tax-d9ca3b87b403"
+      "prompt_sha256": "84d409b1acf9e1edd8aef26dda7d44ec071822850f60dd0a1f7abec31b30f69d",
+      "taxonomy_id": "tax-d8ba44dd70c7"
     },
     "min_class_support": 5,
     "min_human_labels": 30,
     "seed": 1750,
-    "taxonomy_id": "tax-d9ca3b87b403"
+    "taxonomy_id": "tax-d8ba44dd70c7"
   },
   "clustering": {
     "clusters": [
@@ -710,7 +710,7 @@
           "passed": true
         },
         {
-          "detail": "human_labels_sha256=2beaf42e8fd6…",
+          "detail": "human_labels_sha256=41a147e868b1…",
           "name": "ground_truth_bound",
           "passed": true
         },
@@ -747,12 +747,12 @@
       ],
       "judge_name": "fake",
       "model_id": "fake-judge-v1",
-      "prompt_sha256": "b963c9e7aa28840b0252ff6378e96ff5673e5c7c0b83c1c550a3c2a60eeb91e4",
-      "taxonomy_id": "tax-d9ca3b87b403"
+      "prompt_sha256": "84d409b1acf9e1edd8aef26dda7d44ec071822850f60dd0a1f7abec31b30f69d",
+      "taxonomy_id": "tax-d8ba44dd70c7"
     }
   },
   "export_format_version": 1,
-  "golden_jsonl_sha256": "c05cdcfa0ed2316767ddee9b0a0061a067b760cbecde67a89e824effec623343",
+  "golden_jsonl_sha256": "20b0a38dd63745f498fe362079729c2e396ff5312e8dc9c66883258790c8a60c",
   "ingest": [
     {
       "lines_read": 8,
@@ -853,7 +853,7 @@
     {
       "name": "annotations_synthetic.jsonl",
       "role": "human_labels",
-      "sha256": "2beaf42e8fd6a7f84f2ef569afca534857db57e07f34f1725255213ddac55e18"
+      "sha256": "41a147e868b17fdb7d78a3c6c74ac252cd0762b16dbd5c66e6b01ff3b1f75745"
     },
     {
       "name": "cluster_demo.jsonl",
@@ -895,8 +895,8 @@
       ],
       "judge_name": "fake",
       "model_id": "fake-judge-v1",
-      "prompt_sha256": "b963c9e7aa28840b0252ff6378e96ff5673e5c7c0b83c1c550a3c2a60eeb91e4",
-      "taxonomy_id": "tax-d9ca3b87b403"
+      "prompt_sha256": "84d409b1acf9e1edd8aef26dda7d44ec071822850f60dd0a1f7abec31b30f69d",
+      "taxonomy_id": "tax-d8ba44dd70c7"
     },
     "labeled": 49,
     "max_labels": 500,

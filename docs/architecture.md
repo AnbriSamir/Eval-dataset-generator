@@ -106,7 +106,11 @@ every report's refuse-to-validate cases; demo golden byte-equality + leak scan
 ```
 contracts/taxonomy.py     TaskTypeLabel / OutcomeLabel / JudgeConfidence StrEnums ·
                           LabelTaxonomy (content-derived self-verified taxonomy_id) ·
-                          TAXONOMY_V1 — ONE questionnaire for judge and human labeler
+                          TAXONOMY_V2 (default since ADR-0006: live claims graded AS
+                          RESPONSES, unjudgeable reserved for defective inputs) ·
+                          TAXONOMY_V1 (frozen historical artifact — the committed real-κ
+                          report's provenance) — ONE questionnaire for judge and human
+                          labeler per version; cross-version joins refused
 contracts/labeling.py     JudgeVerdict — IS the output_format schema (closed enums: an
                           out-of-taxonomy label is unrepresentable at the API) ·
                           Judgment (verdict + model ACTUALLY served) · Judge Protocol
@@ -331,7 +335,14 @@ agreement_run.py       python -m evalgen.agreement_run --labels PATH --judge {fa
                        re-rolled runs accumulate instead of silently replacing each other
                        (red-team F-3: cherry-picking visible, never invisible) · refuses an
                        --out holding annotation artifacts (the F-1 mirror guard, before any
-                       API cost)
+                       API cost) · ADR-0006 anti-mix guard: labels whose taxonomy_id differs
+                       from the run judge's fingerprint (e.g. the historical v1 human
+                       labels) refuse with exit 2 naming BOTH ids + the make annotate
+                       remedy, BEFORE the preflight print and any API spend — and the strict
+                       loader's own typed refusals (malformed/unfilled line, duplicate
+                       record_id, a file mixing taxonomy ids) ride the same clean exit-2
+                       channel, never a traceback (ADR-0006 amendment 2026-08-04, red-team
+                       R-1)
 Makefile               make annotate wired; the real κ run is deliberately NOT a make
                        target — the flags must be typed (never autodetection)
 ```
@@ -349,7 +360,11 @@ byte-identical across runs with `volatile: null`); the mocked-SDK §2 battery at
 (49 calls: adaptive thinking, effort high, `output_format=JudgeVerdict`, no
 temperature/top_p/top_k/budget_tokens; served model id stored, never the requested echo);
 cost line flushed before call #1; fake-path sums pinned to the Phase 4 goldens
-(judged_in=49, human_in=42, matched=40, headline κ=0.513109); composition-layer AST
+(judged_in=49, human_in=42, matched=40, headline κ=0.513109); the ADR-0006 anti-mix
+battery (v1-labels/v2-run refused naming both ids with zero SDK calls; the guard
+symmetric in both directions with matching ids passing; red-team payloads B/D replayed —
+a mixed-taxonomy file, a line missing taxonomy_id and a duplicated record_id each refuse
+cleanly with exit 2, nothing written, zero API spend); composition-layer AST
 battery (+3: nothing imports the CLIs; `annotation_cli` never imports `anthropic`;
 `agreement_run` reaches the SDK only through `evalgen.label.anthropic_judge`).
 

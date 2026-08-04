@@ -212,12 +212,13 @@ def test_nothing_imports_agreement_demo() -> None:
 
 def test_agreement_axis_mirrors_taxonomy() -> None:
     # The kappa axes ARE the taxonomy axes — names AND order; drift between the
-    # questionnaire and the measurement vocabulary must fail loudly.
-    from evalgen.contracts import TAXONOMY_V1, AgreementAxis
+    # questionnaire and the measurement vocabulary must fail loudly. Both versions:
+    # v2 changes definitions only (ADR-0006), never the axis structure.
+    from evalgen.contracts import TAXONOMY_V1, TAXONOMY_V2, AgreementAxis
 
-    assert tuple(member.value for member in AgreementAxis) == tuple(
-        axis.name for axis in TAXONOMY_V1.axes
-    )
+    expected = tuple(member.value for member in AgreementAxis)
+    assert expected == tuple(axis.name for axis in TAXONOMY_V1.axes)
+    assert expected == tuple(axis.name for axis in TAXONOMY_V2.axes)
 
 
 # --------------------------------------------------- Phase 5: export/ boundaries

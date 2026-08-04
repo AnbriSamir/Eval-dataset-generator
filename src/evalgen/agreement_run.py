@@ -38,6 +38,16 @@ receives judge verdicts, so this CLI REFUSES an ``--out`` that contains the
 human-facing annotation artifacts (the mirror of ``annotation_cli``'s guard) —
 verdicts and the blank template never share a directory.
 
+Taxonomy binding (ADR-0006): the judge is fingerprinted on ``TAXONOMY_V2``; a
+``--labels`` file whose ``taxonomy_id`` differs (e.g. the historical v1 human
+labels) is REFUSED with a typed ``TaxonomyMismatchError`` naming both ids —
+before the preflight print and before any API cost — because agreement between
+two different questionnaires is not agreement (ADR-0003 rule 1). The strict
+loader's own typed refusals ride the same channel (ADR-0006 amendment
+2026-08-04, red-team R-1): a malformed/unfilled line, a duplicate ``record_id``
+or a file MIXING taxonomy ids is an operator error — typed message on stderr,
+exit 2, nothing written — never a traceback.
+
 Cost is bounded and stated: ``max_labels_per_run`` binds in the engine exactly as
 on the fake path, and the number of planned judge calls is printed BEFORE any call
 is made. ``AnthropicJudge`` is reached only by the explicit deep import inside the
@@ -57,11 +67,23 @@ from pathlib import Path
 
 from evalgen.cluster import HashingEmbedder, cluster_records, stratified_sample
 from evalgen.config import Settings, get_settings
-from evalgen.contracts import TAXONOMY_V1, FewShotExample, HumanLabel, Judge, LogRecord
+from evalgen.contracts import (
+    TAXONOMY_V2,
+    FewShotExample,
+    HumanLabel,
+    Judge,
+    JudgeFingerprint,
+    LogRecord,
+)
 from evalgen.dedup import run_dedup
 from evalgen.ingest import GenericMapping, load_generic_jsonl, load_tracespan_jsonl, sanitize_text
 from evalgen.label import FakeJudge, load_few_shots, run_labeling
 from evalgen.validate import compute_agreement, load_human_labels, render_agreement_report
+from evalgen.validate.errors import (
+    DuplicateHumanLabelError,
+    HumanLabelFormatError,
+    TaxonomyMismatchError,
+)
 
 #: Same source-checkout resolution as ``demo.py`` (dev tool by declaration).
 _REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -157,13 +179,42 @@ def _run_pipeline(settings: Settings) -> list[LogRecord]:
 def _build_judge(kind: str, model: str, few_shots: tuple[FewShotExample, ...]) -> Judge:
     """Constructor injection at the composition layer — no factory, no env switch."""
     if kind == "fake":
-        return FakeJudge(taxonomy=TAXONOMY_V1, few_shots=few_shots)
+        return FakeJudge(taxonomy=TAXONOMY_V2, few_shots=few_shots)
     # The ONE sanctioned reach into the real judge: an explicit deep import inside
     # the --judge anthropic branch (ADR-0003 rule 4 — never via label/__init__,
     # never at module top, so the fake path never loads the SDK).
     from evalgen.label.anthropic_judge import AnthropicJudge
 
-    return AnthropicJudge(model=model, taxonomy=TAXONOMY_V1, few_shots=few_shots)
+    return AnthropicJudge(model=model, taxonomy=TAXONOMY_V2, few_shots=few_shots)
+
+
+def check_labels_match_run_taxonomy(
+    labels: Sequence[HumanLabel], fingerprint: JudgeFingerprint, *, labels_basename: str
+) -> None:
+    """The anti-mix guard, at the CLI seam and BEFORE any cost (ADR-0006).
+
+    v1 human labels against a v2 judge (or the reverse) would measure agreement
+    between two different questionnaires — the exact thing ADR-0003 rule 1 forbids.
+    ``compute_agreement`` already refuses the join, but it runs AFTER the labeling
+    pass: with ``--judge anthropic`` every API call would already be spent when the
+    typed error finally fired, and it would surface as a traceback rather than a
+    refusal. This guard runs right after the strict load — before the preflight
+    print, before the first judge call — and raises the same typed
+    ``TaxonomyMismatchError`` naming BOTH ids. Symmetric by construction: it
+    compares ids, so v1-labels/v2-run and v2-labels/v1-run are both refused.
+    """
+    foreign = sorted({label.taxonomy_id for label in labels} - {fingerprint.taxonomy_id})
+    if foreign:
+        raise TaxonomyMismatchError(
+            f"refusing {labels_basename}: its labels answer taxonomy_id(s) "
+            f"{foreign} but this run's judge is fingerprinted "
+            f"{fingerprint.taxonomy_id!r} — agreement between different "
+            "questionnaires is not agreement (ADR-0003 rule 1; ADR-0006 taxonomy "
+            "v2). Labels written against an older taxonomy are a historical "
+            "artifact, not an input to this instrument: regenerate the template "
+            "with `make annotate`, re-annotate under the current definitions, and "
+            "re-run."
+        )
 
 
 def _canonical_label_content(labels: Sequence[HumanLabel]) -> tuple[tuple[str, str, str], ...]:
@@ -344,7 +395,20 @@ def run(argv: Sequence[str] | None = None) -> int:
     # the agreement_demo pattern): the composition layer that read the file hashes
     # it; the strict loader then validates the same file.
     labels_sha256 = hashlib.sha256(args.labels.read_bytes()).hexdigest()
-    labels: tuple[HumanLabel, ...] = load_human_labels(args.labels)
+    # Strict load + ADR-0006 anti-mix guard on ONE refusal path, BEFORE the
+    # preflight print and BEFORE any judge call (the F-1 discipline: refuse before
+    # any cost): labels from another taxonomy version answer a different
+    # questionnaire and can never be measured here — and the loader's own typed
+    # refusals (malformed/unfilled line, duplicate record_id, a file MIXING
+    # taxonomy ids) are operator errors owed the same clean exit 2, never a
+    # traceback (red-team R-1: the SAME TaxonomyMismatchError escaped as a
+    # traceback when load_human_labels raised it on a mixed file).
+    try:
+        labels: tuple[HumanLabel, ...] = load_human_labels(args.labels)
+        check_labels_match_run_taxonomy(labels, judge.fingerprint, labels_basename=args.labels.name)
+    except (HumanLabelFormatError, DuplicateHumanLabelError, TaxonomyMismatchError) as error:
+        sys.stderr.write(str(error) + "\n")
+        return 2
     annotators = tuple(sorted({label.annotator for label in labels}))
     fixture_sha256 = hashlib.sha256(_SYNTHETIC_FIXTURE.read_bytes()).hexdigest()
     # Synthetic detection is content-based, never bytes-only (red-team F-2): a

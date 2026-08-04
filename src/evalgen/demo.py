@@ -22,7 +22,7 @@ from evalgen.cluster import HashingEmbedder, cluster_records, stratified_sample
 from evalgen.config import get_settings
 from evalgen.contracts import (
     NOISE_CLUSTER_ID,
-    TAXONOMY_V1,
+    TAXONOMY_V2,
     ClusteringReport,
     DedupOutcome,
     IngestReport,
@@ -206,7 +206,7 @@ def run_demo() -> str:
     sampled_ids = [rid for stratum in sampling.strata for rid in stratum.sampled_record_ids]
     sampled_records = [by_id[rid] for rid in sampled_ids]
     judge = FakeJudge(
-        taxonomy=TAXONOMY_V1, few_shots=load_few_shots(_FEWSHOTS_PATH, sanitizer=sanitize_text)
+        taxonomy=TAXONOMY_V2, few_shots=load_few_shots(_FEWSHOTS_PATH, sanitizer=sanitize_text)
     )
     labeling = run_labeling(sampled_records, judge=judge, max_labels=settings.max_labels_per_run)
 

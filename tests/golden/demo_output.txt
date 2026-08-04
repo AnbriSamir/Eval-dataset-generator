@@ -53,7 +53,7 @@ evalgen demo — offline pipeline on committed fixtures
                                rec-c0d7b5986ffbf0da, rec-ccf2c7490864b9db,
                                rec-d1087e0ca3da3367, rec-f469c4171d1b2785
 
-[5/5] label   judge=fake model=fake-judge-v1  taxonomy=tax-d9ca3b87b403  prompt=b963c9e7aa28
+[5/5] label   judge=fake model=fake-judge-v1  taxonomy=tax-d8ba44dd70c7  prompt=84d409b1acf9
   in=50  labeled=49  refused=0  failed=0  budget_skipped=0  fewshot_collisions=1  (budget=500)
   collision  rec-d1087e0ca3da3367  (canonical text matches a committed few-shot — never labeled, never exportable)
   outcome    correct=9  partially_correct=16  incorrect=15  unjudgeable=9   [synthetic fake-judge verdicts]

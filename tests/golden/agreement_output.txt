@@ -5,9 +5,9 @@ evalgen agreement — Cohen's kappa, judge vs human labels
 ========================================================
 
 source      annotations_synthetic.jsonl   annotators: synthetic
-labels      sha256=2beaf42e8fd6a7f84f2ef569afca534857db57e07f34f1725255213ddac55e18
-taxonomy    tax-d9ca3b87b403
-judge       fake  model=fake-judge-v1  prompt=b963c9e7aa28
+labels      sha256=41a147e868b17fdb7d78a3c6c74ac252cd0762b16dbd5c66e6b01ff3b1f75745
+taxonomy    tax-d8ba44dd70c7
+judge       fake  model=fake-judge-v1  prompt=84d409b1acf9
 bootstrap   B=10000  seed=1750  method=percentile
 gates       min_human_labels=30  min_class_support=5
 

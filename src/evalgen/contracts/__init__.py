@@ -96,6 +96,7 @@ from evalgen.contracts.reports import (
 )
 from evalgen.contracts.taxonomy import (
     TAXONOMY_V1,
+    TAXONOMY_V2,
     JudgeConfidence,
     LabelTaxonomy,
     OutcomeLabel,
@@ -116,6 +117,7 @@ __all__ = [
     "NOISE_CLUSTER_ID",
     "SIMILARITY_DECIMALS",
     "TAXONOMY_V1",
+    "TAXONOMY_V2",
     "AgreementAxis",
     "AgreementReport",
     "AxisAgreement",

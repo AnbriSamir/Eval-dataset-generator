@@ -34,7 +34,7 @@ from evalgen.annotation_cli import (
     main,
     run_annotation_cli,
 )
-from evalgen.contracts import TAXONOMY_V1
+from evalgen.contracts import TAXONOMY_V2
 from evalgen.label import FAKE_JUDGE_MODEL_ID
 from evalgen.validate import render_annotator_instructions
 
@@ -154,7 +154,7 @@ def test_template_lines_carry_empty_label_fields_and_no_verdict(artifacts) -> No
         assert payload["outcome"] == ""
         assert payload["annotator"] == ""
         assert payload["note"] == ""
-        assert payload["taxonomy_id"] == TAXONOMY_V1.taxonomy_id
+        assert payload["taxonomy_id"] == TAXONOMY_V2.taxonomy_id
 
 
 def test_no_judge_information_reaches_the_artifacts(artifacts) -> None:
@@ -176,7 +176,7 @@ def test_no_judge_information_reaches_the_artifacts(artifacts) -> None:
 
 def test_instructions_are_the_pure_renderer_output_verbatim(artifacts) -> None:
     _, instructions, _ = artifacts
-    assert instructions == render_annotator_instructions(TAXONOMY_V1)
+    assert instructions == render_annotator_instructions(TAXONOMY_V2)
 
 
 # ------------------------------------------------------------------ banner + leaks

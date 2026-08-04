@@ -23,9 +23,15 @@ from typing import Any
 import pytest
 
 from conftest import STUB_VERDICT
-from evalgen.agreement_run import REPORT_BASENAME, REPORT_SCHEMA, run
-from evalgen.contracts import JudgeVerdict
+from evalgen.agreement_run import (
+    REPORT_BASENAME,
+    REPORT_SCHEMA,
+    check_labels_match_run_taxonomy,
+    run,
+)
+from evalgen.contracts import TAXONOMY_V1, TAXONOMY_V2, HumanLabel, JudgeVerdict
 from evalgen.label import FAKE_JUDGE_MODEL_ID
+from evalgen.validate.errors import TaxonomyMismatchError
 
 FIXTURE = Path(__file__).resolve().parents[1] / "data" / "fixtures" / "annotations_synthetic.jsonl"
 
@@ -497,3 +503,152 @@ def test_the_fixed_basename_is_never_used_by_the_real_judge(monkeypatch, tmp_pat
     assert run(["--labels", str(labels), "--judge", "anthropic", "--out", str(out_dir)]) == 0
     capsys.readouterr()
     assert not (out_dir / REPORT_BASENAME).exists()
+
+
+# ---------------- ADR-0006 anti-mix guard: v1 labels never meet the v2 instrument
+
+
+def _v1_labels_copy(tmp_path: Path, name: str = "human_labels_v1_session.jsonl") -> Path:
+    """The historical shape: the fixture's labels rewritten under the FROZEN v1
+    taxonomy id (exactly what data/labels/human_labels.jsonl carries)."""
+    payloads = _fixture_payloads()
+    for payload in payloads:
+        payload["taxonomy_id"] = TAXONOMY_V1.taxonomy_id
+    return _write_labels(tmp_path, payloads, name)
+
+
+def test_v1_labels_against_the_v2_run_are_refused_naming_both_ids(tmp_path, capsys) -> None:
+    # The historical human labels answer the v1 questionnaire; the run's judge is
+    # fingerprinted on v2 — measuring one against the other would be agreement
+    # between two different questionnaires (ADR-0003 rule 1 / ADR-0006).
+    labels = _v1_labels_copy(tmp_path)
+    out_dir = tmp_path / "out"
+    assert run(["--labels", str(labels), "--judge", "fake", "--out", str(out_dir)]) == 2
+    err = capsys.readouterr().err
+    assert TAXONOMY_V1.taxonomy_id in err  # the labels' id, named
+    assert TAXONOMY_V2.taxonomy_id in err  # the run's id, named
+    assert "make annotate" in err  # the remedy, named
+    assert not out_dir.exists() or not list(out_dir.iterdir())  # nothing written
+
+
+def test_the_taxonomy_guard_fires_before_any_api_call(monkeypatch, tmp_path, capsys) -> None:
+    # The refusal must land BEFORE the first judge call: mixing questionnaires must
+    # not cost 49 API calls before being detected (the F-1 pre-cost discipline).
+    client = RecordingClient(DuckResponse(parsed_output=STUB_VERDICT))
+    _mock_sdk(monkeypatch, client)
+    labels = _v1_labels_copy(tmp_path)
+    out_dir = tmp_path / "out"
+    assert run(["--labels", str(labels), "--judge", "anthropic", "--out", str(out_dir)]) == 2
+    err = capsys.readouterr().err
+    assert client.messages.calls == []  # zero API spend
+    assert TAXONOMY_V1.taxonomy_id in err
+    assert TAXONOMY_V2.taxonomy_id in err
+
+
+# ------- R-1 payload replays: loader refusals are clean exit-2, never a traceback
+
+
+def _mixed_labels_copy(tmp_path: Path, name: str = "mixed_labels.jsonl") -> Path:
+    """Red-team payload B: one file alternating v1 and v2 taxonomy ids."""
+    payloads = _fixture_payloads()
+    for index, payload in enumerate(payloads):
+        if index % 2 == 0:
+            payload["taxonomy_id"] = TAXONOMY_V1.taxonomy_id
+    return _write_labels(tmp_path, payloads, name)
+
+
+def test_a_mixed_taxonomy_file_is_refused_cleanly_not_a_traceback(tmp_path, capsys) -> None:
+    # Red-team payload B replayed: before the fix, load_human_labels' own
+    # TaxonomyMismatchError (mixed file) escaped run() as a traceback (exit 1);
+    # the guard's try only covered check_labels_match_run_taxonomy. Now the strict
+    # load shares the guard's refusal path: typed message, exit 2, nothing written.
+    labels = _mixed_labels_copy(tmp_path)
+    out_dir = tmp_path / "out"
+    assert run(["--labels", str(labels), "--judge", "fake", "--out", str(out_dir)]) == 2
+    err = capsys.readouterr().err
+    assert "mixed taxonomy_id values" in err
+    assert TAXONOMY_V1.taxonomy_id in err
+    assert TAXONOMY_V2.taxonomy_id in err
+    assert not out_dir.exists()  # --out never created on refusal
+
+
+def test_the_mixed_file_refusal_costs_zero_api_calls(monkeypatch, tmp_path, capsys) -> None:
+    # The B payload's cost claim, pinned: with --judge anthropic the refusal must
+    # land before the first SDK call (the F-1 pre-cost discipline).
+    client = RecordingClient(DuckResponse(parsed_output=STUB_VERDICT))
+    _mock_sdk(monkeypatch, client)
+    labels = _mixed_labels_copy(tmp_path)
+    out_dir = tmp_path / "out"
+    assert run(["--labels", str(labels), "--judge", "anthropic", "--out", str(out_dir)]) == 2
+    assert "mixed taxonomy_id values" in capsys.readouterr().err
+    assert client.messages.calls == []  # zero API spend
+    assert not out_dir.exists()
+
+
+def test_a_label_line_missing_taxonomy_id_is_refused_cleanly(tmp_path, capsys) -> None:
+    # Red-team payload D replayed: a line without taxonomy_id used to escape as a
+    # HumanLabelFormatError traceback; now it is a clean refusal naming the line.
+    payloads = _fixture_payloads()
+    del payloads[0]["taxonomy_id"]
+    labels = _write_labels(tmp_path, payloads, "no_taxonomy_labels.jsonl")
+    out_dir = tmp_path / "out"
+    assert run(["--labels", str(labels), "--judge", "fake", "--out", str(out_dir)]) == 2
+    err = capsys.readouterr().err
+    assert "no_taxonomy_labels.jsonl line 1" in err  # the 1-based line, named
+    assert "invalid or unfilled human label" in err
+    assert not out_dir.exists()
+
+
+def test_a_duplicated_record_id_is_refused_cleanly(tmp_path, capsys) -> None:
+    # The third member of the loader's typed-refusal family rides the same path.
+    payloads = _fixture_payloads()
+    payloads.append(dict(payloads[0]))
+    labels = _write_labels(tmp_path, payloads, "duplicated_labels.jsonl")
+    out_dir = tmp_path / "out"
+    assert run(["--labels", str(labels), "--judge", "fake", "--out", str(out_dir)]) == 2
+    err = capsys.readouterr().err
+    assert "labeled more than once" in err
+    assert payloads[0]["record_id"] in err
+    assert not out_dir.exists()
+
+
+def _label_for(taxonomy_id: str) -> HumanLabel:
+    return HumanLabel(
+        record_id="rec-0000000000000000",
+        taxonomy_id=taxonomy_id,
+        task_type="factual_query",
+        outcome="correct",
+        annotator="annotator-a",
+    )
+
+
+def test_the_guard_is_symmetric_in_both_directions() -> None:
+    # v1 labels vs v2 judge AND v2 labels vs v1 judge both refuse, each naming both
+    # ids; matching ids pass. (The CLI only ever runs the v2 side; the symmetry is
+    # the function's contract so a future default flip keeps the guard.)
+    from conftest import make_stub_fingerprint
+
+    v1_fingerprint = make_stub_fingerprint()  # conftest stubs are v1-fingerprinted
+    assert v1_fingerprint.taxonomy_id == TAXONOMY_V1.taxonomy_id
+    with pytest.raises(TaxonomyMismatchError) as excinfo:
+        check_labels_match_run_taxonomy(
+            [_label_for(TAXONOMY_V2.taxonomy_id)], v1_fingerprint, labels_basename="x.jsonl"
+        )
+    assert TAXONOMY_V1.taxonomy_id in str(excinfo.value)
+    assert TAXONOMY_V2.taxonomy_id in str(excinfo.value)
+
+    v2_fingerprint = v1_fingerprint.model_copy(update={"taxonomy_id": TAXONOMY_V2.taxonomy_id})
+    with pytest.raises(TaxonomyMismatchError) as excinfo:
+        check_labels_match_run_taxonomy(
+            [_label_for(TAXONOMY_V1.taxonomy_id)], v2_fingerprint, labels_basename="x.jsonl"
+        )
+    assert TAXONOMY_V1.taxonomy_id in str(excinfo.value)
+    assert TAXONOMY_V2.taxonomy_id in str(excinfo.value)
+
+    # Matching questionnaires pass on both versions — the guard blocks mixing only.
+    check_labels_match_run_taxonomy(
+        [_label_for(TAXONOMY_V1.taxonomy_id)], v1_fingerprint, labels_basename="x.jsonl"
+    )
+    check_labels_match_run_taxonomy(
+        [_label_for(TAXONOMY_V2.taxonomy_id)], v2_fingerprint, labels_basename="x.jsonl"
+    )

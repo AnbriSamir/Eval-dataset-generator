@@ -17,8 +17,8 @@ files       written to data/annotation/ — kept apart from data/out/ on purpose
             (golden.jsonl, meta.json, agreement run reports); a blank template
             must never sit next to the answer key, and this CLI refuses any
             directory that contains those artifacts.
-  annotation_template.jsonl      49 lines   sha256=d44106e94838af42c6908f3e1daec2f143c5bee69bdf1d558fe8e375fc10cdec
-  annotation_instructions.txt    29 lines   sha256=d3ac44c1b8955a2cc027a804f4bb97ab29dfe3246242a5ff4a3e845127cd226c
+  annotation_template.jsonl      49 lines   sha256=0b3b3212a56b07858af18339bd2f33c6e011e0fbbbab74657894d8281b7a464d
+  annotation_instructions.txt    29 lines   sha256=cd996d888f594f634ec903b8abc52cde006331db05efd08c65d636309faed3a9
 
 next
   1. answer every line per the instructions (task_type, outcome, annotator)

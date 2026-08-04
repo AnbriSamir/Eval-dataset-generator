@@ -47,7 +47,7 @@ from pathlib import Path
 
 from evalgen.cluster import HashingEmbedder, cluster_records, stratified_sample
 from evalgen.config import get_settings
-from evalgen.contracts import TAXONOMY_V1, LabelingOutcome, LogRecord
+from evalgen.contracts import TAXONOMY_V2, LabelingOutcome, LogRecord
 from evalgen.dedup import run_dedup
 from evalgen.ingest import GenericMapping, load_generic_jsonl, load_tracespan_jsonl, sanitize_text
 from evalgen.label import FakeJudge, load_few_shots, run_labeling
@@ -129,13 +129,13 @@ def build_annotation_artifacts() -> tuple[str, str, LabelingOutcome]:
     # FakeJudge SOLELY to know the labelable set + collisions (offline, no API);
     # its verdicts are discarded — the renderers below cannot even receive them.
     judge = FakeJudge(
-        taxonomy=TAXONOMY_V1, few_shots=load_few_shots(_FEWSHOTS_PATH, sanitizer=sanitize_text)
+        taxonomy=TAXONOMY_V2, few_shots=load_few_shots(_FEWSHOTS_PATH, sanitizer=sanitize_text)
     )
     labeling = run_labeling(sampled_records, judge=judge, max_labels=settings.max_labels_per_run)
 
     labelable_records = [by_id[example.record_id] for example in labeling.labeled_examples]
-    template = render_label_template(labelable_records, TAXONOMY_V1)
-    instructions = render_annotator_instructions(TAXONOMY_V1)
+    template = render_label_template(labelable_records, TAXONOMY_V2)
+    instructions = render_annotator_instructions(TAXONOMY_V2)
     return template, instructions, labeling
 
 

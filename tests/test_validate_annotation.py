@@ -1,12 +1,15 @@
 """The annotation renderers: fillable template + instructions, blind by signature
-(ADR-0004 rule 2)."""
+(ADR-0004 rule 2) — and the ADR-0006 pin that the v2 definitions render VERBATIM
+and IDENTICALLY on both sides of the double-blind (judge prompt / annotator
+instructions): one questionnaire, two annotators."""
 
 from __future__ import annotations
 
 import json
 
 from conftest import make_record
-from evalgen.contracts import TAXONOMY_V1, record_sort_key
+from evalgen.contracts import TAXONOMY_V1, TAXONOMY_V2, record_sort_key
+from evalgen.label.prompt import render_system_prompt
 from evalgen.validate import render_annotator_instructions, render_label_template
 
 RECORDS = [
@@ -93,3 +96,46 @@ class TestAnnotatorInstructions:
         assert render_annotator_instructions(TAXONOMY_V1) == render_annotator_instructions(
             TAXONOMY_V1
         )
+
+
+class TestOneQuestionnaireTwoAnnotators:
+    """ADR-0006 / ADR-0003 rule 1: the judge and the human answer the SAME v2
+    questions with the SAME definitions — otherwise κ measures instruction drift."""
+
+    def test_v2_definitions_verbatim_in_the_annotator_instructions(self) -> None:
+        instructions = render_annotator_instructions(TAXONOMY_V2)
+        for axis in TAXONOMY_V2.axes:
+            assert f"Axis '{axis.name}' — {axis.question}" in instructions
+            for cls in axis.classes:
+                assert f"- {cls.name}: {cls.definition}" in instructions
+
+    def test_v2_definitions_verbatim_in_the_judge_prompt(self) -> None:
+        prompt = render_system_prompt(TAXONOMY_V2, ())
+        for axis in TAXONOMY_V2.axes:
+            assert f"Axis '{axis.name}' — {axis.question}" in prompt
+            for cls in axis.classes:
+                assert f"- {cls.name}: {cls.definition}" in prompt
+
+    def test_both_sides_render_the_identical_axis_blocks(self) -> None:
+        # Byte-identical questionnaire text on both sides of the double-blind: the
+        # exact "Axis …" and "- class: definition" lines, in the exact same order.
+        def axis_block_lines(text: str) -> list[str]:
+            return [
+                line
+                for line in text.splitlines()
+                if line.startswith("Axis '") or line.startswith("- ")
+            ]
+
+        judge_side = axis_block_lines(render_system_prompt(TAXONOMY_V2, ()))
+        human_side = axis_block_lines(render_annotator_instructions(TAXONOMY_V2))
+        assert judge_side == human_side
+        assert len(judge_side) == 2 + 5 + 4  # 2 axis headers + 5 + 4 classes
+
+    def test_the_live_claim_convention_reaches_both_artifacts(self) -> None:
+        for text in (
+            render_system_prompt(TAXONOMY_V2, ()),
+            render_annotator_instructions(TAXONOMY_V2),
+        ):
+            assert "grade the answer AS A RESPONSE" in text
+            assert "ONLY when the INPUT is ambiguous or the exchange is incomplete" in text
+            assert "never merely because the claim is live" in text

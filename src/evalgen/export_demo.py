@@ -34,7 +34,7 @@ from evalgen import __version__
 from evalgen.cluster import HashingEmbedder, cluster_records, stratified_sample
 from evalgen.config import get_settings
 from evalgen.contracts import (
-    TAXONOMY_V1,
+    TAXONOMY_V2,
     ExportGateOverride,
     ExportManifest,
     ExportOutcome,
@@ -149,7 +149,7 @@ def build_export_artifacts() -> tuple[ExportOutcome, ExportManifest]:
     sampled_ids = [rid for stratum in sampling.strata for rid in stratum.sampled_record_ids]
     sampled_records = [by_id[rid] for rid in sampled_ids]
     few_shots = load_few_shots(_FEWSHOTS_PATH, sanitizer=sanitize_text)
-    judge = FakeJudge(taxonomy=TAXONOMY_V1, few_shots=few_shots)
+    judge = FakeJudge(taxonomy=TAXONOMY_V2, few_shots=few_shots)
     labeling = run_labeling(sampled_records, judge=judge, max_labels=settings.max_labels_per_run)
 
     # Composition-level drift assertion (ADR-0005 options §3): the store just loaded

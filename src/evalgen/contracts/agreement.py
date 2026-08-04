@@ -164,7 +164,9 @@ class HumanLabel(BaseModel):
 
 
 class AgreementAxis(StrEnum):
-    """The two taxonomy axes κ is computed on — pinned to ``TAXONOMY_V1.axes`` by test."""
+    """The two taxonomy axes κ is computed on — pinned to BOTH ``TAXONOMY_V1.axes``
+    and ``TAXONOMY_V2.axes`` by test (v2 is the default; ADR-0006 changes
+    definitions only, never the axis structure)."""
 
     TASK_TYPE = "task_type"
     OUTCOME = "outcome"

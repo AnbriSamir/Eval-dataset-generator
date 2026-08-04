@@ -8,7 +8,7 @@
 > working.
 
 [![CI](https://github.com/anbsamsam17/Eval-dataset-generator/actions/workflows/ci.yml/badge.svg)](https://github.com/anbsamsam17/Eval-dataset-generator/actions/workflows/ci.yml)
-[![Tests](https://img.shields.io/badge/tests-658%20offline-brightgreen)](#the-machinery-was-proven-on-synthetic-data-first)
+[![Tests](https://img.shields.io/badge/tests-677%20offline-brightgreen)](#the-machinery-was-proven-on-synthetic-data-first)
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue)](#)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Status](https://img.shields.io/badge/status-complete-brightgreen)](#roadmap)
@@ -47,15 +47,19 @@ headline is the repo's thesis working, published exactly as measured:
   is not noise — it is an **annotation-guideline gap**, surfaced by exactly the
   drill-down built to surface it. The flywheel's next turn is now concrete: sharpen the
   `outcome` definitions for live-status claims, relabel, re-measure — and only then
-  should the gate open.
+  should the gate open. The sharpening has landed as **taxonomy v2**
+  ([ADR-0006](docs/decisions/ADR-0006-taxonomy-v2-live-status-convention.md): live
+  claims are graded *as responses*; `unjudgeable` is reserved for defective inputs);
+  v1 stays frozen so this report's provenance never breaks, and the pipeline refuses
+  to measure v1 labels against the v2 judge. The relabel + re-measure are next.
 
 Per-class κ tables, both confusion matrices, and every disagreement with the judge's
 rationale are in the committed run report.
 
-> ✅ **Complete.** All six pipeline stages implemented, **658 offline tests**, CI green
+> ✅ **Complete.** All six pipeline stages implemented, **677 offline tests**, CI green
 > (lint · typecheck · test) — no API key, no Docker, no network. Three zero-argument
 > CLIs (`make demo` · `make agreement` · `make export`) are **byte-identical between
-> runs** and pinned by committed golden files. Five ADRs record the load-bearing
+> runs** and pinned by committed golden files. Six ADRs record the load-bearing
 > decisions, and every phase was [adversarially red-teamed before
 > merge](#what-the-red-team-caught). Every number in this README reproduces from one of
 > those commands or is pinned by the test suite — except the one that can't be: the
@@ -137,7 +141,7 @@ decision is an ADR in [`docs/decisions/`](docs/decisions/).
 ```bash
 git clone https://github.com/anbsamsam17/Eval-dataset-generator && cd Eval-dataset-generator
 make install     # pip install -e ".[dev]"
-make test        # 658 offline tests — no API key, no Docker, no network
+make test        # 677 offline tests — no API key, no Docker, no network
 make demo        # ingest → dedup → cluster → sample → label, on committed fixtures
 make agreement   # Cohen's κ + CI95, judge vs (synthetic) human labels
 make export      # the κ gate + golden.jsonl + meta.json provenance
@@ -156,7 +160,7 @@ visible in the run itself:
   near   rec-d829e64df1f0efad -> kept rec-083298153276e970  sim=0.910607  [chain]
   …
 
-[5/5] label   judge=fake model=fake-judge-v1  taxonomy=tax-d9ca3b87b403  prompt=b963c9e7aa28
+[5/5] label   judge=fake model=fake-judge-v1  taxonomy=tax-d8ba44dd70c7  prompt=84d409b1acf9
   in=50  labeled=49  refused=0  failed=0  budget_skipped=0  fewshot_collisions=1  (budget=500)
   collision  rec-d1087e0ca3da3367  (canonical text matches a committed few-shot — never labeled, never exportable)
 ```
@@ -178,7 +182,7 @@ gate        min_export_kappa=0.6
   [pass] headline_ready      n_matched=40 >= min_human_labels=30
   [pass] headline_status     ok
   [pass] instrument_binding  agreement fingerprint == labeling fingerprint
-  [pass] ground_truth_bound  human_labels_sha256=2beaf42e8fd6…
+  [pass] ground_truth_bound  human_labels_sha256=41a147e868b1…
   [FAIL] kappa_threshold     kappa=0.513109 < min_export_kappa=0.6
   verdict     blocked -> OVERRIDDEN (deliberate)
 ```
@@ -191,7 +195,7 @@ findings, and say so on their face:
 
 | | Measured | The honest fine print |
 |---|---|---|
-| **Test suite** | **658 offline tests**, CI green | no API key, no Docker, no network; includes byte-equality against committed goldens, double-run identity, and the red-team payloads replayed verbatim |
+| **Test suite** | **677 offline tests**, CI green | no API key, no Docker, no network; includes byte-equality against committed goldens, double-run identity, and the red-team payloads replayed verbatim |
 | **Demo funnel** | 62 records in → 54 after dedup (3 exact + 5 near, 1 chain-flagged) → 4 clusters + 12 noise → 50 sampled → 49 labeled | `make demo`, byte-pinned by `tests/golden/demo_output.txt`; fixtures are synthetic — cluster counts are machinery proof, not findings |
 | **Agreement machinery** | κ = **0.513109** (outcome axis, n=40), CI95 **[0.286421, 0.707241]**, B=10000, seed 1750, per-class table + confusion matrix | `make agreement`, byte-pinned — **SYNTHETIC by design**, see below |
 | **The gate fails honestly** | export gate **blocks**: 0.513109 < 0.6 | `make export`, byte-pinned; the demo exports only through an explicit override whose reason prints on the export's face |
@@ -263,6 +267,7 @@ recorded in the ADR amendment sections.
 | [ADR-0003](docs/decisions/ADR-0003-label-taxonomy-judge.md) | A two-axis taxonomy sized for per-class κ at n=30–50, the two-string `Judge` Protocol (blindness by signature), typed labeling failures, the few-shot leakage gate |
 | [ADR-0004](docs/decisions/ADR-0004-agreement-kappa-protocol.md) | The agreement protocol: strict human-label loader, one hand-checked κ formula (global + per-class), paired percentile bootstrap CI95, typed degeneracy, ground-truth SHA-256 binding |
 | [ADR-0005](docs/decisions/ADR-0005-export-provenance-gates.md) | Canonical `golden.jsonl`, the two-section `meta.json`, the contamination guard as a validator, the five-check κ gate and its deliberate, scoped override |
+| [ADR-0006](docs/decisions/ADR-0006-taxonomy-v2-live-status-convention.md) | Taxonomy v2: the bounded-plausibility convention for live-status claims (the κ=0.263 `correct → unjudgeable` gap closed in the guideline), v1 frozen for provenance, the cross-version anti-mix guard |
 
 ## Project structure
 
@@ -279,8 +284,8 @@ src/evalgen/
 data/fixtures/      committed demo logs + synthetic annotations (say SYNTHETIC on their face)
 data/fewshots/      the judge's few-shot store — redaction-clean by construction
 data/labels/        real human ground truth lands here — hook-protected, agent writes blocked
-docs/decisions/     the five ADRs (red-team amendments included)
-tests/              658 offline tests, incl. golden byte-equality + replayed red-team payloads
+docs/decisions/     the six ADRs (red-team amendments included)
+tests/              677 offline tests, incl. golden byte-equality + replayed red-team payloads
 ```
 
 Module boundaries are enforced by tests, not convention: `contracts` imports no sibling;
@@ -303,7 +308,7 @@ Done:
 
 - [x] Phases 0–5: contracts + ingest/redaction · dedup/cluster/sampling · judge ·
   agreement · export — five ADRs, three byte-pinned CLIs (612 offline tests then;
-  658 with the real-session CLI pair below)
+  658 with the real-session CLI pair below, 673 with taxonomy v2)
 - [x] Red-team pass on every phase, with closures recorded as ADR amendments and
   regression tests replaying each payload
 - [x] **Real human labels → the real κ — measured, published as-is.** A human
@@ -320,9 +325,15 @@ Done:
 
 Next — the honest part:
 
-- [ ] Sharpen the annotation guideline for live-status claims (the
-  `correct → unjudgeable` gap [the drill-down surfaced](#the-real-κ-measured)),
-  relabel, re-measure — the gate stays closed until the number earns it.
+- [x] Sharpen the annotation guideline for live-status claims (the
+  `correct → unjudgeable` gap [the drill-down surfaced](#the-real-κ-measured)):
+  **taxonomy v2** ([ADR-0006](docs/decisions/ADR-0006-taxonomy-v2-live-status-convention.md))
+  grades inherently live claims *as responses* and reserves `unjudgeable` for
+  defective inputs; v1 stays frozen for provenance and `agreement_run` refuses v1
+  labels against the v2 judge (both directions, before any API cost).
+- [ ] Relabel under v2 (`make annotate` → human fills outside any agent),
+  re-measure, publish whatever comes back — the gate stays closed until the
+  number earns it.
 - [ ] Real-data export behind `--allow-low-kappa "<reason>"` — the Phase 5 gate and its
   override contract ship today; the explicit flag waits for a κ worth arguing about.
 - [ ] Near-dup threshold calibration on real labeled pairs — the protocol, harness, and
