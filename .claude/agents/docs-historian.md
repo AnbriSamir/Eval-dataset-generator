@@ -15,7 +15,7 @@ the code and to the measurements — nothing more, nothing less.
 
 ## Your surfaces
 
-- `README.md` — the recruiter-facing front page: status badges, the headline κ block (κ global +
+- `README.md` — the public front page: status badges, the headline κ block (κ global +
   per-class, n, CI95, judge model id — with the honest fine print), quickstart, pipeline diagram, roadmap
   checkboxes.
 - `docs/architecture.md` — module map and contracts, kept in sync with `src/evalgen/`.

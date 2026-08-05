@@ -4,14 +4,15 @@
 > This repo turns **raw production logs** into a **labeled, deduplicated, statistically
 > validated golden dataset** — agreement **measured** (Cohen's κ + bootstrap CI95),
 > never declared. Measured for real, twice: a first run blocked at **κ = 0.26** and
-> surfaced a guideline gap; after the fix, it re-ran at **κ = 0.80** on the author's real
+> surfaced a guideline gap; after the fix, it re-ran at **κ = 0.80** on my real working
 > domain, and the gate opened. The improvement loop, closed on itself.
 
 [![CI](https://github.com/anbsamsam17/Eval-dataset-generator/actions/workflows/ci.yml/badge.svg)](https://github.com/anbsamsam17/Eval-dataset-generator/actions/workflows/ci.yml)
 [![Tests](https://img.shields.io/badge/tests-677%20offline-brightgreen)](#the-machinery-was-proven-on-synthetic-data-first)
+[![Agreement](https://img.shields.io/badge/outcome%20κ-0.804%20·%20CI95%20%5B0.65%2C%200.93%5D-blueviolet)](#the-real-κ-measured--and-a-full-flywheel-turn)
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue)](#)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Status](https://img.shields.io/badge/status-complete-brightgreen)](#roadmap)
+[![Status](https://img.shields.io/badge/status-v1%20complete-brightgreen)](#roadmap)
 
 ## The real κ (measured) — and a full flywheel turn
 
@@ -36,7 +37,7 @@ frozen, so [turn 1's report](docs/reports/agreement_run_report.20260804T002205Z-
 keeps its provenance, and the pipeline refuses to measure v1 labels against a v2 judge.)
 
 **Turn 2 — re-measured on the real work, with the sharpened guideline.** The demo corpus
-then moved to the author's actual domain — machine-learning **redressement of Floating Car
+then moved to my actual working domain — machine-learning **redressement of Floating Car
 Data** (partial probe-vehicle flow → true all-vehicle flow, road-reference features
 calibrated on SIREO permanent stations and pneumatic tubes) — and the session was re-run
 under v2. Perfect join: 49/49 matched, zero orphans.
@@ -52,7 +53,8 @@ under v2. Perfect join: 49/49 matched, zero orphans.
 sits above it. Every `outcome` class now has the support to report its own κ (0.88
 `correct`, 0.56 `partially_correct`, 0.85 `incorrect`, 0.90 `unjudgeable`) — the
 corpus was engineered for that, the fix of turn 1's under-supported classes. Just six
-`outcome` disagreements remain, all one-step (`→ partially_correct`).
+`outcome` disagreements remain, all landing on `partially_correct` (never a two-class
+jump like `correct → incorrect`).
 
 **What this pair is, and isn't.** It is one honest measurement that failed and blocked,
 a guideline fix it motivated, and a second honest measurement that passed — the
@@ -105,7 +107,7 @@ reproducible from a harness*.
 | **Where did each item come from?** | Every `golden.jsonl` line carries typed provenance (source, line, span id, cluster, content hash) and recomputes its own id and content hash on parse — a line tampered in its identity, origin, or texts refuses to exist; the label fields are fenced at file level by the `golden.jsonl` digest in `meta.json`. `meta.json` embeds the **entire validated report chain** from `lines_read` to `exported`. |
 | **Are there hidden near-duplicates?** | Exact (SHA-256) + near-dup (embedding cosine, union-find) dedup, with a report naming **every drop, its survivor, and (for near-dups) its similarity** — chain collapses flagged, never hidden. |
 | **Does it cover real traffic, or the easy head?** | HDBSCAN over deterministic embeddings + stratified sampling with floor-1 quotas. Noise is a **first-class stratum** — the tail cannot be silently discarded. |
-| **Can you trust the LLM judge?** | A human-labeled subset validates it: Cohen's κ (global **and** per-class) + paired bootstrap CI95, degenerate cases as typed statuses (never NaN, never a silent 0). An embarrassing κ is published as-is — [it was](#the-real-κ-measured). |
+| **Can you trust the LLM judge?** | A human-labeled subset validates it: Cohen's κ (global **and** per-class) + paired bootstrap CI95, degenerate cases as typed statuses (never NaN, never a silent 0). An embarrassing κ is published as-is — [it was](#the-real-κ-measured--and-a-full-flywheel-turn). |
 | **Could the judge have seen the answers?** | Blindness is structural: the judge's entire input surface is two strings (a human label is untransportable by signature), and `export ∩ few-shots = ∅` is enforced by a **validator** — a contaminated export is unrepresentable, not merely filtered. |
 | **Can you replay it?** | Same inputs → byte-identical outputs. Seeds, thresholds, model ids, input SHA-256s, and the ground-truth-file SHA-256 all travel in `meta.json`. |
 
@@ -218,7 +220,7 @@ the real human labels landed in `data/labels/human_labels.jsonl`, only the numbe
 changed — the machinery was already proven byte-for-byte. And on the committed fixtures
 the export gate **genuinely blocks** (κ = 0.565581 < 0.6) — a pipeline demonstrated
 failing honestly is worth more than one demonstrated only passing. The
-[real domain dataset](#the-real-κ-measured) *clears* the same gate at κ = 0.80; the
+[real domain dataset](#the-real-κ-measured--and-a-full-flywheel-turn) *clears* the same gate at κ = 0.80; the
 first real run did not, and blocked. Both outcomes are the gate doing its job.
 
 ## What the red team caught
@@ -321,7 +323,7 @@ Done:
   (generic corpus): outcome κ = **0.263158**, CI95 straddling zero, gate blocked —
   the unfavorable number this rule exists for. Turn 2 (domain corpus, v2 guideline):
   outcome κ = **0.803869**, CI95 [0.652, 0.933], gate opens. Both live-judge runs are
-  committed under [`docs/reports/`](docs/reports/); see [The real κ](#the-real-κ-measured).
+  committed under [`docs/reports/`](docs/reports/); see [The real κ](#the-real-κ-measured--and-a-full-flywheel-turn).
 - [x] Real-data CLI pair — explicit flags only, never autodetection: `make annotate`
   emits the blank template into `data/annotation/` (structurally apart from judge
   output — each CLI refuses a directory holding the other family's artifacts), and
@@ -332,7 +334,7 @@ Done:
 Next — the honest part:
 
 - [x] Sharpen the annotation guideline for live-status claims (the
-  `correct → unjudgeable` gap [the drill-down surfaced](#the-real-κ-measured)):
+  `correct → unjudgeable` gap [the drill-down surfaced](#the-real-κ-measured--and-a-full-flywheel-turn)):
   **taxonomy v2** ([ADR-0006](docs/decisions/ADR-0006-taxonomy-v2-live-status-convention.md))
   grades inherently live claims *as responses* and reserves `unjudgeable` for
   defective inputs; v1 stays frozen for provenance and `agreement_run` refuses v1

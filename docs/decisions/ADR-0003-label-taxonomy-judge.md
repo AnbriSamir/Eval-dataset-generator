@@ -317,7 +317,7 @@ Layered, each layer independently tested:
 ### 6. Demo integration
 
 **A. Leave the demo at four stages.** Cons: the phase that carries the repo's central
-instrument would be invisible in the one artifact recruiters run. **B. Extend to
+instrument would be invisible in the one artifact a first-time reader runs. **B. Extend to
 `[5/5] label` with the FakeJudge over the sampled records (chosen):** the pipeline
 narrative becomes ingest → dedup → cluster → sample → **label the sample** — which is
 exactly the production shape (the sample is what gets labeled and exported). Offline,

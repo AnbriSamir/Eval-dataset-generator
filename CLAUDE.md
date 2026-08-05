@@ -2,7 +2,7 @@
 
 Project memory for **eval-dataset-generator**. This file is loaded into context at the
 start of every Claude Code session. Read it before touching code — it encodes the
-non-negotiables that keep this repo's senior signal intact.
+non-negotiables that keep this repo's engineering discipline intact.
 
 ---
 
@@ -183,4 +183,5 @@ credibility (design, statistics, red team).
 - Re-run `make test` + `make lint` before claiming a feature done.
 - After any dedup/cluster/label/validate change, re-measure — never report stale κ.
 - **No AI attribution anywhere public**: no `Co-Authored-By: Claude` trailers, no
-  "Generated with" footers — in commits, PRs, or docs. Recruiters read this repo.
+  "Generated with" footers — in commits, PRs, or docs. The git history is part of
+  this tool's public engineering record.
