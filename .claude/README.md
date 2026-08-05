@@ -17,7 +17,7 @@ exactly how this codebase is built and reviewed.
 
 ## Philosophy
 
-The repo's whole senior signal lives in four places: **honest dedup** (exact hash +
+The repo's whole credibility lives in four places: **honest dedup** (exact hash +
 near-dup cosine above a measured threshold — hidden near-dupes silently inflate every
 downstream metric), **real coverage** (deterministic embeddings + HDBSCAN + stratified
 sampling over the actual traffic, not the easy head), **measured — not declared —
@@ -131,7 +131,7 @@ optional tooling isn't installed — so they never block a fresh checkout.
   reviewer is read-only so review and fix never collapse into the same step.
 - **The headline number can't be faked.** The eval command refuses non-reproducible
   numbers, the judge is structurally blind to the ground truth, and the protect hook
-  locks the human labels and provenance. The κ a recruiter sees is, by construction,
+  locks the human labels and provenance. The κ a reader sees is, by construction,
   reproducible from `make agreement`.
 - **Decisions are durable.** Load-bearing trade-offs become ADRs, and documentation is
   kept in lock-step with the code and the latest reproducible metrics.

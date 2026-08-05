@@ -1,7 +1,7 @@
 ---
 name: stats-scientist
 description: >-
-  Owner of validation — the repo's headline signal. The human-label subset workflow, Cohen's κ (global +
+  Owner of validation — the repo's credibility. The human-label subset workflow, Cohen's κ (global +
   per-class), bootstrap CI95 on the paired judge/human labels, disagreement drill-down, and the
   contamination guards. Guards against κ gaming, leakage, and overclaiming. Use for anything under
   src/evalgen/validate/ or touching how agreement is measured or reported.

@@ -269,8 +269,8 @@ does.
 **A. Extend `make demo` with a `[6/6] agreement` stage.** Cons: the demo golden's
 diff discipline is deliberately expensive (ADR-0003 paid it twice); agreement wants
 its own golden; and CLAUDE.md §4 already defines `make agreement` as its own
-headline command — burying the headline inside the demo dilutes the story the
-recruiter runs. Rejected — **the demo and its golden are byte-untouched this phase**
+headline command — burying the headline inside the demo dilutes the story a
+first-time user runs. Rejected — **the demo and its golden are byte-untouched this phase**
 (a phase that changes nothing upstream must not pay a golden regeneration).
 
 **B. Separate target + separate composition module (chosen).** `make agreement` =
