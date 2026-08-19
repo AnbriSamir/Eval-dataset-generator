@@ -7,7 +7,7 @@
 > surfaced a guideline gap; after the fix, it re-ran at **κ = 0.80** on my real working
 > domain, and the gate opened. The improvement loop, closed on itself.
 
-[![CI](https://github.com/anbsamsam17/Eval-dataset-generator/actions/workflows/ci.yml/badge.svg)](https://github.com/anbsamsam17/Eval-dataset-generator/actions/workflows/ci.yml)
+[![CI](https://github.com/AnbriSamir/Eval-dataset-generator/actions/workflows/ci.yml/badge.svg)](https://github.com/AnbriSamir/Eval-dataset-generator/actions/workflows/ci.yml)
 [![Tests](https://img.shields.io/badge/tests-677%20offline-brightgreen)](#the-machinery-was-proven-on-synthetic-data-first)
 [![Agreement](https://img.shields.io/badge/outcome%20κ-0.804%20·%20CI95%20%5B0.65%2C%200.93%5D-blueviolet)](#the-real-κ-measured--and-a-full-flywheel-turn)
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue)](#)
@@ -86,12 +86,12 @@ are exactly what this codebase exists to get right — and to *prove* it got rig
 This is the third leg of a loop I run on my own tooling: *production traces → eval data
 → better systems*.
 
-- [`multi-agent-orchestrator`](https://github.com/anbsamsam17/multi-agent-orchestrator) —
+- [`multi-agent-orchestrator`](https://github.com/AnbriSamir/multi-agent-orchestrator) —
   agents as production infrastructure. Every decision it makes is a typed, costed
   `TraceSpan` — and that JSONL is **this repo's first-class native input** (a structural
   adapter mines `plan`/`execute`/`verdict` spans; a generic mapping adapter onboards any
   other JSONL source via a six-field declared mapping, only two of them required).
-- [`hybrid-rag-pipeline`](https://github.com/anbsamsam17/hybrid-rag-pipeline) — the
+- [`hybrid-rag-pipeline`](https://github.com/AnbriSamir/hybrid-rag-pipeline) — the
   evaluation science: nDCG/recall@k, verified citations, paired bootstrap CI95.
 - **`eval-dataset-generator`** *(this repo)* — industrializes the loop's fuel: mines
   those traces into a labeled, deduplicated, provenance-stamped golden set that the
@@ -146,7 +146,7 @@ decision is an ADR in [`docs/decisions/`](docs/decisions/).
 ## Quickstart
 
 ```bash
-git clone https://github.com/anbsamsam17/Eval-dataset-generator && cd Eval-dataset-generator
+git clone https://github.com/AnbriSamir/Eval-dataset-generator && cd Eval-dataset-generator
 make install     # pip install -e ".[dev]"
 make test        # 677 offline tests — no API key, no Docker, no network
 make demo        # ingest → dedup → cluster → sample → label, on committed fixtures

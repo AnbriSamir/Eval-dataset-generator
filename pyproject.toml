@@ -41,7 +41,7 @@ dev = [
 ]
 
 [project.urls]
-Repository = "https://github.com/anbsamsam17/eval-dataset-generator"
+Repository = "https://github.com/AnbriSamir/eval-dataset-generator"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/evalgen"]
